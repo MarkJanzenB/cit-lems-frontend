@@ -36,7 +36,7 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.2em;
   line-height: 1.1;
   color: #1a1a1a;
 }
@@ -83,6 +83,22 @@ button:focus-visible {
   height: 250px; /* Adjust height as needed */
   width: 400px;  /* Adjust width as needed */
 }
+.logo1 {
+    height: 100px; /* Adjust height as needed */
+    width: 100px;  /* Adjust width as needed */
+}
+.logo2 {
+  height: 100px; /* Adjust height as needed */
+  width: 200px;  /* Adjust width as needed */
+}
+.logo4 {
+  height: 150px; /* Adjust height as needed */
+  width: 250px;  /* Adjust width as needed */
+}
+.logo3 {
+  height: 120px; /* Adjust height as needed */
+  width: 600px;  /* Adjust width as needed */
+}
 h2 {
   line-height: 1.1;
   color: #1a1a1a;
@@ -105,11 +121,11 @@ h2 {
 /*  padding: 10px; !* Add padding for better spacing *!*/
 /*}*/
 .form-group {
-  display: flex;
+  /*display: flex;*/
   align-items: center;
 }
 .form-container {
-  padding: 20px; /* Adjust the padding as needed */
+  padding: 10px; /* Adjust the padding as needed */
 }
 .center-button {
   display: block;

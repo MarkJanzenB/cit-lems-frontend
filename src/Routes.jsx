@@ -4,6 +4,7 @@ import Login from './components/login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Home from './components/Home'; // Add a new Home component for the root path
+import Reg from './components/Reg';
 
 function AppRoutes() {
   return (
@@ -12,6 +13,7 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/reg" element={<Reg />} />
     </Routes>
   );
 }

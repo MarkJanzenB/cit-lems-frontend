@@ -3,9 +3,10 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import logo3 from "../assets/static/img/cit-logo.png";
-import lems from "../assets/static/img/lems.png";
+import lems from "../assets/static/img/lems-removebg-preview.png";
 import StyledPaper from "./MyPaper";
 import '../index.css';
+import Button from "@mui/material/Button";
 
 
 
@@ -74,8 +75,13 @@ export default function Login() {
     }
   };
 
+  const handleBack = () => {
+    navigate('/'); // Adjust the path as needed
+  };
+
   return (
       <>
+        <Button onClick={handleBack} sx={{ marginTop: '20px' }}>Back</Button>
         <div className="headerrr">
           <img className="inline-element" src={logo3} alt="Cebu Institute of Technology University Logo"/>
           <img className="inline-element logo" src={lems} alt="LEMS Logo"/>
