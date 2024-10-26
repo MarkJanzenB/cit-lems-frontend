@@ -1,0 +1,93 @@
+.login-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+.login-bg {
+  background-image: url('../../assets/loginbg.jpg');
+  background-size: cover;
+  background-position: center;
+  width: 50%;
+  height: 100vh;
+  opacity: 0.5;
+  position: absolute;
+  left: 0;
+  z-index: 0;
+}
+
+.sign-up {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
+  color: rgb(146, 6, 32);
+  z-index: 1;
+}
+
+.login-box {
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  background: white;
+  width: 50%;
+  height: 100vh;
+  margin-left: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.border-container {
+  border: 2px solid black;
+  border-radius: 20px;
+  padding: 20px; 
+  width:40vw;
+  margin-top: 130px;
+ 
+ 
+  
+}
+
+.logform {
+  margin: 2px 0;
+}
+
+.logform label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.logform input {
+  width: calc(100% - 70px);
+  height: 40px;
+  padding: 2px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.error-text {
+  color: red;
+}
+
+.sign-up-button {
+  background-color: #800000;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.login-button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+}
