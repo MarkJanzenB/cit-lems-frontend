@@ -3,7 +3,7 @@ body {
 }
 .register-container {
     display: flex;
-    justify-content: space-between; /* Space between left and right */
+    justify-content: space-between; 
     align-items: center;
     height: 100vh;
     width: 100vw;
@@ -19,14 +19,14 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    width: 65%;
+    width: 60%;
     height: 100%;
     opacity: 0.3;
     z-index: 1;
 }
 
 .register-paper {
-    max-width: 600px;
+    max-width: 400px;
     max-height: 610px;
     width: 100%;
     text-align: center;
@@ -54,6 +54,9 @@ body {
 }
 
 .custom-paragraph {
-    font-size: 25px; /* Adjust the size as needed */
+    font-size: 20px; /* Adjust the size as needed */
+    color: #800000;
+}
+.next-button{
     color: #800000;
 }

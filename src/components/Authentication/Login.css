@@ -2,36 +2,40 @@
   display: flex;
   width: 100vw;
   height: 100vh;
-  position: relative;
   justify-content: center;
   align-items: center;
+   background-color: #F2EE9D;
 }
 .login-bg {
   background-image: url('../../assets/static/img/loginbg.jpg');
   background-size: cover;
   background-position: center;
-  width: 50%;
+  width: 65%;
   height: 100vh;
   opacity: 0.5;
   position: absolute;
   left: 0;
   z-index: 0;
+  
+  
+}
+.sign-up h2{
+  color: rgb(146, 6, 32);
+  font-size: 35px;
+ 
 }
 
 .sign-up {
-  position: absolute;
-  top: 50%;
-  left: 5%;
-  transform: translateY(-50%);
+  margin: 40px 0 0 40px;
+  
   color: rgb(146, 6, 32);
   z-index: 1;
 }
 
 .login-box {
   padding: 20px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  background: white;
-  width: 50%;
+  background-color: #F2EE9D;
+  width: 40%;
   height: 100vh;
   margin-left: auto;
   position: relative;
@@ -39,23 +43,23 @@
 }
 
 .border-container {
-  border: 2px solid black;
-  border-radius: 20px;
+  border: 1px solid black;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
   padding: 20px; 
-  width:40vw;
-  margin-top: 130px;
- 
- 
-  
+  width:30vw;
+  margin-top: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 25px;
+  background-color: #FFFFFF;
 }
 
 .logform {
   margin: 2px 0;
-}
-
-.logform label {
-  display: block;
-  margin-bottom: 5px;
+  background-color: #FFFFFF;
 }
 
 .logform input {
@@ -90,4 +94,11 @@
   cursor: pointer;
   margin-top: 10px;
   width: 100%;
+}
+
+form input{
+  background-color: #FFFFFF;
+}
+form{
+  background-color: #FFFFFF;
 }

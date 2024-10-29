@@ -6,7 +6,7 @@
 }   
 
 #wrapper{
-    height: 100vh;
+    height: 90vh;
     width: 100vw;
     background-color: #ffffff;
 }
@@ -21,7 +21,7 @@
     flex-direction: column;
     width: 50%;
     padding: 20px;
-    height: 70%;
+    height: 90%;
   }
   
   .content h1 {
@@ -47,7 +47,7 @@
     border-radius: 50%;   
     background-color: #016565;
     margin-left: 120px;
-    margin-top: 50px;
+    margin-top: 80px;
 }
   #imgcontainer img{
     width: 500px;

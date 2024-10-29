@@ -1,43 +1,43 @@
 /* Appbar.css */
 .appbar-toolbar {
-    background-color: #F2EE9D;
-    
-    
-  }
+  background-color: #F2EE9D;
   
-  .appbar-logo {
-    transform: scale(2.0);
-  }
+  
+}
+
+.appbar-logo {
+  transform: scale(2.0);
+}
 body {
-  font-family: 'Poppins', sans-serif;
+font-family: 'Poppins', sans-serif;
 }
 
 .appbar-typography {
-  font-family: 'Poppins', sans-serif;
+font-family: 'Poppins', sans-serif;
 }
 
 .vertical-line {
-  border-left: 1px solid #000; /* Adjust color and width as needed */
-  height: 50%; /* Adjust height as needed */
-  margin: 5px; /* Adjust spacing as needed */
+border-left: 1px solid #000; /* Adjust color and width as needed */
+height: 50%; /* Adjust height as needed */
+margin: 5px; /* Adjust spacing as needed */
 }
-  
-  /*.appbar-typography {*/
-  /*  font-family: Sansita;*/
-  /*  font-weight: bold;*/
-  /*}*/
 
-  
-  /*.appbar-button {*/
-  /*  color: #056765;*/
-  /*  font-weight: bold;*/
-  /*  margin-left: 16px;*/
-  /*}*/
+.appbar-typography {
+ font-family: Sansita;
+ font-weight: bold;
+}
 
-  /*.appbar-button-signup {*/
-  /*  margin-left: 8px;*/
-  /*  font-weight: bold;*/
-  /*}*/
-  .appbar{
-    width: 100%;
-  }
+
+.appbar-button {
+  color: #056765;
+ font-weight: bold;
+ margin-left: 16px;
+}
+
+.appbar-button-signup {
+ margin-left: 8px;
+font-weight: bold;
+} 
+.appbar{
+  width: 100%;
+}

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import AuthAppBar from '../Appbar/AuthAppbar';
-import './Register.css'; // Import CSS for styling
+import './Register.css'; 
+import { Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 
 export default function Register() {
     const [credentials, setCredentials] = useState({
@@ -49,7 +49,7 @@ export default function Register() {
                 <Box className="register-paper">
                     {!showAccountTypeForm ? (
                         <form onSubmit={handleNext}>
-                            <Box component="section" sx={{ p: 2 }}>
+                            <Box component="section" sx={{ p: 2}}>
                                 <h1>CREATE LEMS ACCOUNT</h1>
                             </Box>
                             <Box component="section" sx={{ p: 2 }}>
@@ -101,27 +101,39 @@ export default function Register() {
                                         margin="normal"
                                     />
                                 </div>
-                                <Button type="submit" variant="contained" className="next-button">NEXT</Button>
+                                <Button type="submit" variant="contained"  style={{ backgroundColor: '#800000', color: 'white',  width:'300px'}} className="next-button">NEXT</Button>
                             </Box>
                         </form>
                     ) : (
                         <Box component="section" sx={{ p: 2 }}>
-                            <h1>SELECT ACCOUNT TYPE</h1>
-                            <TextField
-                                label="Account Type"
-                                type="text"
-                                name="acctype"
-                                value={credentials.acctype}
-                                onChange={handleChange}
-                                required
-                                fullWidth
-                                margin="normal"
-                            />
+                        <h1>SELECT ACCOUNT TYPE</h1>
+                        <FormControl fullWidth margin="normal" required>
+                          <InputLabel>Account Type</InputLabel>
+                          <Select
+                            label="Account Type"
+                            name="acctype"
+                            value={credentials.acctype}
+                            onChange={handleChange}
+                          >
+                            <MenuItem value="Laboratory Incharge">Laboratory Incharge</MenuItem>
+                            <MenuItem value="Laboratory Assistant">Laboratory Assistant</MenuItem>
+                            <MenuItem value="Science Teacher">Science Teacher</MenuItem>
+                          </Select>
+                        </FormControl>
+                      
+                        {/* Sign Up Button */}
+                        <Button 
+                          variant="contained" 
+                          fullWidth 
+                          sx={{ backgroundColor: '#800000', color: 'white', mt: 2, '&:hover': { backgroundColor: '#660000' } }}
+                        >
+                          Sign Up
+                        </Button>
                         </Box>
                     )}
                 </Box>
                 <div className="image-side">
-                    <h1 style={{ color: '#800000', fontSize:"2.5em"}}>Welcome Back to Your Laboratory Management Hub</h1>
+                    <h1 style={{ color: '#800000', fontSize:"2em"}}>Welcome Back to Your Laboratory Management Hub</h1>
                     <p className="custom-paragraph">
                         Revisit your streamlined laboratory experience with our application that efficiently tracks borrowing and breakages. Sign in now to continue managing your lab with ease!
                     </p><br/>
@@ -129,7 +141,7 @@ export default function Register() {
                         variant="contained"
                         style={{ backgroundColor: '#800000', color: 'white' }}
                         onClick={() => navigate('/login')}
-                        sx={{ width: '200px', height: '50px', fontSize:'1.5em', textTransform: 'none', lineHeight: '1.5' }}
+                        sx={{ width: '140px', height: '45px', fontSize:'1.5em', textTransform: 'none', lineHeight: '1.5' }}
                     >
 
                         Sign In
