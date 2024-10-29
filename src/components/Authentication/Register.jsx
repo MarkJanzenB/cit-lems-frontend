@@ -121,11 +121,17 @@ export default function Register() {
                     )}
                 </Box>
                 <div className="image-side">
-                    <h2 style={{ color: '#800000' }}>Welcome Back to Your Laboratory Management Hub</h2>
-                    <p style={{ color: '#800000' }}>
+                    <h1 style={{ color: '#800000', fontSize:"2.5em"}}>Welcome Back to Your Laboratory Management Hub</h1>
+                    <p className="custom-paragraph">
                         Revisit your streamlined laboratory experience with our application that efficiently tracks borrowing and breakages. Sign in now to continue managing your lab with ease!
-                    </p>
-                    <Button variant="contained" style={{ backgroundColor: '#800000', color: 'white' }} onClick={() => navigate('/login')}>
+                    </p><br/>
+                    <Button
+                        variant="contained"
+                        style={{ backgroundColor: '#800000', color: 'white' }}
+                        onClick={() => navigate('/login')}
+                        sx={{ width: '200px', height: '50px', fontSize:'1.5em', textTransform: 'none', lineHeight: '1.5' }}
+                    >
+
                         Sign In
                     </Button>
                 </div>
