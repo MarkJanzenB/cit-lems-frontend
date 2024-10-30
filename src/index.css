@@ -1,11 +1,8 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  line-height: 1.0;
   font-weight: 400;
-  background-color: #ffffff;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -31,7 +28,7 @@ body {
 }
 
 h1 {
-  font-size: 2.2em;
+  font-size: 1.8em;
   line-height: 1.1;
   color: #1a1a1a;
 }

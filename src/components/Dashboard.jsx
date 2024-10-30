@@ -5,6 +5,7 @@ import StyledPaper from "./MyPaper";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import Appbar from "./Appbar/Appbar.jsx";
 // import './index.css';
 
 
@@ -31,6 +32,7 @@ export default function Dashboard() {
 
     return (
         <>
+            <Appbar/>
             <Button onClick={handleOpen}>Open modal</Button>
             <Modal
                 open={open}

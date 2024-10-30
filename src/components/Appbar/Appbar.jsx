@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { AppBar, Toolbar, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './Appbar.css';
@@ -24,13 +25,14 @@ const Appbar = () => {
         <Typography variant="h6" className="appbar-typography">
 
         </Typography>
-        <Button variant={'contained'}
+
+        <Button variant={'outlined'}
                 sx={{fontSize: '1.5em',
-          '&:hover': {
-            backgroundColor: '#FFF1DB', // Change the background color on hover
-            color: '#056765', // Change the text color on hover
-          },
-        }} onClick={handleSignIn}>
+                  '&:hover': {
+                    backgroundColor: '#FFF1DB', // Change the background color on hover
+                    color: '#056765', // Change the text color on hover
+                  },}} onClick={handleSignIn}>
+
           Sign In
         </Button>
         <div className="vertical-line"></div>
@@ -38,10 +40,10 @@ const Appbar = () => {
           '&:hover': {
             backgroundColor: '#FFF1DB', // Change the background color on hover
             color: '#056765', // Change the text color on hover
-          },
-        }} onClick={handleSignUp}>
+          },}} onClick={handleSignUp}>
           Sign Up
         </Button>
+
 
       </Toolbar>
     </AppBar>
