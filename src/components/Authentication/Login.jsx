@@ -42,6 +42,9 @@ export default function Login() {
       const result = await checkLoginCredentials(formData); // returns a string
       console.log(result); //displays in console if register was successful
       alert("Logged in successfuly with credentials "+formData.idnum+" and "+formData.password);
+      if (result === "login successfully") {
+        setError('');
+        navigate('/dashboard');}
     } catch (e) {
       console.error("Error submitting form: ", e);
     }
