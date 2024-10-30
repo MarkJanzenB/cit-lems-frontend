@@ -2,15 +2,26 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Appbar from '../Appbar/AuthAppbar';
 import './Login.css';
+import axios from "axios";
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    idNumber: '',
+    idnum: '',
     password: ''
   });
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const checkLoginCredentials = async (formData) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/user/login?idnum=${formData.idnum}&password=${formData.password}`);
+      return response.data;
+    }catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,19 +31,27 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.idNumber || !formData.password) {
+    if (!formData.idnum || !formData.password) {
       setError('Institutional ID and password are required');
+
       return;
     }
-
-    if (formData.idNumber === "testId" && formData.password === "testPassword") {
-      setError('');
-      navigate('/dashboard');
-    } else {
-      setError('Invalid institutional ID or password');
+    try {
+      const result = await checkLoginCredentials(formData); // returns a string
+      console.log(result); //displays in console if register was successful
+      alert("Logged in successfuly with credentials "+formData.idnum+" and "+formData.password);
+    } catch (e) {
+      console.error("Error submitting form: ", e);
     }
+
+    // if (formData.idnum === "testId" && formData.password === "testPassword") {
+    //   setError('');
+    //   navigate('/dashboard');
+    // } else {
+    //   setError('Invalid institutional ID or password');
+    // }
   };
 
   const handleSignUp = () => {
@@ -49,7 +68,7 @@ export default function Login() {
               Simplify your laboratory operations with our web application </p>
               <p> that streamlines borrowing and enhances inventory management.</p>
               <p> Sign up now to boost your lab's efficiency and productivity!</p>
-            
+
             <button onClick={handleSignUp} className="sign-up-button">
               SIGN UP
             </button>
@@ -62,8 +81,8 @@ export default function Login() {
                 <label style={{fontSize: '20px', marginTop: '20px'}}>Institutional ID:</label>
                 <input
                   type="text"
-                  name="idNumber"
-                  value={formData.idNumber}
+                  name="idnum"
+                  value={formData.idnum}
                   onChange={handleChange}
                   required
                   autoComplete="username"
