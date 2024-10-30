@@ -32,7 +32,7 @@ export default function Dashboard() {
 
     return (
         <>
-            <Appbar/>
+            <Appbar page={'dashboard'}/>
             <Button onClick={handleOpen}>Open modal</Button>
             <Modal
                 open={open}
