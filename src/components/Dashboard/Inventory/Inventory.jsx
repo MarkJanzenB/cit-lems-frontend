@@ -1,6 +1,8 @@
 
 export default function Inventory() {
     return (
-        <h1>Inventory</h1>
+        <>
+            <h1>Inventory</h1>
+        </>
     );
 }

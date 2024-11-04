@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
@@ -219,29 +218,13 @@ export default function Register() {
                         variant="contained"
                         style={{ backgroundColor: '#800000', color: 'white' }}
                         onClick={handleLoginRedirect}
-                        sx={{ width: '140px', height: '45px', fontSize:'1.5em', textTransform: 'none', lineHeight: '1.5' }}
+                        sx={{ width: '130px', height: '35px', fontSize:'1em', lineHeight: '1.5' }}
                     >
-
-                        Sign In
+                        SIGN IN
                     </Button>
                 </div>
             </div>
 
-            {/*<Popover*/}
-            {/*    open={popover.open}*/}
-            {/*    anchorEl={popover.anchorEl}*/}
-            {/*    onClose={handlePopoverClose}*/}
-            {/*    anchorOrigin={{*/}
-            {/*        vertical: 'bottom',*/}
-            {/*        horizontal: 'center',*/}
-            {/*    }}*/}
-            {/*    transformOrigin={{*/}
-            {/*        vertical: 'top',*/}
-            {/*        horizontal: 'center',*/}
-            {/*    }}*/}
-            {/*>*/}
-            {/*    <Typography sx={{ p: 2 }}>{popover.message}</Typography>*/}
-            {/*</Popover>*/}
         </>
     );
 }

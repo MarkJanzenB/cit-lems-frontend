@@ -21,10 +21,22 @@ border-left: 1px solid #000; /* Adjust color and width as needed */
 height: 50%; /* Adjust height as needed */
 margin: 5px; /* Adjust spacing as needed */
 }
+.space-grotesk-font1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
 
 .appbar-typography {
- font-family: Sansita;
- font-weight: bold;
+    font-family: "Space Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+ /*font-family: Sansita;*/
+ /*font-weight: bold;*/
+
+
 }
 
 

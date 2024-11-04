@@ -1,6 +1,8 @@
 
 export default function BorrowHistory() {
     return (
-        <h1>Borrow History</h1>
+        <>
+            <h1>Borrow History</h1>
+        </>
     );
 }

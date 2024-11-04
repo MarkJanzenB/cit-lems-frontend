@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { AppBar, Toolbar, Button, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Appbar.css';
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -10,18 +10,12 @@ import profile from '/profile.gif';
 const Appbar = ({ page }) => {
   const navigate = useNavigate();
 
-  const handleSignIn = () => {
-    navigate('/login');
-  };
 
-  const handleSignUp = () => {
-    navigate('/register');
-  };
-
-  const handleSignOut = () => {
-    // Add sign out logic here
-    navigate('/login');
-  };
+  //
+  // const handleSignOut = () => {
+  //   // Add sign out logic here
+  //   navigate('/login');
+  // };
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -47,6 +41,7 @@ const Appbar = ({ page }) => {
           <Typography variant="h6" className="appbar-typography"></Typography>
           {page === 'home' ? (
               <>
+              <Link to="/login" style={{ textDecoration: 'none' }}>
                 <Button
                     variant={'outlined'}
                     sx={{
@@ -56,12 +51,16 @@ const Appbar = ({ page }) => {
                         color: '#056765',
                       },
                     }}
-                    onClick={handleSignIn}
+                    // onClick={handleSignIn}
                 >
                   Sign In
                 </Button>
+              </Link>
                 <div className="vertical-line"></div>
-                <Button
+
+
+                <Link to="/register" style={{ textDecoration: 'none' }}>
+                  <Button
                     variant={'outlined'}
                     sx={{
                       fontSize: '1.5em',
@@ -70,10 +69,11 @@ const Appbar = ({ page }) => {
                         color: '#056765',
                       },
                     }}
-                    onClick={handleSignUp}
-                >
+                    // onClick={handleSignUp}
+                  >
                   Sign Up
-                </Button>
+                  </Button>
+                </Link>
               </>
           ) : (
               <>
@@ -103,7 +103,8 @@ const Appbar = ({ page }) => {
                       <Button>Edit Profile</Button><br/>
                       <Button>About</Button><br/>
                       <Button>Settings</Button><br/>
-                      <Button onClick={handleSignOut}>Log Out</Button><br/>
+                      <Link to="/login" style={{ textDecoration: 'none' }}>
+                        <Button>Log Out</Button></Link><br/>
                     </Typography>
                   </Box>
                 </Modal>

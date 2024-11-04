@@ -4,6 +4,7 @@ import { Button } from '@mui/material';
 import StyledPaper from "../MyPaper.jsx";
 import Box from '@mui/material/Box';
 import Appbar from "../Appbar/Appbar.jsx";
+
 // import './index.css';
 
 
@@ -20,22 +21,23 @@ const style = {
     p: 4,
 };
 
-const handleSched = () => {
-    navigate('/schedule');
-};
-const handleInv = () => {
-    navigate('/inventory');
-};
-const handleReps = () => {
-    navigate('/report');
-};
-const handleBHist = () => {
-    navigate('/borrowhistory');
-};
-
 export default function Dashboard() {
 
     const navigate = useNavigate();
+
+    const handleSched = () => {
+        navigate('/schedule'); // Adjust the path as needed
+    };
+    const handleInv = () => {
+        navigate('/inventory');
+    };
+    const handleReps = () => {
+        navigate('/report');
+    };
+    const handleBHist = () => {
+        navigate('/borrowhistory');
+    };
+
 
 
     return (
@@ -54,10 +56,10 @@ export default function Dashboard() {
             >
             <StyledPaper width="700px" height="510px"
                          sx={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 2,marginTop:'60px'}}>
-                <Button variant="contained" sx={{backgroundColor: '#FFB3BA', color: 'black'}}>Schedule</Button>
-                <Button variant="contained" sx={{backgroundColor: '#FFDFBA', color: 'black'}}>Inventory</Button>
-                <Button variant="contained" sx={{backgroundColor: '#FFFFBA', color: 'black'}}>Reports</Button>
-                <Button variant="contained" sx={{backgroundColor: '#BAFFC9', color: 'black'}}>Borrow History</Button>
+                <Button variant="contained" sx={{backgroundColor: '#FFB3BA', color: 'black'}} onClick={handleSched}>Schedule</Button>
+                <Button variant="contained" sx={{backgroundColor: '#FFDFBA', color: 'black'}} onClick={handleInv}>Inventory</Button>
+                <Button variant="contained" sx={{backgroundColor: '#FFFFBA', color: 'black'}} onClick={handleReps}>Reports</Button>
+                <Button variant="contained" sx={{backgroundColor: '#BAFFC9', color: 'black'}} onClick={handleBHist}>Borrow History</Button>
             </StyledPaper>
             </Box>
 
