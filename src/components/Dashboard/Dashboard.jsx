@@ -26,7 +26,7 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     const handleSched = () => {
-        navigate('/schedule'); // Adjust the path as needed
+        navigate('/schedule/request'); 
     };
     const handleInv = () => {
         navigate('/inventory');

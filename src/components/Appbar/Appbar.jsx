@@ -58,33 +58,6 @@ const Appbar = ({ page }) => {
               </Link>
                 <div className="vertical-line"></div>
 
-<<<<<<< HEAD
-        </Typography>
-        <Button 
-                sx={{fontSize: '1.2em',
-                  fontWeight:'bold',
-                  color:'#056765',
-          '&:hover': {
-            backgroundColor: '#056765', 
-            color: '#056765', 
-          },
-        }} onClick={handleSignIn}>
-          Sign In
-        </Button>
-        <div className="vertical-line"></div>
-        <Button  sx={{fontSize: '1.2em',
-         fontWeight:'bold',
-         color:'#056765',
-          '&:hover': {
-            backgroundColor: '#056765', 
-            color: '#056765',
-            
-          },
-        }} onClick={handleSignUp}>
-          Sign Up
-        </Button>
-=======
->>>>>>> ff86ae52a021a68aed84d5df2c5f681f1be2d66c
 
                 <Link to="/register" style={{ textDecoration: 'none' }}>
                   <Button

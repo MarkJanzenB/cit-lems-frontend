@@ -8,11 +8,14 @@ import Schedule from "./Dashboard/Schedule/Schedule.jsx";// Add a new Home compo
 import Inventory from "./Dashboard/Inventory/Inventory.jsx";
 import Report from "./Dashboard/Report/Report.jsx";
 import BorrowHistory from "./Dashboard/History/BorrowHistory.jsx";
+import Request from "./Dashboard/Schedule/ScheduleTab/Request.jsx"
+import Today from "./Dashboard/Schedule/ScheduleTab/Today.jsx"
+import UpcomingSchedule from "./Dashboard/Schedule/ScheduleTab/UpcomingSchedule.jsx"
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} /> // Add a new route for the root path
+      <Route path="/" element={<Home />} /> 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard" element={<Dashboard />} />
@@ -20,6 +23,9 @@ function AppRoutes() {
       <Route path={"/inventory"} element={<Inventory />} />
       <Route path={"/report"} element={<Report />} />
       <Route path={"/borrowhistory"} element={<BorrowHistory />} />
+      <Route path="/schedule/request" element={<Request />} />
+      <Route path="/schedule/today" element={<Today />} />
+      <Route path ="/schedule/upcoming" element={<UpcomingSchedule />}/>
 
 
     </Routes>
