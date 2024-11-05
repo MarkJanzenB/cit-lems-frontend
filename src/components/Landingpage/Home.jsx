@@ -5,7 +5,7 @@ import './LandingPage.css';
 const LandingPage = () => {
   return (
     <div id='wrapper'>
-        <Appbar position='static'/>
+        <Appbar page={'home'}/>
        <br/> <br/>
        <div className="landing-page">
        <div className="content">
