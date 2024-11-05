@@ -103,7 +103,7 @@ const Appbar = ({ page }) => {
                       <Button>Edit Profile</Button><br/>
                       <Button>About</Button><br/>
                       <Button>Settings</Button><br/>
-                      <Link to="/login" style={{ textDecoration: 'none' }}>
+                      <Link to="/" style={{ textDecoration: 'none' }}>
                         <Button>Log Out</Button></Link><br/>
                     </Typography>
                   </Box>

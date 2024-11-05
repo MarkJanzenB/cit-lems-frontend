@@ -18,12 +18,11 @@ const register = async (credentials) => {
 };
 export default function Register() {
     const [credentials, setCredentials] = useState({
-        fname: '',
-        lname: '',
-        idnum: '',
+        first_name: '',
+        last_name: '',
+        insti_id: '',
         email: '',
         password: '',
-        acctype: ''
 
     });
 
@@ -115,8 +114,8 @@ export default function Register() {
                                     <TextField
                                         label="ID Number"
                                         type="text"
-                                        name="idnum"
-                                        value={credentials.idnum}
+                                        name="insti_id"
+                                        value={credentials.insti_id}
                                         onChange={handleChange}
                                         required
                                         fullWidth
@@ -127,8 +126,8 @@ export default function Register() {
                                     <TextField
                                         label="First Name"
                                         type="text"
-                                        name="fname"
-                                        value={credentials.fname}
+                                        name="first_name"
+                                        value={credentials.first_name}
                                         onChange={handleChange}
                                         required
                                         fullWidth
@@ -139,8 +138,8 @@ export default function Register() {
                                     <TextField
                                         label="Last Name"
                                         type="text"
-                                        name="lname"
-                                        value={credentials.lname}
+                                        name="last_name"
+                                        value={credentials.last_name}
                                         onChange={handleChange}
                                         required
                                         fullWidth
