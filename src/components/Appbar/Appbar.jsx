@@ -24,20 +24,25 @@ const Appbar = () => {
         <Typography variant="h6" className="appbar-typography">
 
         </Typography>
-        <Button variant={'contained'}
-                sx={{fontSize: '1.5em',
+        <Button 
+                sx={{fontSize: '1.2em',
+                  fontWeight:'bold',
+                  color:'#056765',
           '&:hover': {
-            backgroundColor: '#FFF1DB', // Change the background color on hover
-            color: '#056765', // Change the text color on hover
+            backgroundColor: '#056765', 
+            color: '#056765', 
           },
         }} onClick={handleSignIn}>
           Sign In
         </Button>
         <div className="vertical-line"></div>
-        <Button variant={'outlined'} sx={{fontSize: '1.5em',
+        <Button  sx={{fontSize: '1.2em',
+         fontWeight:'bold',
+         color:'#056765',
           '&:hover': {
-            backgroundColor: '#FFF1DB', // Change the background color on hover
-            color: '#056765', // Change the text color on hover
+            backgroundColor: '#056765', 
+            color: '#056765',
+            
           },
         }} onClick={handleSignUp}>
           Sign Up

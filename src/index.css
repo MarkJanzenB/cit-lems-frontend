@@ -1,40 +1,8 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
   background-color: #ffffff;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
- /* min-width: 320px; */
-  height: 100vh;
-}
-
-h1 {
-  font-size: 2.2em;
-  line-height: 1.1;
-  color: #1a1a1a;
-}
 
 button {
   border-radius: 8px;
@@ -55,77 +23,20 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
 
-/* Home.css */
 
-.inline-element {
-  display: inline-block;
-  vertical-align: middle; /* Optional: Align elements vertically */
-}
+
 .logo {
   height: 250px; /* Adjust height as needed */
   width: 400px;  /* Adjust width as needed */
-}
-.logo1 {
-    height: 100px; /* Adjust height as needed */
-    width: 100px;  /* Adjust width as needed */
-}
-.logo2 {
-  height: 100px; /* Adjust height as needed */
-  width: 200px;  /* Adjust width as needed */
-}
-.logo4 {
-  height: 150px; /* Adjust height as needed */
-  width: 250px;  /* Adjust width as needed */
-}
-.logo3 {
-  height: 120px; /* Adjust height as needed */
-  width: 600px;  /* Adjust width as needed */
 }
 h2 {
   line-height: 1.1;
   color: #1a1a1a;
 }
 
-.regform{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 
-  color: #1a1a1a;
-}
-/*.regform label {*/
-/*  font-size: 2.5em; !* Increase label font size *!*/
-/*}*/
 
-/*.regform input {*/
-/*  font-size: 2.5em; !* Increase input font size *!*/
-/*  padding: 10px; !* Add padding for better spacing *!*/
-/*}*/
-.form-group {
-  /*display: flex;*/
-  align-items: center;
-}
-.form-container {
-  padding: 10px; /* Adjust the padding as needed */
-}
-.center-button {
-  display: block;
-  margin: 0 auto;
-}
 
 .logform{
   display: flex;
@@ -135,12 +46,10 @@ h2 {
   color: #1a1a1a;
 }
 
-.logform label {
-  font-size: 3.2em; /* Increase label font size */
-}
+
 
 .logform input {
-  font-size: 3.2em; /* Increase input font size */
+  font-size: 1.2em; /* Increase input font size */
   padding: 10px; /* Add padding for better spacing */
 }
 
