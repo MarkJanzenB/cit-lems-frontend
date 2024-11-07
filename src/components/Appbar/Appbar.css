@@ -1,12 +1,15 @@
 /* Appbar.css */
 .appbar-toolbar {
   background-color: #F2EE9D;
+
   
   
 }
 
 .appbar-logo {
-  transform: scale(2.0);
+
+height: 85px;
+    width: 200px;
 }
 body {
 font-family: 'Poppins', sans-serif;

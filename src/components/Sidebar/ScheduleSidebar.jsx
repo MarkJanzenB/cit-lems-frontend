@@ -1,14 +1,11 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import {useNavigate, useLocation, Link} from 'react-router-dom';
 import './ScheduleSidebar.css';
+import {Button} from "@mui/material";
 
 export default function ScheduleSidebar() {
     const navigate = useNavigate();
     const location = useLocation();
-
-    const handleBackToDashboard = () => {
-        navigate('/dashboard');
-    };
 
     const handleRequest = () => {
         navigate('/schedule/request');
@@ -24,12 +21,22 @@ export default function ScheduleSidebar() {
 
     return (
         <aside className="schedule-sidebar">
-            <h2 className="sidebar-title">SCHEDULE</h2>
+            {/*please make use ani nga back button na icon. ty.*/}
+            {/*<img src="/wired-flat-32-chevron-left-hover-scale%20(1).gif" alt="Icon"/>*/}
+            <h2 className="sidebar-title">
+                <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} style={{ width: '25px', height: '20px', marginBottom:'5px', marginLeft: '16px' }} /></Button></Link>
+                SCHEDULE
+            </h2>
             <div className="sidebar-buttons">
-                <button className="sidebar-button" onClick={handleBackToDashboard}>Back to Dashboard</button>
-                <button className={`sidebar-button ${isActive('/schedule/request') ? 'active' : ''}`} onClick={handleRequest}>Request</button>
-                <button className={`sidebar-button ${isActive('/schedule/today') ? 'active' : ''}`} onClick ={handleToday}>Today</button>
-                <button className={`sidebar-button ${isActive('/schedule/upcoming') ? 'active' : ''}`}onClick ={handleUpcomingSched}>Upcoming Schedule</button>
+                <button className={`sidebar-button ${isActive('/schedule/request') ? 'active' : ''}`}
+                        onClick={handleRequest}>Request
+                </button>
+                <button className={`sidebar-button ${isActive('/schedule/today') ? 'active' : ''}`}
+                        onClick={handleToday}>Today
+                </button>
+                <button className={`sidebar-button ${isActive('/schedule/upcoming') ? 'active' : ''}`}
+                        onClick={handleUpcomingSched}>Upcoming Schedule
+                </button>
             </div>
         </aside>
     );

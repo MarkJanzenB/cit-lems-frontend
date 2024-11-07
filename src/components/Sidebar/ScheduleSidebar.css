@@ -21,11 +21,11 @@
 .sidebar-title::after {
     content: "";
     display: block;
-    width: calc(100% + 40px); 
+    width: calc(100% + 40px);
     height: 2px;
     background-color: #F2EE9D;
     margin-top: 10px;
-    margin-left: -20px; 
+    margin-left: -20px;
 }
 
 
