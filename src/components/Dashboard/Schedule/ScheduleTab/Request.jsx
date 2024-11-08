@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ScheduleSidebar from '../../../Sidebar/ScheduleSidebar';
+import Sidebar from '../../../Sidebar/Sidebar.jsx';
 import Appbar from '../../../Appbar/Appbar';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, Modal, Box, TextField, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -88,7 +88,7 @@ export default function Request() {
         <ThemeProvider theme={theme}>
             <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
                 <Appbar />
-                <ScheduleSidebar />
+                <Sidebar />
                 <div style={{ padding: '20px', flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px' }}>
                     <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
                         <Table>
@@ -158,7 +158,7 @@ export default function Request() {
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
                             width: 400,
-                            bgcolor: 'background.paper',
+                            //bgcolor: 'background.paper',
                             boxShadow: 24,
                             bgcolor: '#F2EE9D',
                             p: 4,
