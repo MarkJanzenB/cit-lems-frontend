@@ -10,7 +10,7 @@
 #wrapper{
     height: 90vh;
     width: 100vw;
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
 }
 .landing-page {
     display: flex;
