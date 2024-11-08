@@ -88,7 +88,7 @@ export default function Request() {
         <ThemeProvider theme={theme}>
             <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
                 <Appbar />
-                <Sidebar />
+                <Sidebar page={"schedule"} />
                 <div style={{ padding: '20px', flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px' }}>
                     <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
                         <Table>
@@ -167,9 +167,9 @@ export default function Request() {
                             gap: 2,
                             borderRadius: '15px',
                             textAlign: 'center'
-                        }}
-                    >
-                        <Typography sx={{fontWeight:'bold', color: '#016565',}}variant="h6">Are you sure you want to set this schedule?</Typography>
+                        }}>
+                        <Typography sx={{fontWeight:'bold', color: '#016565',}} variant="h6">
+                            Are you sure you want to set this schedule?</Typography>
                         <Box display="flex" justifyContent="space-around" mt={2}>
                             <Button variant="contained" sx={{backgroundColor:'maroon'}} onClick={handleConfirmSchedule}>Yes</Button>
                             <Button variant="outlined" sx={{backgroundColor:'maroon', color:'white'}} onClick={handleCloseConfirmModal}>No</Button>

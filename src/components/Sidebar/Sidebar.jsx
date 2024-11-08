@@ -1,9 +1,9 @@
 import React from 'react';
-import {useNavigate, useLocation, Link} from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './Sidebar.css';
-import {Button} from "@mui/material";
+import { Button } from "@mui/material";
 
-export default function Sidebar({page}) {
+export default function Sidebar({ page }) {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -19,55 +19,48 @@ export default function Sidebar({page}) {
     };
 
     // Functions to handle sidebar button clicks for INVENTORY page
-    const handleBack = () =>{
+    const handleBack = () => {
         navigate('/dashboard');
-    }
-    const handleAllItems = () =>{
+    };
+    const handleAllItems = () => {
         navigate('/inventory/allitems');
-    }
+    };
 
     const isActive = (path) => location.pathname === path;
-
 
     return (
         <aside className="schedule-sidebar">
             <h2 className="sidebar-title">
-                <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} style={{ width: '25px', height: '20px', marginBottom:'5px', marginLeft: '16px' }} /></Button></Link>
-                {page.toUpperCase()}
+                <Link to={"/dashboard"}>
+                    <Button>
+                        <img alt="profile image" src={"/ybb.gif"} style={{ width: '25px', height: '20px', marginBottom: '5px', marginLeft: '16px' }} />
+                    </Button>
+                </Link>
+                Schedule
             </h2>
             <div className="sidebar-buttons">
                 {page === 'schedule' && (
                     <>
-                        <button className={`sidebar-button ${isActive('/schedule/request') ? 'active' : ''}`}
-                                onClick={handleRequest}>Request
-                        </button>
-                        <button className={`sidebar-button ${isActive('/schedule/today') ? 'active' : ''}`}
-                                onClick={handleToday}>Today
-                        </button>
-                        <button className={`sidebar-button ${isActive('/schedule/upcoming') ? 'active' : ''}`}
-                                onClick={handleUpcomingSched}>Upcoming Schedule
-                        </button>
+                        <button className={`sidebar-button ${isActive('/schedule/request') ? 'active' : ''}`} onClick={handleRequest} style={{ display: 'block' }}>Request</button>
+                        <button className={`sidebar-button ${isActive('/schedule/today') ? 'active' : ''}`} onClick={handleToday} style={{ display: 'block' }}>Today</button>
+                        <button className={`sidebar-button ${isActive('/schedule/upcoming') ? 'active' : ''}`} onClick={handleUpcomingSched} style={{ display: 'block' }}>Upcoming Schedule</button>
                     </>
                 )}
                 {page === 'inventory' && (
                     <>
-                        <button className={`sidebar-button ${isActive('/inventory') ? 'active' : ''}`}
-                                onClick={handleBack}>Back
-                        </button>
+                        <button className={`sidebar-button ${isActive('/inventory') ? 'active' : ''}`} onClick={handleBack} style={{ display: 'block' }}>Back</button>
                     </>
                 )}
-                {page === 'reports' &&(
+                {page === 'reports' && (
                     <>
-                        //here goes the buttons for reports
+                        {/* here goes the buttons for reports */}
                     </>
                 )}
-                {page === 'borrowhistory' &&(
+                {page === 'borrowhistory' && (
                     <>
-                        //here goes the buttons for borrowhistory
+                        {/* here goes the buttons for borrowhistory */}
                     </>
                 )}
-
-
             </div>
         </aside>
     );

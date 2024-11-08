@@ -65,7 +65,7 @@ export default function UpcomingSchedule() {
     return (
         <div style={{ display: 'flex', height: 'auto', width: '100vw' }}>
             <Appbar />
-            <Sidebar />
+            <Sidebar page={"schedule"} />
             <div style={{ padding: '20px', flexGrow: 1, marginTop:'50px' }}>
                 <TableContainer component={Paper} style={{ height:'auto',width:'90%',  overflow: 'auto', marginTop: '50px' }}>
                     <Table sx={{  }} aria-label="instructor schedule table" stickyHeader>
