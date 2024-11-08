@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ScheduleSidebar from '../../../Sidebar/ScheduleSidebar';
+import Sidebar from '../../../Sidebar/Sidebar.jsx';
 import Appbar from '../../../Appbar/Appbar';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -65,7 +65,7 @@ export default function UpcomingSchedule() {
     return (
         <div style={{ display: 'flex', height: 'auto', width: '100vw' }}>
             <Appbar />
-            <ScheduleSidebar />
+            <Sidebar />
             <div style={{ padding: '20px', flexGrow: 1, marginTop:'50px' }}>
                 <TableContainer component={Paper} style={{ height:'auto',width:'90%',  overflow: 'auto', marginTop: '50px' }}>
                     <Table sx={{  }} aria-label="instructor schedule table" stickyHeader>
