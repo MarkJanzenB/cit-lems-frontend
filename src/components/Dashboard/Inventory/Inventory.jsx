@@ -1,6 +1,7 @@
 import Appbar from "../../Appbar/Appbar.jsx";
 import {Button} from "@mui/material";
 import {Link} from "react-router-dom";
+import Sidebar from "../../Sidebar/ScheduleSidebar.jsx"
 
 export default function Inventory() {
     return (

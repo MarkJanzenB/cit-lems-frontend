@@ -1,8 +1,14 @@
+import Appbar from "../../Appbar/Appbar.jsx";
+import {Button} from "@mui/material";
+import {Link} from "react-router-dom";
+import Sidebar from "../../Sidebar/ScheduleSidebar.jsx"
 
 export default function BorrowHistory() {
     return (
         <>
-            <h1>Borrow History</h1>
+            <Appbar page={"borrow-history"} />
+            <br/><br/><br/><br/>
+            <Link to={"/dashboard"}><Button><img src={"/orangeybackbutton.gif"} style={{ width: '50px', height: '50px' }} /></Button></Link>
         </>
     );
 }

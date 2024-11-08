@@ -22,7 +22,7 @@ export default function ScheduleSidebar() {
     return (
         <aside className="schedule-sidebar">
             <h2 className="sidebar-title">
-                <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} style={{ width: '25px', height: '20px', marginBottom:'5px', marginLeft: '16px' }} /></Button></Link>
+                <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} style={{ width: '25px', height: '20px', marginBottom:'5px', marginLeft: '20px' }} /></Button></Link>
                 SCHEDULE
             </h2>
             <div className="sidebar-buttons">
