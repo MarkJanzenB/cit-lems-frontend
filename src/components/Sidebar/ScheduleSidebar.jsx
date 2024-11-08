@@ -21,8 +21,6 @@ export default function ScheduleSidebar() {
 
     return (
         <aside className="schedule-sidebar">
-            {/*please make use ani nga back button na icon. ty.*/}
-            {/*<img src="/wired-flat-32-chevron-left-hover-scale%20(1).gif" alt="Icon"/>*/}
             <h2 className="sidebar-title">
                 <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} style={{ width: '25px', height: '20px', marginBottom:'5px', marginLeft: '16px' }} /></Button></Link>
                 SCHEDULE

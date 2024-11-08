@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import './Register.css';
 import { Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import axios from "axios";
@@ -97,11 +97,13 @@ export default function Register() {
 
     return (
         <>
-            {/*<Button onClick={handleBack} sx={{ marginTop: '20px' }}>Back</Button>*/}
-
+            {/*needs adjustment, dapat dili sha scrollable v and h kumbaga fixed ang page.*/}
+            <div style={{backgroundColor: '#056765'}}>
+            <Link to={"/"}><Button sx={{ backgroundColor:'#056765'}}><img src={"/ybb.gif"} alt={"back"} style={{ width: '50px', height: '50px' }} /></Button></Link>
+            </div>
             <div className="register-container">
-
                 <div className="register-background" />
+
 
                 <Box className="register-paper">
                     {!showAccountTypeForm ? (

@@ -6,8 +6,6 @@ export default function Schedule() {
         <>
         <Appbar/>
         <ScheduleSidebar/>
-
-            <h1>Schedule</h1>
         </>
 
     );
