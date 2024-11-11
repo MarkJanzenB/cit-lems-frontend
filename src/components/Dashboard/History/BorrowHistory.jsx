@@ -7,8 +7,9 @@ export default function BorrowHistory() {
     return (
         <>
             <Appbar page={"borrow-history"} />
-            <br/><br/><br/><br/>
-            <Link to={"/dashboard"}><Button><img src={"/orangeybackbutton.gif"} style={{ width: '50px', height: '50px' }} /></Button></Link>
+            <Sidebar page={"borrow-history"}/>
+            {/*<br/><br/><br/><br/>*/}
+            {/*<Link to={"/dashboard"}><Button><img src={"/orangeybackbutton.gif"} style={{ width: '50px', height: '50px' }} /></Button></Link>*/}
         </>
     );
 }

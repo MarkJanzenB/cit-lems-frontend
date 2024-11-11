@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import profile from '/src/assets/static/img/profile2.gif';
 import m1 from '/src/assets/static/img/menu.png';
 
+
 const Appbar = ({ page }) => {
   const navigate = useNavigate();
 
@@ -26,6 +27,7 @@ const Appbar = ({ page }) => {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    borderRadius: '10px',
   };
 
   const buttonStyle = {
@@ -48,6 +50,19 @@ const Appbar = ({ page }) => {
     textAlign: 'center',
     textDecoration: 'none',
     backgroundColor: '#FFB3BA',
+  };
+
+  const closeButtonStyle = {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    // backgroundColor: '#FF0000',
+    color: '#056765',
+    border: '1px solid #056765',
+    // borderRadius: '50%',
+    width: '30px',
+    height: '30px',
+    cursor: 'pointer',
   };
 
   return (
@@ -80,19 +95,30 @@ const Appbar = ({ page }) => {
                 </Button>
                 <Modal
                     open={open}
-                    onClose={handleClose}
+                    // onClose={handleClose}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
                   <Box sx={style}>
+                    <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br/>
                     <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
                       <Box sx={buttonStyle}>
-                        <Link to="/register" style={{ textDecoration: 'none' }}>
-                          <Button sx={{ fontFamily: 'monospace', fontWeight: 'bold',color: '#056765', '&:hover': { color: 'green' } }}>Create An Account</Button></Link><br/>
+                        <Link to="/register" style={{textDecoration: 'none'}}>
+                          <Button sx={{
+                            fontFamily: 'monospace',
+                            fontWeight: 'bold',
+                            color: '#056765',
+                            '&:hover': {color: 'green'}
+                          }}>Create An Account</Button></Link><br/>
                       </Box>
                       <Box sx={buttonStyle}>
-                        <Link to="/login" style={{ textDecoration: 'none' }}>
-                          <Button sx={{ fontFamily: 'monospace', fontWeight: 'bold',color: '#056765', '&:hover': { color: 'green' } }}>Sign In</Button></Link><br/>
+                        <Link to="/login" style={{textDecoration: 'none'}}>
+                          <Button sx={{
+                            fontFamily: 'monospace',
+                            fontWeight: 'bold',
+                            color: '#056765',
+                            '&:hover': {color: 'green'}
+                          }}>Sign In</Button></Link><br/>
                       </Box>
                     </Typography>
                   </Box>
@@ -118,24 +144,46 @@ const Appbar = ({ page }) => {
                 </Button>
                 <Modal
                     open={open}
-                    onClose={handleClose}
+                    // onClose={handleClose}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
                   <Box sx={style}>
+                    <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br/>
+
                     <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
                       <Box sx={buttonStyle}>
-                        <Button sx={{ fontFamily: 'monospace', fontWeight: 'bold',color: '#056765', '&:hover': { color: 'green' } }}>Edit Profile</Button><br/>
+                        <Button sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 'bold',
+                          color: '#056765',
+                          '&:hover': {color: 'green'}
+                        }}>Edit Profile</Button><br/>
                       </Box>
                       <Box sx={buttonStyle}>
-                        <Button sx={{ fontFamily: 'monospace', fontWeight: 'bold',color: '#056765', '&:hover': { color: 'green' } }}>Settings</Button><br/>
+                        <Button sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 'bold',
+                          color: '#056765',
+                          '&:hover': {color: 'green'}
+                        }}>Settings</Button><br/>
                       </Box>
                       <Box sx={buttonStyle}>
-                        <Button sx={{ fontFamily: 'monospace', fontWeight: 'bold',color: '#056765', '&:hover': { color: 'green' } }}>Help</Button><br/>
+                        <Button sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 'bold',
+                          color: '#056765',
+                          '&:hover': {color: 'green'}
+                        }}>Help</Button><br/>
                       </Box>
                       <Box sx={buttonStyle}>
-                          <Link to="/login" style={{ textDecoration: 'none' }}>
-                          <Button sx={{ fontFamily: 'monospace', fontWeight: 'bold',color: '#056765', '&:hover': { color: 'green' } }}>Log Out</Button></Link><br/>
+                        <Link to="/login" style={{textDecoration: 'none'}}>
+                          <Button sx={{
+                            fontFamily: 'monospace',
+                            fontWeight: 'bold',
+                            color: '#056765',
+                            '&:hover': {color: 'green'}
+                          }}>Log Out</Button></Link><br/>
                       </Box>
                     </Typography>
                   </Box>

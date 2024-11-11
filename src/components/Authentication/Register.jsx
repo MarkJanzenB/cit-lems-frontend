@@ -23,6 +23,7 @@ export default function Register() {
         insti_id: '',
         email: '',
         password: '',
+        role: '',
 
     });
 
@@ -122,6 +123,7 @@ export default function Register() {
                                         required
                                         fullWidth
                                         margin="normal"
+                                        autoComplete={'off'}
                                     />
                                 </div>
                                 <div className="form-group">
@@ -134,6 +136,7 @@ export default function Register() {
                                         required
                                         fullWidth
                                         margin="normal"
+                                        autoComplete={"off"}
                                     />
                                 </div>
                                 <div className="form-group">
@@ -146,6 +149,7 @@ export default function Register() {
                                         required
                                         fullWidth
                                         margin="normal"
+                                        autoComplete={'off'}
                                     />
                                 </div>
                                 <div className="form-group">
@@ -158,6 +162,7 @@ export default function Register() {
                                         required
                                         fullWidth
                                         margin="normal"
+                                        autoComplete={'off'}
                                     />
                                 </div>
                                 <div className="form-group">
@@ -170,6 +175,7 @@ export default function Register() {
                                         required
                                         fullWidth
                                         margin="normal"
+                                        autoComplete={'off'}
                                     />
                                 </div>
                                 <Button type="submit" variant="contained"
@@ -186,7 +192,7 @@ export default function Register() {
                                     <Select
                                         label="Account Type"
                                         name="acctype"
-                                        value={credentials.acctype}
+                                        value={credentials.role}
                                         onChange={handleChange}
                                     >
                                         <MenuItem value="Laboratory Incharge">Laboratory In-Charge</MenuItem>
