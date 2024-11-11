@@ -11,25 +11,29 @@ import BorrowHistory from "./Dashboard/History/BorrowHistory.jsx";
 import Request from "./Dashboard/Schedule/ScheduleTab/Request.jsx"
 import Today from "./Dashboard/Schedule/ScheduleTab/Today.jsx"
 import UpcomingSchedule from "./Dashboard/Schedule/ScheduleTab/UpcomingSchedule.jsx"
+import Damages from "./Dashboard/Report/ReportTab/Damages.jsx";
+import ReturnItems from "./Dashboard/Report/ReportTab/ReturnItems.jsx";
+
 
 function AppRoutes() {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} /> 
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path={"/schedule"} element={<Schedule />} />
-      <Route path={"/inventory"} element={<Inventory />} />
-      <Route path={"/report"} element={<Report />} />
-      <Route path={"/borrowhistory"} element={<BorrowHistory />} />
-      <Route path="/schedule/request" element={<Request />} />
-      <Route path="/schedule/today" element={<Today />} />
-      <Route path ="/schedule/upcoming" element={<UpcomingSchedule />}/>
+    return (
+        <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path={"/schedule"} element={<Schedule />} />
+            <Route path={"/inventory"} element={<Inventory />} />
+            <Route path={"/report"} element={<Report />} />
+            <Route path={"/borrowhistory"} element={<BorrowHistory />} />
+            <Route path="/schedule/request" element={<Request />} />
+            <Route path="/schedule/today" element={<Today />} />
+            <Route path ="/schedule/upcoming" element={<UpcomingSchedule />}/>
+            <Route path ="/report/damages" element={<Damages />}/>
+            <Route path ="/report/returnitems" element={<ReturnItems />}/>
 
-
-    </Routes>
-  );
+        </Routes>
+    );
 }
 
 export default AppRoutes;
