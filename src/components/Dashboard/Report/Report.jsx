@@ -6,7 +6,7 @@ export default function Report() {
     return (
         <>
             <Appbar />
-            <Sidebar page="report" />
+            <Sidebar page="reports" />
         </>
     );
 }

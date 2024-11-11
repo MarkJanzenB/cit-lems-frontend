@@ -16,7 +16,7 @@ export default function ReturnItems() {
     return (
         <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
             <Appbar />
-            <Sidebar page={"report"} />
+            <Sidebar page={"reports"} />
             <TableContainer component={Paper} style={{ width: '100%', padding: 20 }}>
                 <Table>
                     <TableHead>

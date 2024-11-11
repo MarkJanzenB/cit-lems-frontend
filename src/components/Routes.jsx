@@ -24,13 +24,13 @@ function AppRoutes() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path={"/schedule"} element={<Schedule />} />
             <Route path={"/inventory"} element={<Inventory />} />
-            <Route path={"/report"} element={<Report />} />
+            <Route path={"/reports"} element={<Report />} />
             <Route path={"/borrowhistory"} element={<BorrowHistory />} />
             <Route path="/schedule/request" element={<Request />} />
             <Route path="/schedule/today" element={<Today />} />
             <Route path ="/schedule/upcoming" element={<UpcomingSchedule />}/>
-            <Route path ="/report/damages" element={<Damages />}/>
-            <Route path ="/report/returnitems" element={<ReturnItems />}/>
+            <Route path ="/reports/damages" element={<Damages />}/>
+            <Route path ="/reports/returnitems" element={<ReturnItems />}/>
 
         </Routes>
     );
