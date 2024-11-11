@@ -26,13 +26,13 @@ export default function Dashboard() {
     const navigate = useNavigate();
 
     const handleSched = () => {
-        navigate('/schedule/request');
+        navigate('/schedule/request'); 
     };
     const handleInv = () => {
         navigate('/inventory');
     };
     const handleReps = () => {
-        navigate('/reports/damages');
+        navigate('/report/damages');
     };
     const handleBHist = () => {
         navigate('/borrowhistory');
