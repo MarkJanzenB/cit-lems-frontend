@@ -3,7 +3,7 @@ import {Button} from "@mui/material";
 import {Link} from "react-router-dom";
 import MyPaper from "../../MyPaper.jsx";
 import Sidebar from "../../Sidebar/Sidebar.jsx";
-import './Inventory.css'; // Import the CSS file
+import './Inventory.css';
 
 export default function Inventory() {
     return (
