@@ -29,10 +29,10 @@ export default function Sidebar({ page }) {
 
     // Functions to handle sidebar button clicks for REPORT page
     const handleDamages = () => {
-        navigate('/reports/damages');
+        navigate('/report/damages');
     };
     const handleReturnItems = () => {
-        navigate('/reports/returnitems');
+        navigate('/report/returnitems');
     };
     const handleBorrowHistory = () => {
         navigate('/borrowhistory/list');
@@ -79,12 +79,12 @@ export default function Sidebar({ page }) {
                         </button>
                     </>
                 )}
-                {page === 'reports' && (
+                {page === 'report' && (
                     <>
-                        <button className={`sidebar-button ${isActive('/reports/damages') ? 'active' : ''}`}
+                        <button className={`sidebar-button ${isActive('/report/damages') ? 'active' : ''}`}
                                 onClick={handleDamages} style={{display: 'block'}}>Damages
                         </button>
-                        <button className={`sidebar-button ${isActive('/reports/returnitems') ? 'active' : ''}`}
+                        <button className={`sidebar-button ${isActive('/report/returnitems') ? 'active' : ''}`}
                                    onClick={handleReturnItems} style={{display: 'block'}}>Return Items
                         </button>
                     </>
