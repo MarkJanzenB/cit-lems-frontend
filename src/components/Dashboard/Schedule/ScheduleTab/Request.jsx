@@ -13,33 +13,21 @@ const dummyData = Array.from({ length: 100 }, (_, index) => ({
 const theme = createTheme({
     palette: {
         primary: { main: '#016565' },
-        secondary: { main: '#000000' }
+        secondary: { main: '#000000' },
     },
     components: {
-        MuiInputLabel: {
+        MuiTableCell: {
             styleOverrides: {
-                root: {
-                    color: '#016565'
-                }
-            }
+                head: {
+                    backgroundColor: '#016565',
+                    color: '#FFFFFF',
+                },
+                body: {
+                    fontSize: 14,
+                },
+            },
         },
-        MuiOutlinedInput: {
-            styleOverrides: {
-                root: {
-                    '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#000000'
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#000000'
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#000000'
-                    },
-                    color: '#FFFFFF'
-                }
-            }
-        }
-    }
+    },
 });
 
 export default function Request() {
@@ -91,7 +79,7 @@ export default function Request() {
                 <Sidebar page={"schedule"} />
                 <div style={{ padding: '20px', flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px' }}>
                     <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
-                        <Table>
+                        < Table stickyHeader>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Count</TableCell>
