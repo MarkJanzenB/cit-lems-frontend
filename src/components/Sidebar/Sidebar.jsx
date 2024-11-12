@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 export default function Sidebar({ page }) {
     const navigate = useNavigate();
     const location = useLocation();
+    const label = 'return';
 
     // Functions to handle sidebar button clicks for SCHEDULE page
     const handleRequest = () => {
@@ -33,6 +34,9 @@ export default function Sidebar({ page }) {
     const handleReturnItems = () => {
         navigate('/reports/returnitems');
     };
+    const handleBorrowHistory = () => {
+        navigate('/borrowhistory/list');
+    };
 
     const isActive = (path) => location.pathname === path;
 
@@ -45,7 +49,8 @@ export default function Sidebar({ page }) {
                     marginBottom: '5px',
                     marginLeft: '16px'
                 }}/></Button></Link>
-                {page.toUpperCase()}
+
+                {label.toUpperCase()}
             </h2>
             <div className="sidebar-buttons">
                 {page === 'schedule' && (
@@ -63,16 +68,15 @@ export default function Sidebar({ page }) {
                 )}
                 {page === 'inventory' && (
                     <>
-                        <button className={`sidebar-button ${isActive('/inventory') ? 'active' : ''}`}
-                                onClick={handleBack} style={{display: 'block'}}>Yearly Inventory
+                        <button className={`sidebar-button ${isActive('/inventory/yearly') ? 'active' : ''}`}
+                                onClick={handleAllItems} style={{display: 'block'}}>Yearly Inventory
                         </button>
-                        <button className={`sidebar-button ${isActive('/inventory') ? 'active' : ''}`}
-                                onClick={handleBack} style={{display: 'block'}}>Data Analysis
+                        <button className={`sidebar-button ${isActive('/inventory/analysis') ? 'active' : ''}`}
+                                onClick={handleAllItems} style={{display: 'block'}}>Data Analysis
                         </button>
-                        <button className={`sidebar-button ${isActive('/inventory') ? 'active' : ''}`}
-                                onClick={handleBack} style={{display: 'block'}}>Supply Request
+                        <button className={`sidebar-button ${isActive('/inventory/request') ? 'active' : ''}`}
+                                onClick={handleAllItems} style={{display: 'block'}}>Supply Request
                         </button>
-
                     </>
                 )}
                 {page === 'reports' && (
@@ -87,7 +91,9 @@ export default function Sidebar({ page }) {
                 )}
                 {page === 'borrowhistory' && (
                     <>
-                        {/* here goes the buttons for borrowhistory */}
+                    <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
+                            onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
+                    </button>
                     </>
                 )}
             </div>

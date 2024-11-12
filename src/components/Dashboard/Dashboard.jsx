@@ -35,7 +35,7 @@ export default function Dashboard() {
         navigate('/report/damages');
     };
     const handleBHist = () => {
-        navigate('/borrowhistory');
+        navigate('/borrowhistory/list');
     };
 
 
