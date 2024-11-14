@@ -29,13 +29,13 @@ export default function Dashboard() {
         navigate('/schedule/request'); 
     };
     const handleInv = () => {
-        navigate('/inventory');
+        navigate('/inventory/categories');
     };
     const handleReps = () => {
-        navigate('/report');
+        navigate('/report/damages');
     };
     const handleBHist = () => {
-        navigate('/borrowhistory');
+        navigate('/borrowhistory/list');
     };
 
 
@@ -56,10 +56,30 @@ export default function Dashboard() {
             >
             <StyledPaper width="700px" height="510px"
                          sx={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 2,marginTop:'60px'}}>
-                <Button variant="contained" sx={{backgroundColor: '#FFB3BA', color: 'black'}} onClick={handleSched}>Schedule</Button>
-                <Button variant="contained" sx={{backgroundColor: '#FFDFBA', color: 'black'}} onClick={handleInv}>Inventory</Button>
-                <Button variant="contained" sx={{backgroundColor: '#FFFFBA', color: 'black'}} onClick={handleReps}>Reports</Button>
-                <Button variant="contained" sx={{backgroundColor: '#BAFFC9', color: 'black'}} onClick={handleBHist}>Borrow History</Button>
+                <Button variant="contained" sx={{backgroundColor: '#FFB3BA', color: 'black', fontSize:'20px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}
+                        onClick={handleSched}><img src={"/sked.png"} style={{
+                    width: '100px',
+                    height: '100px'
+                }}/>Schedule</Button>
+                <Button variant="contained" sx={{
+                    backgroundColor: '#FFDFBA',
+                    color: 'black',
+                    fontSize: '20px',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center'}}
+                        onClick={handleInv}><img src={"/inventory.png"} style={{
+                    width: '130px',
+                    height: '100px'
+                }}/>Inventory</Button>
+                <Button variant="contained" sx={{backgroundColor: '#FFFFBA', color: 'black', fontSize: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}
+                        onClick={handleReps}><img src={"/statistics.png"} style={{
+                    width: '100px',
+                    height: '100px'
+                }}/>Reports</Button>
+                <Button variant="contained" sx={{backgroundColor: '#BAFFC9', color: 'black', fontSize: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}
+                        onClick={handleBHist}><img src={"/history.png"} style={{
+                    width: '100px',
+                    height: '100px'
+                }}/>Borrow History</Button>
             </StyledPaper>
             </Box>
 
