@@ -23,6 +23,9 @@ export default function Login() {
     }
   }
 
+  const handleLogoClick = () => {
+    navigate('/'); 
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,12 +68,12 @@ export default function Login() {
   return (
       <>
         {/*needs adjustment, dapat dili sha scrollable v and h kumbaga fixed ang page.*/}
-        <div style={{backgroundColor: '#056765'}}>
+      {/* <div style={{backgroundColor: '#056765'}}>
           <Link to={"/"}><Button sx={{backgroundColor: '#056765'}}><img src={"/ybb.gif"} alt={"back"} style={{
             width: '50px',
             height: '50px'
-          }}/></Button></Link>
-        </div>
+          }}/></Button></Link> 
+        </div>*/}
 
         <div className="login-container">
           <div className="login-bg"/>
@@ -84,6 +87,20 @@ export default function Login() {
             <button onClick={handleSignUp} className="sign-up-button">
               SIGN UP
             </button>
+            <img
+                        src="../src/assets/static/img/LEMS1.png"
+                        alt="LEMS logo"
+                        style={{
+                            position: 'absolute',
+                            top: '20px',
+                            left: '20px',
+                            width: '100px',
+                            height: 'auto',
+                            cursor: 'pointer',
+                            zIndex: '3', 
+                        }}
+                        onClick={handleLogoClick}
+                    />
           </div>
           <div className="login-box">
             <div className="border-container">
@@ -92,13 +109,15 @@ export default function Login() {
                 <div className="logform">
                   <label style={{fontSize: '20px', marginTop: '20px'}}>Institutional ID:</label>
                   <input
-                      type="text"
-                      name="idnum"
-                      value={formData.idnum}
-                      onChange={handleChange}
-                      required
-                      autoComplete="username"
-                  />
+                  type="text"
+                  name="idnum"
+                  value={formData.idnum}
+                  onChange={handleChange}
+                  required
+                  autoComplete="username"
+                  className="outlined-input"
+                />
+
                 </div>
                 <div className="logform">
                   <label style={{fontSize: '20px'}}>Password:</label>
@@ -115,6 +134,7 @@ export default function Login() {
                 <button type="submit" className="login-button"
                         style={{backgroundColor: '#800000', marginTop: '20px'}}>Login
                 </button>
+              
               </form>
             </div>
           </div>

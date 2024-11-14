@@ -36,7 +36,9 @@ export default function Register() {
 
     const [showAccountTypeForm, setShowAccountTypeForm] = useState(false);
 
-
+    const handleLogoClick = () => {
+        navigate('/'); 
+    };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setCredentials({
@@ -116,9 +118,9 @@ export default function Register() {
     return (
         <>
             {/*needs adjustment, dapat dili sha scrollable v and h kumbaga fixed ang page.*/}
-            <div style={{backgroundColor: '#056765'}}>
+           {/* <div style={{backgroundColor: '#056765'}}>
             <Link to={"/"}><Button sx={{ backgroundColor:'#056765'}}><img src={"/ybb.gif"} alt={"back"} style={{ width: '50px', height: '50px' }} /></Button></Link>
-            </div>
+            </div> */}
             <div className="register-container">
                 <div className="register-background" />
 
@@ -247,6 +249,20 @@ export default function Register() {
                     >
                         SIGN IN
                     </Button>
+                    <img
+                        src="../src/assets/static/img/LEMS1.png"
+                        alt="LEMS logo"
+                        style={{
+                            position: 'absolute',
+                            top: '20px',
+                            right: '20px',
+                            width: '100px',
+                            height: 'auto',
+                            cursor: 'pointer',
+                            zIndex: '3', 
+                        }}
+                        onClick={handleLogoClick}
+                    />
                 </div>
             </div>
 

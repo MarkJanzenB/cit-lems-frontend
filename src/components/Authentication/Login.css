@@ -1,11 +1,22 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .login-container {
   display: flex;
   width: 100vw;
   height: 100vh;
   justify-content: center;
   align-items: center;
-   background-color: #F2EE9D;
+  background-color: #F2EE9D;
+  animation: fadeIn 1s ease-in-out;
 }
+
 .login-bg {
   background-image: url('../../assets/static/img/loginbg.jpg');
   background-size: cover;
@@ -16,20 +27,19 @@
   position: absolute;
   left: 0;
   z-index: 0;
-  
-  
 }
-.sign-up h2{
+
+.sign-up h2 {
   color: rgb(146, 6, 32);
   font-size: 35px;
- 
+  animation: fadeIn 1s ease-in-out;
 }
 
 .sign-up {
   margin: 40px 0 0 40px;
-  
   color: rgb(146, 6, 32);
   z-index: 1;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .login-box {
@@ -40,6 +50,7 @@
   margin-left: auto;
   position: relative;
   z-index: 1;
+
 }
 
 .border-container {
@@ -47,7 +58,7 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   padding: 20px; 
-  width:30vw;
+  width: 30vw;
   margin-top: 200px;
   display: flex;
   flex-direction: column;
@@ -55,11 +66,13 @@
   align-items: center;
   margin-left: 25px;
   background-color: #FFFFFF;
+  animation: fadeIn 1.5s ease-in-out;
 }
 
 .logform {
   margin: 2px 0;
   background-color: #FFFFFF;
+  animation: fadeIn 2s ease-in-out;
 }
 
 .logform input {
@@ -72,6 +85,7 @@
 
 .error-text {
   color: red;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .sign-up-button {
@@ -82,6 +96,7 @@
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  animation: fadeIn 2s ease-in-out;
 }
 
 .login-button {
@@ -93,11 +108,13 @@
   cursor: pointer;
   margin-top: 10px;
   width: 100%;
+  animation: fadeIn 2s ease-in-out;
 }
 
-form input{
+form input {
   background-color: #FFFFFF;
 }
-form{
+
+form {
   background-color: #FFFFFF;
 }

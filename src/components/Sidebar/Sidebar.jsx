@@ -8,7 +8,7 @@ export default function Sidebar({ page }) {
     const location = useLocation();
     const label = 'return';
 
-    // Functions to handle sidebar button clicks for SCHEDULE page
+  
     const handleRequest = () => {
         navigate('/schedule/request');
     };
@@ -19,7 +19,7 @@ export default function Sidebar({ page }) {
         navigate('/schedule/upcoming');
     };
 
-    // Functions to handle sidebar button clicks for INVENTORY page
+   
     const handleBack = () => {
         navigate('/dashboard');
     };
@@ -30,7 +30,7 @@ export default function Sidebar({ page }) {
         navigate('/inventory/categories');
     };
 
-    // Functions to handle sidebar button clicks for REPORT page
+  
     const handleDamages = () => {
         navigate('/report/damages');
     };
@@ -48,7 +48,7 @@ export default function Sidebar({ page }) {
             <h2 className="sidebar-title">
                 <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} style={{
                     width: '25px',
-                    height: '20px',
+                    height: '100%',
                     marginBottom: '5px',
                     marginLeft: '16px'
                 }}/></Button></Link>
