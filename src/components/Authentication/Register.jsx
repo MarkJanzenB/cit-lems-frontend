@@ -10,10 +10,13 @@ import axios from "axios";
 
 const register = async (credentials) => {
     try {
+        console.log("Request payload:", credentials); // Log the request payload
         const response = await axios.post("http://localhost:8080/user/register", credentials);
+        console.log("Response data:", response.data); // Log the response data
         return response.data;
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error:", error.response ? error.response.data : error.message); // Log the error response
+        throw error; // Re-throw the error to be handled by the caller
     }
 };
 export default function Register() {
@@ -52,14 +55,28 @@ export default function Register() {
     };
     const handleAccountTypeNext = async (e) => {
         e.preventDefault();
+        if (!credentials.first_name || !credentials.last_name || !credentials.insti_id || !credentials.email || !credentials.password || !credentials.role) {
+            setError('All fields are required');
+            return;
+        }
         try {
             await register(credentials);
             console.log('Form submitted');
+            setSuccess('User successfully created');
+            setError('');
         } catch (e) {
             console.error("Error submitting form: ", e);
             setError('Error submitting form');
             setSuccess('');
         }
+        // try {
+        //     await register(credentials);
+        //     console.log('Form submitted');
+        // } catch (e) {
+        //     console.error("Error submitting form: ", e);
+        //     setError('Error submitting form');
+        //     setSuccess('');
+        // }
     };
     // const handlePopoverClose = () => {
     //     setPopover({ ...popover, open: false , anchorEl: null});
@@ -191,9 +208,10 @@ export default function Register() {
                                     <InputLabel>Account Type</InputLabel>
                                     <Select
                                         label="Account Type"
-                                        name="acctype"
+                                        name="role"
                                         value={credentials.role}
                                         onChange={handleChange}
+                                        sx={{color:'#000'}}
                                     >
                                         <MenuItem value="Laboratory Incharge">Laboratory In-Charge</MenuItem>
                                         <MenuItem value="Laboratory Assistant">Laboratory Assistant</MenuItem>

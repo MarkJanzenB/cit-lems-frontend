@@ -26,7 +26,7 @@ function AppRoutes() {
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path={"/schedule"} element={<Schedule />} />
-            <Route path={"/inventory"} element={<Inventory />} />
+            <Route path={"/inventory/categories"} element={<Inventory />} />
             <Route path={"/report"} element={<Report />} />
             <Route path={"/borrowhistory/list"} element={<List/>} />
             <Route path="/schedule/request" element={<Request />} />

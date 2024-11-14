@@ -26,6 +26,9 @@ export default function Sidebar({ page }) {
     const handleAllItems = () => {
         navigate('/inventory/allitems');
     };
+    const handleCategoryPage = () => {
+        navigate('/inventory/categories');
+    };
 
     // Functions to handle sidebar button clicks for REPORT page
     const handleDamages = () => {
@@ -68,14 +71,14 @@ export default function Sidebar({ page }) {
                 )}
                 {page === 'inventory' && (
                     <>
+                        <button className={`sidebar-button ${isActive('/inventory/categories') ? 'active' : ''}`}
+                                onClick={handleCategoryPage} style={{display: 'block'}}>All Items
+                        </button>
                         <button className={`sidebar-button ${isActive('/inventory/yearly') ? 'active' : ''}`}
                                 onClick={handleAllItems} style={{display: 'block'}}>Yearly Inventory
                         </button>
                         <button className={`sidebar-button ${isActive('/inventory/analysis') ? 'active' : ''}`}
                                 onClick={handleAllItems} style={{display: 'block'}}>Data Analysis
-                        </button>
-                        <button className={`sidebar-button ${isActive('/inventory/request') ? 'active' : ''}`}
-                                onClick={handleAllItems} style={{display: 'block'}}>Supply Request
                         </button>
                     </>
                 )}

@@ -158,7 +158,6 @@ export default function Request() {
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
                             width: 400,
-                            //bgcolor: 'background.paper',
                             boxShadow: 24,
                             bgcolor: '#F2EE9D',
                             p: 4,

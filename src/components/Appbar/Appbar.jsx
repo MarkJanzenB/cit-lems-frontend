@@ -23,11 +23,13 @@ const Appbar = ({ page }) => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: 'background.paper',
+     bgcolor:'#FFF1DB',
+     //bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     borderRadius: '10px',
+
   };
 
   const buttonStyle = {
@@ -39,6 +41,9 @@ const Appbar = ({ page }) => {
     textAlign: 'center',
     textDecoration: 'none',
     backgroundColor: '#FFF1DB',
+    '&:hover': {
+        backgroundColor: '#056765',
+    }
   };
 
   const buttonStyle1 = {
@@ -56,14 +61,17 @@ const Appbar = ({ page }) => {
     position: 'absolute',
     top: '10px',
     right: '10px',
-    // backgroundColor: '#FF0000',
     color: '#056765',
     border: '1px solid #056765',
-    // borderRadius: '50%',
     width: '30px',
     height: '30px',
     cursor: 'pointer',
+    backgroundColor: '#FFF1DB',
+    '&:hover': {
+      backgroundColor: '#056765',
+    }
   };
+
 
   return (
       <AppBar className="appbar">
@@ -95,31 +103,44 @@ const Appbar = ({ page }) => {
                 </Button>
                 <Modal
                     open={open}
-                    // onClose={handleClose}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
                   <Box sx={style}>
                     <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br/>
                     <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
-                      <Box sx={buttonStyle}>
-                        <Link to="/register" style={{textDecoration: 'none'}}>
+                      <Link to="/register" style={{textDecoration: 'none'}}>
+                        <Box sx={{
+                          ...buttonStyle,
+                          '&:hover': { bgcolor: '#056765',
+                            '& button': {
+                              color: '#FFF'
+                            }
+                          }
+                        }}>
                           <Button sx={{
                             fontFamily: 'monospace',
                             fontWeight: 'bold',
-                            color: '#056765',
-                            '&:hover': {color: 'green'}
-                          }}>Create An Account</Button></Link><br/>
-                      </Box>
-                      <Box sx={buttonStyle}>
-                        <Link to="/login" style={{textDecoration: 'none'}}>
+                            color:'#056765',
+                          }}>Create An Account</Button><br/>
+                        </Box>
+                      </Link>
+                      <Link to="/login" style={{textDecoration: 'none'}}>
+                        <Box sx={{
+                          ...buttonStyle,
+                          '&:hover': { bgcolor: '#056765',
+                            '& button': {
+                              color: '#FFF'
+                            }
+                          }
+                        }}>
                           <Button sx={{
                             fontFamily: 'monospace',
                             fontWeight: 'bold',
-                            color: '#056765',
-                            '&:hover': {color: 'green'}
-                          }}>Sign In</Button></Link><br/>
-                      </Box>
+                            color:'#056765',
+                          }}>Sign In</Button><br/>
+                        </Box>
+                      </Link>
                     </Typography>
                   </Box>
                 </Modal>
