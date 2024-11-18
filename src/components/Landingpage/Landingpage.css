@@ -43,7 +43,6 @@
   position: absolute;
   background-size: cover;
   background-repeat: no-repeat;
-  z-index: -1;
 }
 
 .landing-page::before {

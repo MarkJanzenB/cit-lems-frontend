@@ -26,7 +26,7 @@ export default function Register() {
         insti_id: '',
         email: '',
         password: '',
-        role: '',
+        role: {role_id:0},
 
     });
 
@@ -41,10 +41,17 @@ export default function Register() {
     };
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setCredentials({
-            ...credentials,
-            [name]: value
-        });
+        if (name === "role") {
+            setCredentials({
+                ...credentials,
+                role: { role_id: value },
+            });
+        } else {
+            setCredentials({
+                ...credentials,
+                [name]: value,
+            });
+        }
     };
 
     const handleNext = (e) => {
@@ -211,13 +218,13 @@ export default function Register() {
                                     <Select
                                         label="Account Type"
                                         name="role"
-                                        value={credentials.role}
+                                        value={credentials.role_id}
                                         onChange={handleChange}
                                         sx={{color:'#000'}}
                                     >
-                                        <MenuItem value="Laboratory Incharge">Laboratory In-Charge</MenuItem>
-                                        <MenuItem value="Laboratory Assistant">Laboratory Assistant</MenuItem>
-                                        <MenuItem value="Science Teacher">Science Teacher</MenuItem>
+                                        <MenuItem value={3}>Laboratory In-Charge</MenuItem>
+                                        <MenuItem value={2}>Laboratory Assistant</MenuItem>
+                                        <MenuItem value={1}>Science Teacher</MenuItem>
                                     </Select>
                                 </FormControl>
 
