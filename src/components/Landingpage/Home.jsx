@@ -9,7 +9,7 @@ const LandingPage = () => {
           <Appbar page={'home'}/>
           <div className="waterMark"></div>
 
-          <br/>
+          <br/> <br/>
           <div className="landing-page">
               <div className="content">
                   <h1>Laboratory Equipment</h1>
@@ -17,10 +17,9 @@ const LandingPage = () => {
                   <p>Optimize lab operations with our app for efficient equipment borrowing, breakage assessment, and
                       real-time inventory management.</p>
               </div>
-
-              <div id="imgcontainer">
-                  <img src="src/assets/static/img/scientistnobg.png"/>
-              </div>
+              {/*<div id="imgcontainer">*/}
+              {/*    <img src="src/assets/static/img/scientistnobg.png"/>*/}
+              {/*</div>*/}
           </div>
           </>
       // </div>

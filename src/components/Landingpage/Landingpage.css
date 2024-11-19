@@ -45,7 +45,7 @@ body, html {
   display: inline-block;
   position: absolute;
   background-size: cover;
-  background-repeat: no-repeat;
+  background-repeat:no-repeat;
 }
 
 .landing-page::before {
