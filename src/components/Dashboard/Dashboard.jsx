@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Button } from '@mui/material';
 import StyledPaper from "../MyPaper.jsx";
 import Box from '@mui/material/Box';
 import Appbar from "../Appbar/Appbar.jsx";
+import { isJWTExpired } from "../Authentication/jwt.jsx";
 
 // import './index.css';
 
@@ -23,6 +24,15 @@ const style = {
 
 export default function Dashboard() {
 
+    useEffect(() => {
+        const jwt = isJWTExpired();
+        if (jwt) {
+            console.log(jwt); // returns true if token is expired
+        }else{
+            console.log("User is not logged in");
+        }
+    }, []);
+
     const navigate = useNavigate();
 
     const handleSched = () => {
@@ -38,7 +48,9 @@ export default function Dashboard() {
         navigate('/borrowhistory/list');
     };
 
-
+    const testing = () => {
+        isJWTExpired();
+    };
 
     return (
         <>
@@ -82,8 +94,6 @@ export default function Dashboard() {
                 }}/>Borrow History</Button>
             </StyledPaper>
             </Box>
-
-
         </>
     );
 }

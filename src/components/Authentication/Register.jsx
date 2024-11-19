@@ -19,6 +19,7 @@ const register = async (credentials) => {
         throw error; // Re-throw the error to be handled by the caller
     }
 };
+
 export default function Register() {
     const [credentials, setCredentials] = useState({
         first_name: '',
@@ -32,7 +33,7 @@ export default function Register() {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-
+    
 
     const [showAccountTypeForm, setShowAccountTypeForm] = useState(false);
 
@@ -70,8 +71,9 @@ export default function Register() {
         }
         try {
             await register(credentials);
+            await autoLogin(credentials);
             console.log('Form submitted');
-            setSuccess('User successfully created');
+            setSuccess('Successfully Registered! Redirecting to dashboard in 5 seconds');
             setError('');
         } catch (e) {
             console.error("Error submitting form: ", e);
@@ -120,6 +122,25 @@ export default function Register() {
     function testing(){
         console.log(credentials);
     }
+
+    const autoLogin = async (credentials) => {
+        const loginCredentials = {
+            insti_id: credentials.insti_id,
+            password: credentials.password,
+        };
+        try {
+            console.log("Login credentials: ", loginCredentials);
+            const response = await axios.post("http://localhost:8080/user/login", loginCredentials);
+            console.log("Login Response data:", response.data);
+            localStorage.setItem("jwtToken", response.data);
+            setTimeout(() => {
+                navigate("/dashboard");
+            }, 5000);
+        } catch (error) {
+            console.error("Error:", error.response ? error.response.data : error.message);
+            throw error;
+        }
+    };
 
 
     return (
