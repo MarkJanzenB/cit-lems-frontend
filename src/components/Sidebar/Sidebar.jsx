@@ -6,9 +6,16 @@ import { Button } from "@mui/material";
 export default function Sidebar({ page }) {
     const navigate = useNavigate();
     const location = useLocation();
-    const label = 'return';
 
-  
+    const labels = {
+        schedule: 'Schedule',
+        inventory: 'Inventory',
+        report: 'Report',
+        borrowhistory: 'Borrow History'
+    };
+
+    const label = labels[page] || 'Return';
+
     const handleRequest = () => {
         navigate('/schedule/request');
     };
@@ -19,7 +26,6 @@ export default function Sidebar({ page }) {
         navigate('/schedule/upcoming');
     };
 
-   
     const handleBack = () => {
         navigate('/dashboard');
     };
@@ -30,7 +36,6 @@ export default function Sidebar({ page }) {
         navigate('/inventory/categories');
     };
 
-  
     const handleDamages = () => {
         navigate('/report/damages');
     };
@@ -88,15 +93,15 @@ export default function Sidebar({ page }) {
                                 onClick={handleDamages} style={{display: 'block'}}>Damages
                         </button>
                         <button className={`sidebar-button ${isActive('/report/returnitems') ? 'active' : ''}`}
-                                   onClick={handleReturnItems} style={{display: 'block'}}>Return Items
+                                onClick={handleReturnItems} style={{display: 'block'}}>Return Items
                         </button>
                     </>
                 )}
                 {page === 'borrowhistory' && (
                     <>
-                    <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
-                            onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
-                    </button>
+                        <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
+                                onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
+                        </button>
                     </>
                 )}
             </div>
