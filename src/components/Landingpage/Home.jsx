@@ -4,11 +4,12 @@ import './LandingPage.css';
 
 const LandingPage = () => {
   return (
-      <div id='wrapper'>
+      // <div id='wrapper'>
+      <>
           <Appbar page={'home'}/>
           <div className="waterMark"></div>
 
-          <br/> <br/>
+          <br/>
           <div className="landing-page">
               <div className="content">
                   <h1>Laboratory Equipment</h1>
@@ -21,8 +22,8 @@ const LandingPage = () => {
                   <img src="src/assets/static/img/scientistnobg.png"/>
               </div>
           </div>
-
-      </div>
+          </>
+      // </div>
   );
 };
 

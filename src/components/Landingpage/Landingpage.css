@@ -8,6 +8,9 @@
   height: 90vh;
   width: 100vw;
 }
+body, html {
+  overflow: hidden;
+}
 
 @keyframes fadeInSlideUp {
   0% {
@@ -36,9 +39,9 @@
 .waterMark {
   background-image: url("src/assets/static/img/Cebu_Institute_of_Technology_University_logo.png");
   width: 720px;
-  bottom: 1%;
+  top: 50%;
   height: 700px;
-  right: 1%;
+  left: -25%;
   display: inline-block;
   position: absolute;
   background-size: cover;
@@ -96,8 +99,8 @@
 
 #imgcontainer {
   width: 500px;
-  height: 500px;
-  border-radius: 50%;
+  height: 450px;
+  border-radius: 5%;
   background-color: #016565;
   margin-right: 50px;
   z-index: 3;
