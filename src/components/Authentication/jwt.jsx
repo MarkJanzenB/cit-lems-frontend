@@ -1,14 +1,16 @@
+import { jwtDecode } from "jwt-decode";
+
 export const isJWTExpired = () => {
     const jwt = localStorage.getItem("jwtToken");
-    const payload = jwt.split(".")[1];
-    const payloadData = decodeURIComponent(
-        atob(payload)
-            .split("")
-            .map((c) => `%${c.charCodeAt(0).toString(16).padStart(2, "0")}`)
-            .join("")
-    );
+    const decodedToken = jwtDecode(jwt);
+    const currentDate = new Date();
+    
+    return currentDate.getTime() >= decodedToken.exp * 1000;
+}
 
-    const { exp } = JSON.parse(payloadData);
-
-    return Date.now() >= exp * 1000;
+export const getJWTSub = () => {
+    const jwt = localStorage.getItem("jwtToken");
+    const decodedToken = jwtDecode(jwt);
+    
+    return decodedToken.sub;
 }

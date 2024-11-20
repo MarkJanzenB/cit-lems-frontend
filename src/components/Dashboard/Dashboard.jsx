@@ -4,8 +4,8 @@ import { Button } from '@mui/material';
 import StyledPaper from "../MyPaper.jsx";
 import Box from '@mui/material/Box';
 import Appbar from "../Appbar/Appbar.jsx";
-import { isJWTExpired } from "../Authentication/jwt.jsx";
-
+import { getJWTSub, isJWTExpired } from "../Authentication/jwt.jsx";
+import axios from "axios";
 // import './index.css';
 
 
@@ -25,12 +25,43 @@ const style = {
 export default function Dashboard() {
 
     useEffect(() => {
-        const jwt = isJWTExpired();
-        if (jwt) {
-            console.log(jwt); // returns true if token is expired
+        const jwtExpire = isJWTExpired(); // returns true if token is expired
+        if (jwtExpire != null) {
+            console.log(jwtExpire);
         }else{
             console.log("User is not logged in");
         }
+
+        const jwtSub = getJWTSub();
+        if (jwtSub != null){
+            console.log(jwtSub);
+        }else{
+            console.log("Could not get JWT sub");
+        }
+
+        const isUserNew = async () => {
+            try {
+                const jwtToken = localStorage.getItem("jwtToken");
+
+                if(!jwtToken){
+                    console.log("JWT token not found");
+                    return;
+                }
+
+                console.log("Request payload:", jwtSub); // Log the request payload
+                const response = await axios.get(`http://localhost:8080/user/isusernew?instiId=${jwtSub}`, {
+                    headers: {
+                        "authorization": `Bearer ${jwtToken}`,
+                    }});
+                console.log("Is User New?", response.data); // Log the response data
+                return response.data;
+            } catch (error) {
+                console.error("Error:", error.response ? error.response.data : error.message); // Log the error response
+                throw error; // Re-throw the error to be handled by the caller
+            }
+        };
+
+        isUserNew();
     }, []);
 
     const navigate = useNavigate();
@@ -46,10 +77,6 @@ export default function Dashboard() {
     };
     const handleBHist = () => {
         navigate('/borrowhistory/list');
-    };
-
-    const testing = () => {
-        isJWTExpired();
     };
 
     return (
