@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Button } from '@mui/material';
 import StyledPaper from "../MyPaper.jsx";
@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Appbar from "../Appbar/Appbar.jsx";
 import { getJWTSub, isJWTExpired } from "../Authentication/jwt.jsx";
 import axios from "axios";
+import GetStarted from '../GetStarted/GetStarted.jsx';
 // import './index.css';
 
 
@@ -23,6 +24,7 @@ const style = {
 };
 
 export default function Dashboard() {
+    const [isNew, setIsNew] = useState(false);
 
     useEffect(() => {
         const jwtExpire = isJWTExpired(); // returns true if token is expired
@@ -53,6 +55,7 @@ export default function Dashboard() {
                     headers: {
                         "authorization": `Bearer ${jwtToken}`,
                     }});
+                setIsNew(response.data);
                 console.log("Is User New?", response.data); // Log the response data
                 return response.data;
             } catch (error) {
@@ -82,6 +85,8 @@ export default function Dashboard() {
     return (
         <>
             <Appbar page={'dashboard'}/>
+
+            {isNew && <GetStarted/>}
 
             <Box
                 sx={{
