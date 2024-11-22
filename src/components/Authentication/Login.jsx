@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    idnum: '',
+    insti_id: '',
     password: ''
   });
 
@@ -16,7 +16,10 @@ export default function Login() {
 
   const checkLoginCredentials = async (formData) => {
     try {
-      const response = await axios.get(`http://localhost:8080/user/login?idnum=${formData.idnum}&password=${formData.password}`);
+      const response = await axios.post("http://localhost:8080/user/login", formData);
+      console.log(response.data);
+      console.log(formData);
+      localStorage.setItem("jwtToken", response.data);
       return response.data;
     }catch (error) {
       console.error("Error:", error);
@@ -37,7 +40,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.idnum || !formData.password) {
+    if (!formData.insti_id || !formData.password) {
       setError('Institutional ID and password are required');
 
       return;
@@ -45,10 +48,12 @@ export default function Login() {
     try {
       const result = await checkLoginCredentials(formData); // returns a string
       console.log(result); //displays in console if register was successful
-      alert("Logged in successfuly with credentials "+formData.idnum+" and "+formData.password);
-      if (result === "login successfully") {
+      if (result.startsWith("eyJhbGciOiJIUzI1NiJ9")) {
         setError('');
-        navigate('/dashboard');}
+        return navigate('/dashboard');
+      }else{
+        setError('Incorrect Institutional ID or password');
+      }
     } catch (e) {
       console.error("Error submitting form: ", e);
     }
@@ -110,8 +115,8 @@ export default function Login() {
                   <label style={{fontSize: '20px', marginTop: '20px'}}>Institutional ID:</label>
                   <input
                   type="text"
-                  name="idnum"
-                  value={formData.idnum}
+                  name="insti_id"
+                  value={formData.insti_id}
                   onChange={handleChange}
                   required
                   autoComplete="username"

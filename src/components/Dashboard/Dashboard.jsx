@@ -27,11 +27,19 @@ export default function Dashboard() {
     const [isNew, setIsNew] = useState(false);
 
     useEffect(() => {
+        if (
+            !localStorage.getItem("jwtToken") || 
+            !localStorage.getItem("jwtToken").startsWith("eyJhbGciOiJIUzI1NiJ9")
+          ) {
+            return navigate("/login");
+          }
+          
         const jwtExpire = isJWTExpired(); // returns true if token is expired
         if (jwtExpire != null) {
             console.log(jwtExpire);
-        }else{
-            console.log("User is not logged in");
+            if(jwtExpire){
+                return navigate("/login");
+            }
         }
 
         const jwtSub = getJWTSub();
