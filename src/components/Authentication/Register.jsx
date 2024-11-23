@@ -55,13 +55,20 @@ export default function Register() {
         }
     };
 
-    const handleNext = (e) => {
+    const handleNext = async(e) => {
         e.preventDefault();
         if (!credentials.email.endsWith('@cit.edu')) {
             setError('Email must end with @cit.edu');
             return;
         }
+
+        const isUserAlrdyExists = await axios.get(`http://localhost:8080/user/isuseralrdyexists?instiId=${credentials.insti_id}`);
+        if(isUserAlrdyExists.data){
+            setError("Institute ID already exists. Sign in instead?");
+            return;
+        }
         setShowAccountTypeForm(true);
+        setError('');
     };
     const handleAccountTypeNext = async (e) => {
         e.preventDefault();
