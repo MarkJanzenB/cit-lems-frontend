@@ -29,6 +29,7 @@ const initialRows = [
     { instructor: 'Dr. Adams', time: '5:00 PM - 6:00 PM', section: 'S' },
     { instructor: 'Ms. White', time: '6:00 PM - 7:00 PM', section: 'T' },
 ];
+export {initialRows};
 
 const theme = createTheme({
     palette: {

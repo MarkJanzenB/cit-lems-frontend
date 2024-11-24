@@ -11,6 +11,7 @@ import Inventory from "./Dashboard/Inventory/Inventory.jsx";
 import Request from "./Dashboard/Schedule/ScheduleTab/Request.jsx"
 import Today from "./Dashboard/Schedule/ScheduleTab/Today.jsx"
 import UpcomingSchedule from "./Dashboard/Schedule/ScheduleTab/UpcomingSchedule.jsx"
+import Calendar from "./Dashboard/Schedule/ScheduleTab/Calendar.jsx";
 //report tab
 import Report from "./Dashboard/Report/Report.jsx";
 import Damages from "./Dashboard/Report/ReportTab/Damages.jsx";
@@ -34,6 +35,7 @@ function AppRoutes() {
             <Route path ="/schedule/upcoming" element={<UpcomingSchedule />}/>
             <Route path ="/report/damages" element={<Damages />}/>
             <Route path ="/report/returnitems" element={<ReturnItems />}/>
+            <Route path ="/schedule/calendar" element={<Calendar />}/>
 
         </Routes>
     );
