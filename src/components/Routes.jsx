@@ -11,7 +11,7 @@ import Inventory from "./Dashboard/Inventory/Inventory.jsx";
 import Request from "./Dashboard/Schedule/ScheduleTab/Request.jsx"
 import Today from "./Dashboard/Schedule/ScheduleTab/Today.jsx"
 import UpcomingSchedule from "./Dashboard/Schedule/ScheduleTab/UpcomingSchedule.jsx"
-import Calendar from "./Dashboard/Schedule/ScheduleTab/Calendar.jsx";
+import Calendar from "./Calendar/Calendar.jsx";
 //report tab
 import Report from "./Dashboard/Report/Report.jsx";
 import Damages from "./Dashboard/Report/ReportTab/Damages.jsx";
@@ -27,7 +27,7 @@ function AppRoutes() {
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path={"/schedule"} element={<Schedule />} />
-            <Route path={"/inventory/categories"} element={<Inventory />} />
+            <Route path={"/inventory"} element={<Inventory />} />
             <Route path={"/report"} element={<Report />} />
             <Route path={"/borrowhistory/list"} element={<List/>} />
             <Route path="/schedule/request" element={<Request />} />

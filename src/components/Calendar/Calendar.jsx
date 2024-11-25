@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import Sidebar from '../../../Sidebar/Sidebar';
-import Appbar from '../../../Appbar/Appbar';
-import { initialRows } from './Today'; // Import data from Today.jsx
+import Sidebar from '../Sidebar/Sidebar';
+import Appbar from '../Appbar/Appbar.jsx';
+import { initialRows } from '../Dashboard/Schedule/ScheduleTab/Today.jsx'; // Import data from Today.jsx
+import StyledPaper from '../MyPaper.jsx'; // Import the StyledPaper component
 
 const localizer = momentLocalizer(moment);
 
@@ -43,21 +44,23 @@ export default function Calendar() {
     };
 
     return (
-        <div style={{ display: 'flex' }}>
-            <Sidebar />
-            <div style={{ flexGrow: 1 }}>
-                <Appbar />
-                <div style={{ height: '110vh', padding: '20px' }}>
-                    <BigCalendar
-                        localizer={localizer}
-                        events={events}
-                        startAccessor="start"
-                        endAccessor="end"
-                        style={{ height: '100%', padding: '80px' }}
-                        eventPropGetter={eventStyleGetter}
-                    />
+        <StyledPaper>
+            <div style={{ display: 'flex' }}>
+                <Sidebar />
+                <div style={{ flexGrow: 1 }}>
+                    <Appbar />
+                    <div style={{ height: '110vh', padding: '20px' }}>
+                        <BigCalendar
+                            localizer={localizer}
+                            events={events}
+                            startAccessor="start"
+                            endAccessor="end"
+                            style={{ height: '100%', padding: '80px' }}
+                            eventPropGetter={eventStyleGetter}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
+        </StyledPaper>
     );
 }

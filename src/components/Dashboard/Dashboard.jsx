@@ -81,7 +81,7 @@ export default function Dashboard() {
         navigate('/schedule/request'); 
     };
     const handleInv = () => {
-        navigate('/inventory/categories');
+        navigate('/inventory');
     };
     const handleReps = () => {
         navigate('/report/damages');

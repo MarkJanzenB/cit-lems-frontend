@@ -33,7 +33,7 @@ export default function Sidebar({ page }) {
         navigate('/inventory/allitems');
     };
     const handleCategoryPage = () => {
-        navigate('/inventory/categories');
+        navigate('/inventory');
     };
 
     const handleDamages = () => {
@@ -76,7 +76,7 @@ export default function Sidebar({ page }) {
                 )}
                 {page === 'inventory' && (
                     <>
-                        <button className={`sidebar-button ${isActive('/inventory/categories') ? 'active' : ''}`}
+                        <button className={`sidebar-button ${isActive('/inventory') ? 'active' : ''}`}
                                 onClick={handleCategoryPage} style={{display: 'block'}}>All Items
                         </button>
                         <button className={`sidebar-button ${isActive('/inventory/yearly') ? 'active' : ''}`}
@@ -98,6 +98,13 @@ export default function Sidebar({ page }) {
                     </>
                 )}
                 {page === 'borrowhistory' && (
+                    <>
+                        <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
+                                onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
+                        </button>
+                    </>
+                )}
+                {page === 'inventory/categories' && (
                     <>
                         <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
                                 onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
