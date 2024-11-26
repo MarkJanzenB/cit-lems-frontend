@@ -7,6 +7,7 @@ import Home from './Landingpage/Home.jsx';
 import Schedule from "./Dashboard/Schedule/Schedule.jsx";// Add a new Home component for the root path
 //inventory tab
 import Inventory from "./Dashboard/Inventory/Inventory.jsx";
+// import InventoryST from "./Dashboard/ST/InventoryST.jsx";
 //Schedule tab
 import Request from "./Dashboard/Schedule/ScheduleTab/Request.jsx"
 import Today from "./Dashboard/Schedule/ScheduleTab/Today.jsx"
@@ -36,6 +37,7 @@ function AppRoutes() {
             <Route path ="/report/damages" element={<Damages />}/>
             <Route path ="/report/returnitems" element={<ReturnItems />}/>
             <Route path ="/schedule/calendar" element={<Calendar />}/>
+            {/*<Route path ="/inventory/allitems" element={<InventoryST />}/>*/}
 
         </Routes>
     );

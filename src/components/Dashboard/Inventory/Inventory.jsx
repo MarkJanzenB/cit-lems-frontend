@@ -3,7 +3,7 @@ import Appbar from "../../Appbar/Appbar.jsx";
 import {
     Button,
     Modal,
-    Box, Typography, TextField
+    Box, Typography, TextField, ButtonGroup
 } from "@mui/material";
 import Sidebar from "../../Sidebar/Sidebar.jsx";
 import MyPaper from "../../MyPaper.jsx";
@@ -225,8 +225,37 @@ export default function Inventory() {
                                             height: '30px'
                                         }}/></Button>
 
-                                        <h1>{categories[currentCategory]}</h1>
+                                        <ButtonGroup variant="outlined" aria-label="outlined button group">
+                                            <Button
+                                                style={currentCategory === 0 ? { width: '200px', height: '80px', fontSize: '24px',  } : {}}
+                                                 onClick={()=>handleViewListClick(0)}
+                                            >
+                                                {currentCategory === 0 ? 'Consumables' : <img src="/consumable.gif" alt="Consumables" style={{ width: '50px', height: '50px' }} />}
+                                            </Button>
+                                            <Button
+                                                style={currentCategory === 1 ? { width: '200px', height: '80px', fontSize: '24px', } : {}}
+                                                onClick={() =>handleViewListClick(1)}
+                                            >
+                                                {currentCategory === 1 ? 'Equipment' : <img src="/equipment.gif" alt="Equipment" style={{ width: '50px', height: '50px' }} />}
+                                            </Button>
+                                            <Button
+                                                style={currentCategory === 2 ? { width: '200px', height: '80px', fontSize: '24px', } : {}}
+                                                onClick={() =>handleViewListClick(2)}
+                                            >
+                                                {currentCategory === 2 ? 'Glassware' : <img src="/glassware.gif" alt="Glassware" style={{width: '50px', height: '50px' }} />}
+                                            </Button>
+                                            <Button
+                                                style={currentCategory === 3 ? { width: '200px', height: '80px', fontSize: '24px',  } : {}}
+                                                onClick={() =>handleViewListClick(3)}
+                                            >
+                                                {currentCategory === 3 ? 'Hazards' : <img src="/hazardous.gif" alt="Hazards" style={{ width: '50px', height: '50px' }} />}
+                                            </Button>
+                                        </ButtonGroup>
+
+                                        {/*<h1>{categories[currentCategory]}</h1>*/}
                                     </div>
+
+
                                     <CustomTable
                                         columns={columns}
                                         data={paginatedData}

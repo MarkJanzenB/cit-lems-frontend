@@ -54,11 +54,13 @@ export default function Sidebar({ page }) {
                 <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} style={{
                     width: '25px',
                     height: '100%',
-                    marginBottom: '5px',
+                    marginBottom: '3px',
                     marginLeft: '16px'
-                }}/></Button></Link>
+                }}/>
+                    <h1 style={{color: "#F2EE9D"}}>RETURN</h1>
+                </Button></Link>
 
-                {label.toUpperCase()}
+                {/*{label.toUpperCase()}*/}
             </h2>
             <div className="sidebar-buttons">
                 {page === 'schedule' && (

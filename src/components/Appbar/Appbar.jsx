@@ -72,6 +72,13 @@ const Appbar = ({ page }) => {
     }
   };
 
+const pageTitles = {
+  schedule: 'SCHEDULE',
+  inventory: 'INVENTORY',
+  borrowhistory: 'BORROW HISTORY',
+  report: 'REPORT',
+  dashboard: 'dashboard',
+}
 
   return (
       <AppBar className="appbar">
@@ -81,9 +88,12 @@ const Appbar = ({ page }) => {
                 <img src={'../src/assets/static/img/LEMS1.png'} alt="Logo" className="appbar-logo" />
               </Link>
           ) : (
-              <img src={'../src/assets/static/img/LEMS1.png'} alt="Logo" className="appbar-logo" />
+              <>
+                <img src={'../src/assets/static/img/LEMS1.png'} alt="Logo" className="appbar-logo"/>
+                <h2>{pageTitles[page]}</h2>
+              </>
           )}
-            <div style={{ flexGrow: 1 }} />
+          <div style={{flexGrow: 1}}/>
           <Typography variant="h6" className="appbar-typography"></Typography>
           {page === 'home' ? (
               <>
@@ -99,7 +109,8 @@ const Appbar = ({ page }) => {
                     }}
                     onClick={handleOpen}
                 >
-                  <img src={m1} alt="menu" style={{ width: '50px', height: '50px' }} />
+                  <img src={m1} alt="menu" style={{width: '50px', height: '50px'}}/>
+
                 </Button>
                 <Modal
                     open={open}

@@ -88,7 +88,7 @@ export default function Damages() {
     return (
         <ThemeProvider theme={theme}>
             <div style={{ display: 'flex', height: '100%', width: '100vw' }}>
-                <Appbar />
+                <Appbar page={"report"} />
                 <Sidebar page={"report"} />
                 <div style={{ padding: '20px', flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px' }}>
                     <TextField
