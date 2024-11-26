@@ -33,7 +33,7 @@ export default function Sidebar({ page }) {
         navigate('/inventory/allitems');
     };
     const handleCategoryPage = () => {
-        navigate('/inventory/categories');
+        navigate('/inventory');
     };
 
     const handleDamages = () => {
@@ -54,11 +54,13 @@ export default function Sidebar({ page }) {
                 <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} style={{
                     width: '25px',
                     height: '100%',
-                    marginBottom: '5px',
+                    marginBottom: '3px',
                     marginLeft: '16px'
-                }}/></Button></Link>
+                }}/>
+                    <h1 style={{color: "#F2EE9D"}}>RETURN</h1>
+                </Button></Link>
 
-                {label.toUpperCase()}
+                {/*{label.toUpperCase()}*/}
             </h2>
             <div className="sidebar-buttons">
                 {page === 'schedule' && (
@@ -76,7 +78,7 @@ export default function Sidebar({ page }) {
                 )}
                 {page === 'inventory' && (
                     <>
-                        <button className={`sidebar-button ${isActive('/inventory/categories') ? 'active' : ''}`}
+                        <button className={`sidebar-button ${isActive('/inventory') ? 'active' : ''}`}
                                 onClick={handleCategoryPage} style={{display: 'block'}}>All Items
                         </button>
                         <button className={`sidebar-button ${isActive('/inventory/yearly') ? 'active' : ''}`}
@@ -98,6 +100,13 @@ export default function Sidebar({ page }) {
                     </>
                 )}
                 {page === 'borrowhistory' && (
+                    <>
+                        <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
+                                onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
+                        </button>
+                    </>
+                )}
+                {page === 'inventory/categories' && (
                     <>
                         <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
                                 onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
