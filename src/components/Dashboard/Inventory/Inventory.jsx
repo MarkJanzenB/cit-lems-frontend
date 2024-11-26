@@ -107,6 +107,7 @@ export default function Inventory() {
             console.log("Inventory data: ", data);
             setShowTable(true);
             setTransition(false);
+            setPage(0);
         }, 500);
     };
 
