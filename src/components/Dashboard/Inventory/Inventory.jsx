@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Appbar from "../../Appbar/Appbar.jsx";
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from "@mui/material";
+import {
+    Button,
+    Modal,
+    Box, Typography, TextField
+} from "@mui/material";
 import Sidebar from "../../Sidebar/Sidebar.jsx";
 import MyPaper from "../../MyPaper.jsx";
 import './Inventory.css';
 import CustomTable from "../../Table and Pagination/Table.jsx";
 import CustomTablePagination from "../../Table and Pagination/Pagination.jsx";
+import axios from "axios";
 
 const columns = [
-    { field: 'id', headerName: 'ID' },
-    { field: 'serialNum', headerName: 'SerialNo.' },
     { field: 'name', headerName: 'Name' },
     { field: 'description', headerName: 'Description' },
-    { field: 'stock', headerName: 'InStock' },
+    { field: 'quantity', headerName: 'quantity' },
     { field: 'status', headerName: 'Status' },
 ];
 
@@ -66,39 +69,73 @@ const categoryDataMap = {
     'All items':allData,
 };
 
-
-
 export default function Inventory() {
     const [showTable, setShowTable] = useState(false);
-    const [data, setData] = useState(dummyData1);
+    const [data, setData] = useState([{}]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [currentCategory, setCurrentCategory] = useState(0);
     const [transition, setTransition] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+    const [newItem, setNewItem] = useState({
+        id: '',
+        serialNum: '',
+        name: '',
+        description: '',
+        stock: '',
+        status: ''
+    });
 
-    const handleViewListClick = (categoryIndex) => {
+    const handleModalClose = () => {
+        setOpenModal(false);
+    }
+
+    const handleViewListClick = (categoryId) => {
         setTransition(true);
-        setTimeout(() => {
-            setCurrentCategory(categoryIndex);
-            setData(categoryDataMap[categories[categoryIndex]]);
+        setTimeout(async () => {
+            setCurrentCategory(categoryId);
+            const jwtToken = localStorage.getItem("jwtToken");
+
+            console.log("Inventory JWT: ", jwtToken);
+            console.log("Inventory Request: http://localhost:8080/inventory/getinventorybycategory?categoryId=" + categoryId+1);
+            const response = await axios.get(`http://localhost:8080/inventory/getinventorybycategory?categoryId=${categoryId+1}`, {
+                headers: {
+                    "authorization": `Bearer ${jwtToken}`,
+                }});
+            console.log("Inventory request reponse data:", response.data);
+            setData(response.data);
+            console.log("Inventory data: ", data);
             setShowTable(true);
             setTransition(false);
         }, 500);
     };
 
-    const handleViewAllItemsClick = (categoryIndex) => {
+    const handleViewAllItemsClick = (categoryId) => {
         setTransition(true);
-        setTimeout(() => {
-            setData(allData);
-            setCurrentCategory(categoryIndex)
-            setData(categoryDataMap[categories[categoryIndex]]);
+        setTimeout(async () => {
+            setCurrentCategory(categoryId);
+            const jwtToken = localStorage.getItem("jwtToken");
+
+            const response = await axios.get("http://localhost:8080/inventory/getAllInventory", {
+                headers: {
+                    "authorization": `Bearer ${jwtToken}`,
+                }});
+            console.log("All Inventory request reponse data:", response.data);
+            setData(response.data);
+            console.log("All Inventory data: ", data);
             setShowTable(true);
             setTransition(false);
         }, 500);
     };
 
     const handleRemoveItem = (id) => {
-        setData(data.filter(item => item.id !== id));
+        // const updatedData = data.filter(item => item.id !== id);
+        // setData(updatedData);
+        // categoryDataMap[categories[currentCategory]] = updatedData;
+
+        // const updatedAllData = categoryDataMap['All items'].filter(item => item.id !== id);
+        // categoryDataMap['All items'] = updatedAllData;
+        console.log("lol");
     };
 
     const handleBack = () => {
@@ -119,8 +156,23 @@ export default function Inventory() {
     };
 
     const handleAddClick = () => {
-        console.log('Add button clicked');
-        // Add your logic for adding a new item here
+        setOpenModal(true);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewItem(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleAddItem = () => {
+        const updatedData = [...data, { ...newItem, id: data.length + 1 }];
+        setData(updatedData);
+        categoryDataMap[categories[currentCategory]] = updatedData;
+        categoryDataMap['All items'] = [...categoryDataMap['All items'], { ...newItem, id: categoryDataMap['All items'].length + 1 }];
+        setOpenModal(false);
     };
 
     const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -209,6 +261,37 @@ export default function Inventory() {
                                 </>
                             )}
                         </MyPaper>
+                        <Modal open={openModal} onClose={handleModalClose}>
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: 500,
+                                    bgcolor: '#F2EE9D',
+                                    boxShadow: 24,
+                                    p: 4,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 2,
+                                    borderRadius: '25px'
+                                }}
+                            >
+                                <Typography variant={'h6'} component={'div'} sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
+                                    ADD ITEM
+                                </Typography>
+                                <TextField name="serialNum" value={newItem.serialNum} onChange={handleInputChange} sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }} label="Serial Number" variant="outlined" fullWidth />
+                                <TextField name="name" value={newItem.name} onChange={handleInputChange} sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }} label="Name" variant="outlined" fullWidth />
+                                <TextField name="description" value={newItem.description} onChange={handleInputChange} sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }} label="Description" variant="outlined" fullWidth />
+                                <TextField name="stock" value={newItem.stock} onChange={handleInputChange} sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }} label="Stock" variant="outlined" fullWidth />
+                                <TextField name="status" value={newItem.status} onChange={handleInputChange} sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }} label="Status" variant="outlined" fullWidth />
+                                <Box display="flex" justifyContent="space-between" mt={2}>
+                                    <Button variant="outlined" sx={{ color: '#800000', borderColor: '#800000' }} onClick={handleModalClose}>Close</Button>
+                                    <Button variant="contained" sx={{ backgroundColor: '#800000', color: '#FFF', '&:hover': { backgroundColor: '#5c0000' } }} onClick={handleAddItem}>AddItem</Button>
+                                </Box>
+                            </Box>
+                        </Modal>
                     </div>
                 </div>
             </div>

@@ -31,6 +31,7 @@ export default function Login() {
 };
 
   const handleChange = (e) => {
+    setError('');
     const { name, value } = e.target;
     setFormData({
       ...formData,
