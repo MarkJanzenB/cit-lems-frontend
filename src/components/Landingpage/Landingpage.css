@@ -39,12 +39,13 @@ body, html {
 .waterMark {
   background-image: url("src/assets/static/img/Cebu_Institute_of_Technology_University_logo.png");
   width: 720px;
-  top: 50%;
+  top: 25%;
   height: 700px;
-  right: -10%;
+  left: 60.5%;
   display: inline-block;
   position: absolute;
   background-size: cover;
+  opacity: initial;
   background-repeat:no-repeat;
 }
 
