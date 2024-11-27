@@ -19,6 +19,10 @@ import Damages from "./Dashboard/Report/ReportTab/Damages.jsx";
 import ReturnItems from "./Dashboard/Report/ReportTab/ReturnItems.jsx";
 //history tab
 import List from "./Dashboard/History/HistoryTab/List.jsx";
+import Consumables from "./Dashboard/Inventory/Inventory Tabs/Consumables.jsx";
+import Equipments from "./Dashboard/Inventory/Inventory Tabs/Equipments.jsx";
+import Glassware from "./Dashboard/Inventory/Inventory Tabs/Glassware.jsx";
+import Hazards from "./Dashboard/Inventory/Inventory Tabs/Hazards.jsx";
 
 function AppRoutes() {
     return (
@@ -37,6 +41,10 @@ function AppRoutes() {
             <Route path ="/report/damages" element={<Damages />}/>
             <Route path ="/report/returnitems" element={<ReturnItems />}/>
             <Route path ="/schedule/calendar" element={<Calendar />}/>
+            <Route path={"inventory/consumables"} element={<Consumables/>}/>
+            <Route path={"inventory/equipments"} element={<Equipments/>}/>
+            <Route path={"inventory/glassware"} element={<Glassware/>}/>
+            <Route path={"inventory/hazards"} element={<Hazards/>}/>
             {/*<Route path ="/inventory/allitems" element={<InventoryST />}/>*/}
 
         </Routes>

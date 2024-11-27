@@ -19,55 +19,7 @@ const columns = [
     { field: 'status', headerName: 'Status' },
 ];
 
-const dummyData1 = [
-    { id: 1, serialNum: 'AL101asd', name: 'Alcohol Lamp',  description: 'Description 1', stock: 10, status: 'Available' },
-    { id: 2, serialNum: 'AL102zxc', name: 'Alcohol Lamp', description: 'Description 2', stock: 20, status: 'Available' },
-    { id: 3, serialNum: 'M11qwe', name: 'Microscope',  description: 'Description 1', stock: 10, status: 'Available' },
-    { id: 4, serialNum: 'M012qaz', name: 'Microscope', description: 'Description 2', stock: 20, status: 'Available' },
-    { id: 5, serialNum: 'AL101asd', name: 'Alcohol Lamp',  description: 'Description 1', stock: 10, status: 'Available' },
-    { id: 6, serialNum: 'AL102zxc', name: 'Alcohol Lamp', description: 'Description 2', stock: 20, status: 'Available' },
-    { id: 7, serialNum: 'M11qwe', name: 'Microscope',  description: 'Description 1', stock: 10, status: 'Available' },
-    { id: 8, serialNum: 'M012qaz', name: 'Microscope', description: 'Description 2', stock: 20, status: 'Available' },
-];
-const dummyData2 = [
-    { id: 1, serialNum: 'GL101abc', name: 'Beaker', description: 'Description 1', stock: 15, status: 'Available' },
-    { id: 2, serialNum: 'GL102def', name: 'Beaker', description: 'Description 2', stock: 25, status: 'Available' },
-    { id: 3, serialNum: 'GL103ghi', name: 'Flask', description: 'Description 1', stock: 30, status: 'Available' },
-    { id: 4, serialNum: 'GL104jkl', name: 'Flask', description: 'Description 2', stock: 40, status: 'Available' },
-    { id: 5, serialNum: 'GL105mno', name: 'Test Tube', description: 'Description 1', stock: 50, status: 'Available' },
-    { id: 6, serialNum: 'GL106pqr', name: 'Test Tube', description: 'Description 2', stock: 60, status: 'Available' },
-    { id: 7, serialNum: 'GL107stu', name: 'Pipette', description: 'Description 1', stock: 70, status: 'Available' },
-    { id: 8, serialNum: 'GL108vwx', name: 'Pipette', description: 'Description 2', stock: 80, status: 'Available' },
-];
-const dummyData3 = [
-    { id: 17, serialNum: 'HZ101abc', name: 'Chemical X', description: 'Description 1', stock: 5, status: 'Available' },
-    { id: 18, serialNum: 'HZ102def', name: 'Chemical Y', description: 'Description 2', stock: 10, status: 'Available' },
-    { id: 19, serialNum: 'HZ103ghi', name: 'Chemical Z', description: 'Description 1', stock: 15, status: 'Available' },
-    { id: 20, serialNum: 'HZ104jkl', name: 'Chemical A', description: 'Description 2', stock: 20, status: 'Available' },
-    { id: 21, serialNum: 'HZ105mno', name: 'Chemical B', description: 'Description 1', stock: 25, status: 'Available' },
-    { id: 22, serialNum: 'HZ106pqr', name: 'Chemical C', description: 'Description 2', stock: 30, status: 'Available' },
-    { id: 23, serialNum: 'HZ107stu', name: 'Chemical D', description: 'Description 1', stock: 35, status: 'Available' },
-    { id: 24, serialNum: 'HZ108vwx', name: 'Chemical E', description: 'Description 2', stock: 40, status: 'Available' },
-];
-const dummyData4 = [
-    { id: 25, serialNum: 'EQ101abc', name: 'Bunsen Burner', description: 'Description 1', stock: 5, status: 'Available' },
-    { id: 26, serialNum: 'EQ102def', name: 'Bunsen Burner', description: 'Description 2', stock: 10, status: 'Available' },
-    { id: 27, serialNum: 'EQ103ghi', name: 'Thermometer', description: 'Description 1', stock: 15, status: 'Available' },
-    { id: 28, serialNum: 'EQ104jkl', name: 'Thermometer', description: 'Description 2', stock: 20, status: 'Available' },
-    { id: 29, serialNum: 'EQ105mno', name: 'Balance Scale', description: 'Description 1', stock: 25, status: 'Available' },
-    { id: 30, serialNum: 'EQ106pqr', name: 'Balance Scale', description: 'Description 2', stock: 30, status: 'Available' },
-    { id: 31, serialNum: 'EQ107stu', name: 'Centrifuge', description: 'Description 1', stock: 35, status: 'Available' },
-    { id: 32, serialNum: 'EQ108vwx', name: 'Centrifuge', description: 'Description 2', stock: 40, status: 'Available' },
-];
-const allData = [...dummyData1, ...dummyData2, ...dummyData3, ...dummyData4];
-const categories = ['Consumables', 'Equipment', 'Glassware', 'Hazards', 'All items'];
-const categoryDataMap = {
-    'Consumables': dummyData1,
-    'Equipment': dummyData2,
-    'Glassware': dummyData3,
-    'Hazards': dummyData4,
-    'All items':allData,
-};
+
 
 export default function Inventory() {
     const [showTable, setShowTable] = useState(false);
