@@ -41,10 +41,10 @@ function AppRoutes() {
             <Route path ="/report/damages" element={<Damages />}/>
             <Route path ="/report/returnitems" element={<ReturnItems />}/>
             <Route path ="/schedule/calendar" element={<Calendar />}/>
-            <Route path={"inventory/consumables"} element={<Consumables/>}/>
-            <Route path={"inventory/equipments"} element={<Equipments/>}/>
-            <Route path={"inventory/glassware"} element={<Glassware/>}/>
-            <Route path={"inventory/hazards"} element={<Hazards/>}/>
+            {/*<Route path={"inventory/consumables"} element={<Consumables/>}/>*/}
+            {/*<Route path={"inventory/equipments"} element={<Equipments/>}/>*/}
+            {/*<Route path={"inventory/glassware"} element={<Glassware/>}/>*/}
+            {/*<Route path={"inventory/hazards"} element={<Hazards/>}/>*/}
             {/*<Route path ="/inventory/allitems" element={<InventoryST />}/>*/}
 
         </Routes>
