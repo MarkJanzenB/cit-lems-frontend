@@ -26,9 +26,6 @@ export default function Sidebar({ page }) {
         navigate('/schedule/upcoming');
     };
 
-    const handleBack = () => {
-        navigate('/dashboard');
-    };
     const handleAllItems = () => {
         navigate('/inventory/allitems');
     };
@@ -51,16 +48,14 @@ export default function Sidebar({ page }) {
     return (
         <aside className="sidebar-container">
             <h2 className="sidebar-title">
-                <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} style={{
+                <Link to={"/dashboard"}><Button><img src={"/ybb.gif"} alt="Logo" style={{
                     width: '25px',
                     height: '100%',
                     marginBottom: '3px',
                     marginLeft: '16px'
                 }}/>
-                    <h1 style={{color: "#F2EE9D"}}>RETURN</h1>
+                    <h1 style={{color: "#F2EE9D"}}>{label.toUpperCase()}</h1>
                 </Button></Link>
-
-                {/*{label.toUpperCase()}*/}
             </h2>
             <div className="sidebar-buttons">
                 {page === 'schedule' && (
