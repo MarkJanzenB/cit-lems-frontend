@@ -1,14 +1,7 @@
 .inventory-container {
     display: flex;
-
+    height: 100vh;
 }
-
-.sidebar-container {
-    width: 250px;
-    height: 600px;/* Adjust the width as needed */
-    flex-shrink: 0;
-}
-
 .inventory-content {
     flex-grow: 1;
     padding: 10px;
@@ -18,7 +11,7 @@
 .fade-slide-up {
     animation: fadeSlideUp 0.5s forwards;
 }
-
+.papercontainer{}
 @keyframes fadeSlideUp {
     0% {
         opacity: 1;

@@ -8,7 +8,7 @@ const StyledPaper = styled(Paper)(({ theme, width, height, border }) => ({
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-    width: width || 'auto', // Default to 'auto' if width is not provided
+    width: width || '100%', // Default to 'auto' if width is not provided
     height: height || 'auto',
     border: border || 'none',// Default to 'auto' if height is not provided
 }));

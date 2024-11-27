@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Appbar from "../../Appbar/Appbar.jsx";
+// import "./Sidebar/Sidebar.css";
 import {
     Button,
     Modal,
@@ -189,6 +190,7 @@ export default function Inventory() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
+                                        width: '100%',
                                     }}>
                                         <Button onClick={handleBack}><img src={"/back1.gif"} style={{
                                             width: '30px',
