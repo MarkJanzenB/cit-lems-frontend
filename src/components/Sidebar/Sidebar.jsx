@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './Sidebar.css';
 import { Button } from "@mui/material";
 
+
 export default function Sidebar({ page }) {
     const navigate = useNavigate();
     const location = useLocation();
@@ -26,8 +27,8 @@ export default function Sidebar({ page }) {
         navigate('/schedule/upcoming');
     };
 
-    const handleAllItems = () => {
-        navigate('/inventory/allitems');
+    const handleExport = () => {
+        navigate('/inventory/export');
     };
     const handleCategoryPage = () => {
         navigate('/inventory');
@@ -74,13 +75,10 @@ export default function Sidebar({ page }) {
                 {page === 'inventory' && (
                     <>
                         <button className={`sidebar-button ${isActive('/inventory') ? 'active' : ''}`}
-                                onClick={handleCategoryPage} style={{display: 'block'}}>All Items
+                                onClick={handleCategoryPage} style={{display: 'block'}}>Categories
                         </button>
-                        <button className={`sidebar-button ${isActive('/inventory/yearly') ? 'active' : ''}`}
-                                onClick={handleAllItems} style={{display: 'block'}}>Yearly Inventory
-                        </button>
-                        <button className={`sidebar-button ${isActive('/inventory/analysis') ? 'active' : ''}`}
-                                onClick={handleAllItems} style={{display: 'block'}}>Data Analysis
+                        <button className={`sidebar-button ${isActive('/inventory/export') ? 'active' : ''}`}
+                                onClick={handleExport} style={{display: 'block'}}>Export Inventory
                         </button>
                     </>
                 )}
