@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import {Link, useNavigate} from 'react-router-dom';
-import Appbar from '../Appbar/AuthAppbar';
-import './Login.css';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
-import Button from "@mui/material/Button";
+import './Login.css'; // Preserves your existing styles
+
+import { jwtDecode } from 'jwt-decode'; // Import the jwt-decode library
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -14,21 +14,9 @@ export default function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const checkLoginCredentials = async (formData) => {
-    try {
-      const response = await axios.post("http://localhost:8080/user/login", formData);
-      console.log(response.data);
-      console.log(formData);
-      localStorage.setItem("jwtToken", response.data);
-      return response.data;
-    }catch (error) {
-      console.error("Error:", error);
-    }
-  }
-
   const handleLogoClick = () => {
-    navigate('/'); 
-};
+    navigate('/');
+  };
 
   const handleChange = (e) => {
     setError('');
@@ -43,28 +31,37 @@ export default function Login() {
     e.preventDefault();
     if (!formData.insti_id || !formData.password) {
       setError('Institutional ID and password are required');
-
       return;
     }
     try {
-      const result = await checkLoginCredentials(formData); // returns a string
-      console.log(result); //displays in console if register was successful
-      if (result.startsWith("eyJhbGciOiJIUzI1NiJ9")) {
-        setError('');
-        return navigate('/dashboard');
-      }else{
-        setError('Incorrect Institutional ID or password');
+      const response = await axios.post("http://localhost:8080/user/login", formData);
+      const token = response.data;
+
+      if (token) {
+        try {
+          const decoded = jwtDecode(token); // Decode JWT using jwt-decode
+          console.log("Decoded Token:", decoded);
+
+          if (decoded && decoded.role_id) {
+            localStorage.setItem("jwtToken", token);
+            localStorage.setItem("userRole", decoded.role_id);
+
+            setError('');
+            return navigate('/dashboard'); // Redirect after successful login
+          } else {
+            setError('Invalid token structure');
+          }
+        } catch (decodingError) {
+          console.error("Error decoding token:", decodingError);
+          setError('Failed to decode token');
+        }
+      } else {
+        setError('Login failed: Invalid response from server');
       }
     } catch (e) {
       console.error("Error submitting form: ", e);
+      setError('An error occurred. Please try again.');
     }
-
-    // if (formData.idnum === "testId" && formData.password === "testPassword") {
-    //   setError('');
-    //   navigate('/dashboard');
-    // } else {
-    //   setError('Invalid institutional ID or password');
-    // }
   };
 
   const handleSignUp = () => {
@@ -73,60 +70,50 @@ export default function Login() {
 
   return (
       <>
-        {/*needs adjustment, dapat dili sha scrollable v and h kumbaga fixed ang page.*/}
-      {/* <div style={{backgroundColor: '#056765'}}>
-          <Link to={"/"}><Button sx={{backgroundColor: '#056765'}}><img src={"/ybb.gif"} alt={"back"} style={{
-            width: '50px',
-            height: '50px'
-          }}/></Button></Link> 
-        </div>*/}
-
         <div className="login-container">
-          <div className="login-bg"/>
+          <div className="login-bg" />
           <div className="sign-up">
             <h2>Join Us for a Seamless Laboratory Management Experience</h2>
-            <p>
-              Simplify your laboratory operations with our web application </p>
-            <p> that streamlines borrowing and enhances inventory management.</p>
-            <p> Sign up now to boost your lab's efficiency and productivity!</p>
+            <p>Simplify your laboratory operations with our web application </p>
+            <p>that streamlines borrowing and enhances inventory management.</p>
+            <p>Sign up now to boost your lab's efficiency and productivity!</p>
 
             <button onClick={handleSignUp} className="sign-up-button">
               SIGN UP
             </button>
             <img
-                        src="../src/assets/static/img/LEMS1.png"
-                        alt="LEMS logo"
-                        style={{
-                            position: 'absolute',
-                            top: '20px',
-                            left: '20px',
-                            width: '100px',
-                            height: 'auto',
-                            cursor: 'pointer',
-                            zIndex: '3', 
-                        }}
-                        onClick={handleLogoClick}
-                    />
+                src="../src/assets/static/img/LEMS1.png"
+                alt="LEMS logo"
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  left: '20px',
+                  width: '100px',
+                  height: 'auto',
+                  cursor: 'pointer',
+                  zIndex: '3',
+                }}
+                onClick={handleLogoClick}
+            />
           </div>
           <div className="login-box">
             <div className="border-container">
               <form onSubmit={handleSubmit}>
                 <h2>User Authentication</h2>
                 <div className="logform">
-                  <label style={{fontSize: '20px', marginTop: '20px'}}>Institutional ID:</label>
+                  <label style={{ fontSize: '20px', marginTop: '20px' }}>Institutional ID:</label>
                   <input
-                  type="text"
-                  name="insti_id"
-                  value={formData.insti_id}
-                  onChange={handleChange}
-                  required
-                  autoComplete="username"
-                  className="outlined-input"
-                />
-
+                      type="text"
+                      name="insti_id"
+                      value={formData.insti_id}
+                      onChange={handleChange}
+                      required
+                      autoComplete="username"
+                      className="outlined-input"
+                  />
                 </div>
                 <div className="logform">
-                  <label style={{fontSize: '20px'}}>Password:</label>
+                  <label style={{ fontSize: '20px' }}>Password:</label>
                   <input
                       type="password"
                       name="password"
@@ -138,9 +125,9 @@ export default function Login() {
                 </div>
                 {error && <p className="error-text">{error}</p>}
                 <button type="submit" className="login-button"
-                        style={{backgroundColor: '#800000', marginTop: '20px'}}>Login
+                        style={{ backgroundColor: '#800000', marginTop: '20px' }}>
+                  Login
                 </button>
-              
               </form>
             </div>
           </div>
