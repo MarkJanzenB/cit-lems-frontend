@@ -191,7 +191,6 @@ export default function Inventory() {
         }
     }
 
-    // TODO: add mui snackbar after adding item (1 hour)
     const handleAddItem = () => {
         if(newItemCategory == 1){
             axios.post("http://localhost:8080/inventory/addinventory", newConsumable, {
@@ -244,7 +243,7 @@ export default function Inventory() {
                             unique_id: newItem.unique_id,
                             group_id: newItem.group_id,
                             inventory: {
-                                inventory_id: response.data.inventory_id //we need to get this
+                                inventory_id: response.data.inventory_id
                             }
                         },{
                             headers:{
