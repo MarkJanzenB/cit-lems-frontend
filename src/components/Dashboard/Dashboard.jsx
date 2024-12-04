@@ -10,51 +10,40 @@ import GetStarted from '../GetStarted/GetStarted.jsx';
 
 export default function Dashboard() {
     const [isNew, setIsNew] = useState(false);
-    const navigate = useNavigate(); // Ensure this is declared before using
+    const [userRole, setUserRole] = useState(null);
+    const navigate = useNavigate();
+
+    const roleid = localStorage.getItem("userRole");
 
     useEffect(() => {
         const checkAuthentication = async () => {
             const jwtToken = localStorage.getItem("jwtToken");
-            if (!jwtToken || !jwtToken.startsWith("eyJhbGciOiJIUzI1NiJ9")) {
-                console.warn("JWT Token is missing or invalid.");
-                navigate("/login");
-                return;
-            }
-
-            if (isJWTExpired()) {
-                console.warn("JWT Token is expired.");
+            if (!jwtToken || isJWTExpired()) {
                 navigate("/login");
                 return;
             }
 
             try {
                 const jwtSub = getJWTSub();
-                if (!jwtSub) {
-                    console.error("JWT sub is missing or invalid");
-                    return;
-                }
-
-                console.log("JWT sub:", jwtSub);
+                console.log("JWT Token:", jwtToken); // Log the JWT token
+                console.log(roleid);
 
                 const response = await axios.get(`http://localhost:8080/user/isusernew?instiId=${jwtSub}`, {
-                    headers: { "authorization": `Bearer ${jwtToken}` },
+                    headers: { "Authorization": `Bearer ${jwtToken}` },
                 });
 
                 setIsNew(response.data);
-                console.log("Is User New?", response.data);
             } catch (error) {
+                console.error("Error in checkAuthentication:", error);
                 if (error.response && error.response.status === 401) {
-                    console.warn("Unauthorized access - redirecting to login.");
-                    localStorage.removeItem("jwtToken"); // Clear JWT on unauthorized access
+                    localStorage.removeItem("jwtToken");
                     navigate("/login");
-                } else {
-                    console.error("Error fetching user status:", error.response?.data || error.message);
                 }
             }
         };
 
         checkAuthentication();
-    }, [navigate]); // Add navigate to dependency array to avoid warnings
+    }, [navigate]);
 
     const handleSched = () => navigate('/schedule/request');
     const handleInv = () => navigate('/inventory');

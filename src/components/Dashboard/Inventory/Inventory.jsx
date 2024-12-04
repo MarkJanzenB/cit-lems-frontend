@@ -28,6 +28,7 @@ const columns = [
 
 
 export default function Inventory() {
+    const roleid = localStorage.getItem("userRole");
     const jwtToken = localStorage.getItem("jwtToken");
     const [error, setError] = useState('');
     const [showTable, setShowTable] = useState(false);
@@ -88,7 +89,7 @@ export default function Inventory() {
                 <CloseIcon fontSize="small"/>
             </IconButton>
         </React.Fragment>
-    ); 
+    );
 
     const handleModalBack = () => {
         setCurrentStep(1);
@@ -137,12 +138,12 @@ export default function Inventory() {
                 "Authorization": `Bearer ${jwtToken}`
             }
         })
-        .then(response => {
-            fetchData(currentCategory);
-            setSnackbarText(response.data.name + " has been successfully removed.");
-            setOpenSnackbar(true);
-        })
-        .catch(error)
+            .then(response => {
+                fetchData(currentCategory);
+                setSnackbarText(response.data.name + " has been successfully removed.");
+                setOpenSnackbar(true);
+            })
+            .catch(error)
     };
 
     const handleBack = () => {
@@ -159,14 +160,17 @@ export default function Inventory() {
     };
 
     const handleRowClick = (row) => {
-        setEditData(row);
-        setEditDataName(row.name);
-        if(row.item_category.category_id == 1){
-            setEditConsumable(true);
-        }else{
-            setEditConsumable(false);
+        if(roleid != 1){
+            setEditData(row);
+            setEditDataName(row.name);
+            if(row.item_category.category_id == 1){
+                setEditConsumable(true);
+            }else{
+                setEditConsumable(false);
+            }
+            setOpenModalEdit(true);
         }
-        setOpenModalEdit(true);
+
     };
 
     const handleAddClick = () => {
@@ -178,7 +182,7 @@ export default function Inventory() {
         if(name == "category"){
             setNewItemCategory(value);
         }
-        
+
     };
 
     const handleInputChange = (e) => {
@@ -201,7 +205,7 @@ export default function Inventory() {
     const handleInputChangeEdit = (e) => {
         const {name, value} = e.target;
         setError('');
-        
+
         setEditData(prevState => ({
             ...prevState,
             [name]: value
@@ -226,89 +230,89 @@ export default function Inventory() {
                     "Authorization": `Bearer ${jwtToken}`
                 }
             })
-            .then(response => {
-                setOpenModal(false);
-                setCurrentStep(1);
-                fetchData(currentCategory);
-                setOpenSnackbar(true);
-                setSnackbarText("Item added");
-            })
-            .catch(error => {
-                if(error.response.status == 409){
-                    setError("Item already exists. Did you mean add stock?");
-                }else{
-                    setError("An unexpected error occured.");
-                }
-            })
-            
+                .then(response => {
+                    setOpenModal(false);
+                    setCurrentStep(1);
+                    fetchData(currentCategory);
+                    setOpenSnackbar(true);
+                    setSnackbarText("Item added");
+                })
+                .catch(error => {
+                    if(error.response.status == 409){
+                        setError("Item already exists. Did you mean add stock?");
+                    }else{
+                        setError("An unexpected error occured.");
+                    }
+                })
+
         }else{
             axios.get(`http://localhost:8080/inventory/isinventoryexists?inventoryName=${newItem.item_name}`, {
                 headers: {
                     "Authorization": `Bearer ${jwtToken}`
                 }
             })
-            .then(response => {
-                setError("Item already exists. Did you mean add stock?");
-            })
-            .catch(error => {
-                if(error.response.status == 409){
-                    axios.post("http://localhost:8080/inventory/addinventory", {
-                        unit: null,
-                        name: newItem.item_name,
-                        item_category:{
-                            category_id:newItemCategory
-                        },
-                        quantity: 1
-                    },{
-                        headers:{
-                            "Authorization": `Bearer ${jwtToken}`
-                        }
-                    })
-                    .then(response => { 
-                        newInvId.current = response.data.inventory_id;
-                        axios.post("http://localhost:8080/item/insertitem", {
-                            item_name: newItem.item_name,
-                            unique_id: newItem.unique_id,
-                            group_id: newItem.group_id,
-                            inventory: {
-                                inventory_id: response.data.inventory_id
-                            }
+                .then(response => {
+                    setError("Item already exists. Did you mean add stock?");
+                })
+                .catch(error => {
+                    if(error.response.status == 409){
+                        axios.post("http://localhost:8080/inventory/addinventory", {
+                            unit: null,
+                            name: newItem.item_name,
+                            item_category:{
+                                category_id:newItemCategory
+                            },
+                            quantity: 1
                         },{
                             headers:{
                                 "Authorization": `Bearer ${jwtToken}`
                             }
                         })
-                        .then(response => {
-                            setOpenModal(false);
-                            setCurrentStep(1);
-                            fetchData(currentCategory);
-                            setOpenSnackbar(true);
-                            setSnackbarText("Item added");
-                        })
-                        .catch(error => {
-                            if(error.response.status == 409){
-                                setError(error.response.data);
-                                axios.delete(`http://localhost:8080/inventory/delete/${newInvId.current}`, {
+                            .then(response => {
+                                newInvId.current = response.data.inventory_id;
+                                axios.post("http://localhost:8080/item/insertitem", {
+                                    item_name: newItem.item_name,
+                                    unique_id: newItem.unique_id,
+                                    group_id: newItem.group_id,
+                                    inventory: {
+                                        inventory_id: response.data.inventory_id
+                                    }
+                                },{
                                     headers:{
                                         "Authorization": `Bearer ${jwtToken}`
                                     }
                                 })
-                                .then(response => {
-                                })
-                                .catch(error => {
-                                })
-                            }else{
+                                    .then(response => {
+                                        setOpenModal(false);
+                                        setCurrentStep(1);
+                                        fetchData(currentCategory);
+                                        setOpenSnackbar(true);
+                                        setSnackbarText("Item added");
+                                    })
+                                    .catch(error => {
+                                        if(error.response.status == 409){
+                                            setError(error.response.data);
+                                            axios.delete(`http://localhost:8080/inventory/delete/${newInvId.current}`, {
+                                                headers:{
+                                                    "Authorization": `Bearer ${jwtToken}`
+                                                }
+                                            })
+                                                .then(response => {
+                                                })
+                                                .catch(error => {
+                                                })
+                                        }else{
+                                            setError("An unexpected error occured.");
+                                        }
+                                    })
+                            })
+                            .catch(error => {
                                 setError("An unexpected error occured.");
-                            }
-                        })
-                    })
-                    .catch(error => {
+                            })
+                    }else{
                         setError("An unexpected error occured.");
-                    })
-                }else{
-                    setError("An unexpected error occured.");
-                }
-            })
+                    }
+                })
         }
     };
 
@@ -319,19 +323,19 @@ export default function Inventory() {
                 "Authorization": `Bearer ${jwtToken}`
             }
         })
-        .then(response => {
-            setSnackbarText("Item successfully updated");
-            setOpenSnackbar(true);
-            setOpenModalEdit(false);
-            fetchData(currentCategory);
-        })
-        .catch(error => {
-            if(error.response.status == 409){
-                setError(error.response.data);
-            }else{
-                setError("An unexpected error occurred. Please check the details and try again.");
-            }
-        })
+            .then(response => {
+                setSnackbarText("Item successfully updated");
+                setOpenSnackbar(true);
+                setOpenModalEdit(false);
+                fetchData(currentCategory);
+            })
+            .catch(error => {
+                if(error.response.status == 409){
+                    setError(error.response.data);
+                }else{
+                    setError("An unexpected error occurred. Please check the details and try again.");
+                }
+            })
     }
 
     const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -405,7 +409,7 @@ export default function Inventory() {
                                         <ButtonGroup variant="outlined" aria-label="outlined button group">
                                             <Button
                                                 style={currentCategory === 0 ? { width: '200px', height: '80px', fontSize: '24px',  } : {}}
-                                                 onClick={()=>handleViewListClick(0)}
+                                                onClick={()=>handleViewListClick(0)}
                                             >
                                                 {currentCategory === 0 ? 'Consumables' : <img src="/consumable.gif" alt="Consumables" style={{ width: '50px', height: '50px' }} />}
                                             </Button>
@@ -438,6 +442,7 @@ export default function Inventory() {
                                         data={paginatedData}
                                         onRowClick={handleRowClick}
                                         onRemoveClick={handleRemoveItem}
+                                        roleid={roleid}
                                     />
                                     <CustomTablePagination
                                         count={data.length}
@@ -446,6 +451,7 @@ export default function Inventory() {
                                         onPageChange={handleChangePage}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
                                         onAddClick={handleAddClick}
+                                        roleid={roleid}
                                     />
                                 </>
                             )}
@@ -515,13 +521,13 @@ export default function Inventory() {
                                         </Typography>
                                         {newItemCategory != 1 && (
                                             <TextField
-                                            name="unique_id"
-                                            value={newItem.serialNum}
-                                            onChange={handleInputChange}
-                                            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
-                                            label="Serial Number"
-                                            variant="outlined"
-                                            fullWidth
+                                                name="unique_id"
+                                                value={newItem.serialNum}
+                                                onChange={handleInputChange}
+                                                sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                                label="Serial Number"
+                                                variant="outlined"
+                                                fullWidth
                                             />
                                         )}
                                         <TextField
@@ -544,13 +550,13 @@ export default function Inventory() {
                                         />
                                         {newItemCategory == 1 && (
                                             <TextField
-                                            name="quantity"
-                                            value={newItem.stock}
-                                            onChange={handleInputChange}
-                                            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
-                                            label="Quantity"
-                                            variant="outlined"
-                                            fullWidth
+                                                name="quantity"
+                                                value={newItem.stock}
+                                                onChange={handleInputChange}
+                                                sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                                label="Quantity"
+                                                variant="outlined"
+                                                fullWidth
                                             />
                                         )}
                                         {error && <Typography color="error" sx={{mt:2}}>{error}</Typography>}
@@ -588,7 +594,7 @@ export default function Inventory() {
                                             gap: 2,
                                             borderRadius: '25px',
                                         }}
-                                     >
+                                    >
                                         <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
                                             Edit {editDataName}
                                         </Typography>
@@ -619,8 +625,8 @@ export default function Inventory() {
                                             label="Quantity"
                                             variant="outlined"
                                             fullWidth
-                                            />
-                                            {error && <Typography color="error" sx={{mt:2}}>{error}</Typography>}
+                                        />
+                                        {error && <Typography color="error" sx={{mt:2}}>{error}</Typography>}
                                         <Box display="flex" justifyContent="space-between" mt={2}>
                                             <Button variant="outlined" sx={{ color: '#800000', borderColor: '#800000' }} onClick={handleModalEditClose}>
                                                 Cancel
@@ -650,7 +656,7 @@ export default function Inventory() {
                                             gap: 2,
                                             borderRadius: '25px',
                                         }}
-                                     >
+                                    >
                                         <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
                                             Edit nani kashira
                                         </Typography>

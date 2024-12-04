@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import {jwtDecode} from 'jwt-decode'; // Ensure correct import for jwt-decode
 import './Login.css'; // Preserves your existing styles
-
-import { jwtDecode } from 'jwt-decode'; // Import the jwt-decode library
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -19,7 +18,7 @@ export default function Login() {
   };
 
   const handleChange = (e) => {
-    setError('');
+    setError(''); // Clear error when input changes
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -33,34 +32,50 @@ export default function Login() {
       setError('Institutional ID and password are required');
       return;
     }
+
     try {
       const response = await axios.post("http://localhost:8080/user/login", formData);
+
+      // Check if the response data is valid
       const token = response.data;
+      if (!token) {
+        setError('Login failed: No token received');
+        return;
+      }
 
-      if (token) {
-        try {
-          const decoded = jwtDecode(token); // Decode JWT using jwt-decode
-          console.log("Decoded Token:", decoded);
+      try {
+        // Decode the JWT token
+        const decoded = jwtDecode(token);
+        console.log("Decoded Token:", decoded);
 
-          if (decoded && decoded.role_id) {
-            localStorage.setItem("jwtToken", token);
-            localStorage.setItem("userRole", decoded.role_id);
+        // Validate the token structure
+        if (decoded && decoded.role_id && decoded.sub) {
+          // Store token and user role in localStorage
+          localStorage.setItem("jwtToken", token);
+          localStorage.setItem("userRole", decoded.role_id);
 
-            setError('');
-            return navigate('/dashboard'); // Redirect after successful login
-          } else {
-            setError('Invalid token structure');
-          }
-        } catch (decodingError) {
-          console.error("Error decoding token:", decodingError);
-          setError('Failed to decode token');
+          setError(''); // Clear errors
+          navigate('/dashboard'); // Redirect after successful login
+        } else {
+          setError('Invalid token structure received');
+        }
+      } catch (decodeError) {
+        console.error("Error decoding token:", decodeError);
+        setError('Failed to decode token. Please try again.');
+      }
+    } catch (error) {
+      console.error("Error during login request:", error);
+
+      // Handle HTTP and network errors
+      if (error.response) {
+        if (error.response.status === 401) {
+          setError('Invalid Institutional ID or password');
+        } else {
+          setError(`Server error: ${error.response.data || 'Please try again later.'}`);
         }
       } else {
-        setError('Login failed: Invalid response from server');
+        setError('Network error. Please check your connection and try again.');
       }
-    } catch (e) {
-      console.error("Error submitting form: ", e);
-      setError('An error occurred. Please try again.');
     }
   };
 
