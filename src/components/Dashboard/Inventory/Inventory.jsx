@@ -37,17 +37,23 @@ export default function Inventory() {
     const [currentCategory, setCurrentCategory] = useState(0);
     const [transition, setTransition] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [openModalEdit, setOpenModalEdit] = useState(false);
     const [currentStep, setCurrentStep] = useState(1);
     const [newItemCategory, setNewItemCategory] = useState(1);
     const newInvId = useRef(0);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarText, setSnackbarText] = useState("");
+    const [editConsumable, setEditConsumable] = useState(false);
+    const [editDataName, setEditDataName] = useState('');
+    const [editData, setEditData] = useState({});
+
     const [newItem, setNewItem] = useState({
         item_name: '',
         unique_id: '',
         group_id: null,
         inventory: {inventory_id:0}
     });
+
     const [newConsumable, setNewConsumable] = useState({
         unit: '',
         name: '',
@@ -59,6 +65,11 @@ export default function Inventory() {
     const handleModalClose = () => {
         setOpenModal(false);
         setCurrentStep(1);
+        setError('');
+    }
+
+    const handleModalEditClose = () => {
+        setOpenModalEdit(false);
         setError('');
     }
 
@@ -148,7 +159,14 @@ export default function Inventory() {
     };
 
     const handleRowClick = (row) => {
-        console.log('Row clicked:', row);
+        setEditData(row);
+        setEditDataName(row.name);
+        if(row.item_category.category_id == 1){
+            setEditConsumable(true);
+        }else{
+            setEditConsumable(false);
+        }
+        setOpenModalEdit(true);
     };
 
     const handleAddClick = () => {
@@ -178,6 +196,16 @@ export default function Inventory() {
                 [name]: value
             }));
         }
+    }
+
+    const handleInputChangeEdit = (e) => {
+        const {name, value} = e.target;
+        setError('');
+        
+        setEditData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     }
 
     const handleNext = () => {
@@ -283,6 +311,28 @@ export default function Inventory() {
             })
         }
     };
+
+    const handleSave = () => {
+        console.log(editData)
+        axios.put(`http://localhost:8080/inventory/updateinventory?id=${editData.inventory_id}`, editData, {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            setSnackbarText("Item successfully updated");
+            setOpenSnackbar(true);
+            setOpenModalEdit(false);
+            fetchData(currentCategory);
+        })
+        .catch(error => {
+            if(error.response.status == 409){
+                setError(error.response.data);
+            }else{
+                setError("An unexpected error occurred. Please check the details and try again.");
+            }
+        })
+    }
 
     const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -516,6 +566,94 @@ export default function Inventory() {
                                                 Add Item
                                             </Button>
                                         </Box>
+                                    </Box>
+                                )}
+                            </Box>
+                        </Modal>
+                        <Modal open={openModalEdit} onClose={handleModalEditClose}>
+                            <Box>
+                                {editConsumable ? (
+                                    <Box
+                                        sx={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translate(-50%, -50%)',
+                                            width: 500,
+                                            bgcolor: '#F2EE9D',
+                                            boxShadow: 24,
+                                            p: 4,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 2,
+                                            borderRadius: '25px',
+                                        }}
+                                     >
+                                        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
+                                            Edit {editDataName}
+                                        </Typography>
+                                        <TextField
+                                            name={'name'}
+                                            value={editData.name}
+                                            onChange={handleInputChangeEdit}
+                                            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                            label="Name"
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                        <TextField
+                                            name="description"
+                                            value={editData.description}
+                                            onChange={handleInputChangeEdit}
+                                            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                            label="Description"
+                                            variant="outlined"
+                                            fullWidth
+                                        />
+                                        {/* Improve: Modify to only allow decimals as input */}
+                                        <TextField
+                                            name="quantity"
+                                            value={editData.quantity}
+                                            onChange={handleInputChangeEdit}
+                                            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                            label="Quantity"
+                                            variant="outlined"
+                                            fullWidth
+                                            />
+                                            {error && <Typography color="error" sx={{mt:2}}>{error}</Typography>}
+                                        <Box display="flex" justifyContent="space-between" mt={2}>
+                                            <Button variant="outlined" sx={{ color: '#800000', borderColor: '#800000' }} onClick={handleModalEditClose}>
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                variant="contained"
+                                                sx={{ backgroundColor: '#800000', color: '#FFF', '&:hover': { backgroundColor: '#5c0000' } }}
+                                                onClick={handleSave}
+                                            >
+                                                Save
+                                            </Button>
+                                        </Box>
+                                    </Box>
+                                ) : (
+                                    <Box
+                                        sx={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translate(-50%, -50%)',
+                                            width: 500,
+                                            bgcolor: '#F2EE9D',
+                                            boxShadow: 24,
+                                            p: 4,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: 2,
+                                            borderRadius: '25px',
+                                        }}
+                                     >
+                                        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
+                                            Edit nani kashira
+                                        </Typography>
                                     </Box>
                                 )}
                             </Box>
