@@ -28,7 +28,7 @@ const CustomTable = ({ columns, data, onRowClick, onRemoveClick, onDeleteClick, 
                                 <TableCell key={column.field}>{row[column.field]}</TableCell>
                             ))}
                             <TableCell>
-                                <Button variant="contained" color="secondary" onClick={(e) => { e.stopPropagation(); handleActionClick(row.id); }}>
+                                <Button variant="contained" color="secondary" onClick={(e) => { e.stopPropagation(); handleActionClick(row.inventory_id); }}>
                                     Remove
                                 </Button>
                             </TableCell>

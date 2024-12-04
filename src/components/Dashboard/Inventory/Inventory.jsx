@@ -6,7 +6,9 @@ import {
     Modal,
     Box, Typography, TextField, ButtonGroup,
     Select,
-    MenuItem
+    MenuItem,
+    IconButton,
+    Snackbar
 } from "@mui/material";
 import Sidebar from "../../Sidebar/Sidebar.jsx";
 import MyPaper from "../../MyPaper.jsx";
@@ -14,6 +16,7 @@ import './Inventory.css';
 import CustomTable from "../../Table and Pagination/Table.jsx";
 import CustomTablePagination from "../../Table and Pagination/Pagination.jsx";
 import axios from "axios";
+import CloseIcon from '@mui/icons-material/Close';
 
 const columns = [
     { field: 'name', headerName: 'Name' },
@@ -37,6 +40,8 @@ export default function Inventory() {
     const [currentStep, setCurrentStep] = useState(1);
     const [newItemCategory, setNewItemCategory] = useState(1);
     const newInvId = useRef(0);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarText, setSnackbarText] = useState("");
     const [newItem, setNewItem] = useState({
         item_name: '',
         unique_id: '',
@@ -57,24 +62,48 @@ export default function Inventory() {
         setError('');
     }
 
-    const handleModalBack = () => {
-        setCurrentStep(1);
+    const handleSnackbarClose = (event, reason) => {
+        setOpenSnackbar(false);
     }
 
-    const handleViewListClick = (categoryId) => {
-        setTransition(true);
-        setTimeout(async () => {
-            setCurrentCategory(categoryId);
+    const SnackbarAction = (
+        <React.Fragment>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleSnackbarClose}
+            >
+                <CloseIcon fontSize="small"/>
+            </IconButton>
+        </React.Fragment>
+    ); 
 
-            console.log("Inventory JWT: ", jwtToken);
-            console.log("Inventory Request: http://localhost:8080/inventory/getinventorybycategory?categoryId=" + categoryId+1);
+    const handleModalBack = () => {
+        setCurrentStep(1);
+    };
+
+    const fetchData = async (categoryId) => {
+        if(categoryId != 4){
             const response = await axios.get(`http://localhost:8080/inventory/getinventorybycategory?categoryId=${categoryId+1}`, {
                 headers: {
                     "authorization": `Bearer ${jwtToken}`,
                 }});
-            console.log("Inventory request reponse data:", response.data);
             setData(response.data);
-            console.log("Inventory data: ", data);
+        }else{
+            const response = await axios.get("http://localhost:8080/inventory/getAllInventory", {
+                headers: {
+                    "authorization": `Bearer ${jwtToken}`,
+                }});
+            setData(response.data);
+        }
+    }
+
+    const handleViewListClick = (categoryId) => {
+        setTransition(true);
+        setTimeout(() => {
+            setCurrentCategory(categoryId);
+            fetchData(categoryId);
             setShowTable(true);
             setTransition(false);
             setPage(0);
@@ -83,29 +112,26 @@ export default function Inventory() {
 
     const handleViewAllItemsClick = (categoryId) => {
         setTransition(true);
-        setTimeout(async () => {
+        setTimeout(() => {
             setCurrentCategory(categoryId);
-
-            const response = await axios.get("http://localhost:8080/inventory/getAllInventory", {
-                headers: {
-                    "authorization": `Bearer ${jwtToken}`,
-                }});
-            console.log("All Inventory request reponse data:", response.data);
-            setData(response.data);
-            console.log("All Inventory data: ", data);
+            fetchData(categoryId);
             setShowTable(true);
             setTransition(false);
         }, 500);
     };
 
-    const handleRemoveItem = (id) => {
-        // const updatedData = data.filter(item => item.id !== id);
-        // setData(updatedData);
-        // categoryDataMap[categories[currentCategory]] = updatedData;
-
-        // const updatedAllData = categoryDataMap['All items'].filter(item => item.id !== id);
-        // categoryDataMap['All items'] = updatedAllData;
-        console.log("lol");
+    const handleRemoveItem = (category_id) => {
+        axios.delete(`http://localhost:8080/inventory/delete/${category_id}`, {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            fetchData(currentCategory);
+            setSnackbarText(response.data.name + " has been successfully removed.");
+            setOpenSnackbar(true);
+        })
+        .catch(error)
     };
 
     const handleBack = () => {
@@ -165,10 +191,9 @@ export default function Inventory() {
         }
     }
 
+    // TODO: add mui snackbar after adding item (1 hour)
     const handleAddItem = () => {
         if(newItemCategory == 1){
-            console.log(newConsumable)
-            console.log(newItemCategory)
             axios.post("http://localhost:8080/inventory/addinventory", newConsumable, {
                 headers: {
                     "Authorization": `Bearer ${jwtToken}`
@@ -177,12 +202,14 @@ export default function Inventory() {
             .then(response => {
                 setOpenModal(false);
                 setCurrentStep(1);
+                fetchData(currentCategory);
+                setOpenSnackbar(true);
+                setSnackbarText("Item added");
             })
             .catch(error => {
                 if(error.response.status == 409){
                     setError("Item already exists. Did you mean add stock?");
                 }else{
-                    console.log(error);
                     setError("An unexpected error occured.");
                 }
             })
@@ -225,38 +252,33 @@ export default function Inventory() {
                             }
                         })
                         .then(response => {
-                            console.log("insert item resposne: ", response);
                             setOpenModal(false);
                             setCurrentStep(1);
+                            fetchData(currentCategory);
+                            setOpenSnackbar(true);
+                            setSnackbarText("Item added");
                         })
                         .catch(error => {
-                            console.log(error.response);
                             if(error.response.status == 409){
                                 setError(error.response.data);
-                                console.log("inventory ID when error: ",newInvId.current);
                                 axios.delete(`http://localhost:8080/inventory/delete/${newInvId.current}`, {
                                     headers:{
                                         "Authorization": `Bearer ${jwtToken}`
                                     }
                                 })
                                 .then(response => {
-                                    console.log("delete inventory response: ", response);
                                 })
                                 .catch(error => {
-                                    console.log("delete inventory error: ", error.response);
                                 })
                             }else{
-                                console.log(error);
                                 setError("An unexpected error occured.");
                             }
                         })
                     })
                     .catch(error => {
-                        console.log(error);
                         setError("An unexpected error occured.");
                     })
                 }else{
-                    console.log(error);
                     setError("An unexpected error occured.");
                 }
             })
@@ -502,6 +524,13 @@ export default function Inventory() {
                     </div>
                 </div>
             </div>
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+                message={snackbarText}
+                action={SnackbarAction}
+            />
         </>
     );
 }
