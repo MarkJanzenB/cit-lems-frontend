@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TablePagination } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  TablePagination,
+  createTheme, ThemeProvider
+} from '@mui/material';
 import * as XLSX from 'xlsx';
 import Appbar from '../../Appbar/Appbar.jsx';
 import Sidebar from '../../Sidebar/Sidebar.jsx';
@@ -79,10 +90,30 @@ const Export = () => {
     setPage(0);
   };
 
+  const theme = createTheme({
+    palette: {
+      primary: { main: '#016565' },
+      secondary: { main: '#000000' }
+    },
+    components: {
+      MuiTableCell: {
+        styleOverrides: {
+          head: {
+            backgroundColor: '#016565',
+            color: '#FFFFFF',
+          },
+          body: {
+            fontSize: 14,
+          },
+        },
+      },
+    },
+  });
+
   const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Appbar page={"inventory"} />
       <div className="inventory-container">
         <Sidebar page={"inventory"} />
@@ -90,6 +121,7 @@ const Export = () => {
           <Button variant="contained" color="primary" onClick={exportToExcel}>
             Export to Excel
           </Button>
+          <br/><br/>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -123,7 +155,7 @@ const Export = () => {
           />
         </div>
       </div>
-    </>
+    </ThemeProvider>
   );
 };
 

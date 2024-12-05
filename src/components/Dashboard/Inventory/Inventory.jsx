@@ -8,7 +8,7 @@ import {
     Select,
     MenuItem,
     IconButton,
-    Snackbar
+    Snackbar, ThemeProvider, createTheme
 } from "@mui/material";
 import Sidebar from "../../Sidebar/Sidebar.jsx";
 import MyPaper from "../../MyPaper.jsx";
@@ -47,6 +47,26 @@ export default function Inventory() {
     const [editConsumable, setEditConsumable] = useState(false);
     const [editDataName, setEditDataName] = useState('');
     const [editData, setEditData] = useState({});
+
+    const theme = createTheme({
+        palette: {
+            primary: { main: '#016565' },
+            secondary: { main: '#000000' }
+        },
+        components: {
+            MuiTableCell: {
+                styleOverrides: {
+                    head: {
+                        backgroundColor: '#016565',
+                        color: '#FFFFFF',
+                    },
+                    body: {
+                        fontSize: 14,
+                    },
+                },
+            },
+        },
+    });
 
     const [newItem, setNewItem] = useState({
         item_name: '',
@@ -341,7 +361,7 @@ export default function Inventory() {
     const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     return (
-        <>
+        <ThemeProvider theme={theme}>
             <Appbar page={"inventory"} />
             <div className="inventory-container">
                 <Sidebar page={"inventory"} />
@@ -401,12 +421,9 @@ export default function Inventory() {
                                         justifyContent: 'center',
                                         width: '100%',
                                     }}>
-                                        <Button onClick={handleBack}><img src={"/back1.gif"} style={{
-                                            width: '30px',
-                                            height: '30px'
-                                        }}/></Button>
 
-                                        <ButtonGroup variant="outlined" aria-label="outlined button group">
+
+                                        <ButtonGroup variant="outlined" aria-label="outlined button group" >
                                             <Button
                                                 style={currentCategory === 0 ? { width: '200px', height: '80px', fontSize: '24px',  } : {}}
                                                 onClick={()=>handleViewListClick(0)}
@@ -432,7 +449,12 @@ export default function Inventory() {
                                                 {currentCategory === 3 ? 'Hazards' : <img src="/hazardous.gif" alt="Hazards" style={{ width: '50px', height: '50px' }} />}
                                             </Button>
                                         </ButtonGroup>
-
+                                       <div style={{justifyContent:'space-between'}}>
+                                           <Button onClick={handleBack}><img src={"/close.gif"} style={{
+                                               width: '50px',
+                                               height: '50px',
+                                           }}/></Button>
+                                       </div>
                                         {/*<h1>{categories[currentCategory]}</h1>*/}
                                     </div>
 
@@ -674,6 +696,6 @@ export default function Inventory() {
                 message={snackbarText}
                 action={SnackbarAction}
             />
-        </>
+        </ThemeProvider>
     );
 }
