@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import Sidebar from '../../../Sidebar/Sidebar.jsx';
 import Appbar from '../../../Appbar/Appbar';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Modal, Box, TextField, Typography, Button, Snackbar } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Modal, Box, TextField, Typography, Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const generateRandomFutureDate = () => {
     const today = new Date();
@@ -42,26 +45,21 @@ const theme = createTheme({
     },
 });
 
+const localizer = momentLocalizer(moment);
+
 export default function UpcomingSchedule() {
     const [rows, setRows] = useState(initialRows);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchText, setSearchText] = useState('');
     const [openModal, setOpenModal] = useState(false);
-    const [openConfirmModal, setOpenConfirmModal] = useState(false);  
     const [selectedRow, setSelectedRow] = useState(null);
     const [editedInstructor, setEditedInstructor] = useState('');
-    const [editedStartTime, setEditedStartTime] = useState(null);  
-    const [editedEndTime, setEditedEndTime] = useState(null);  
     const [editedSection, setEditedSection] = useState('');
-    const [editedDate, setEditedDate] = useState(null); 
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-
-    const handleChangePage = (event, newPage) => setPage(newPage);
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+    const [editedDate, setEditedDate] = useState(null);
+    const [editedStartTime, setEditedStartTime] = useState(null);
+    const [editedEndTime, setEditedEndTime] = useState(null);
+    const [viewMode, setViewMode] = useState('table');
 
     const handleSearch = (event) => {
         setSearchText(event.target.value);
@@ -72,213 +70,260 @@ export default function UpcomingSchedule() {
         setSelectedRow(row);
         setEditedInstructor(row.instructor);
         setEditedSection(row.section);
-        setEditedDate(new Date(row.date));  
-
-        const startTimeParts = row.startTime.split(' ');
-        const endTimeParts = row.endTime.split(' ');
-
-        const startTimeDate = new Date();
-        const endTimeDate = new Date();
-
-        const startHours = parseInt(startTimeParts[0].split(':')[0]);
-        const startMinutes = parseInt(startTimeParts[0].split(':')[1]);
-        const endHours = parseInt(endTimeParts[0].split(':')[0]);
-        const endMinutes = parseInt(endTimeParts[0].split(':')[1]);
-
-        if (startTimeParts[1] === 'PM' && startHours < 12) startTimeDate.setHours(startHours + 12, startMinutes);
-        else startTimeDate.setHours(startHours, startMinutes);
-
-        if (endTimeParts[1] === 'PM' && endHours < 12) endTimeDate.setHours(endHours + 12, endMinutes);
-        else endTimeDate.setHours(endHours, endMinutes);
-
-        setEditedStartTime(startTimeDate);
-        setEditedEndTime(endTimeDate);
+        setEditedDate(new Date(row.date));
+        setEditedStartTime(moment(row.startTime, 'h:mm A').toDate());
+        setEditedEndTime(moment(row.endTime, 'h:mm A').toDate());
         setOpenModal(true);
     };
 
     const handleSave = () => {
-        setOpenConfirmModal(true); 
-    };
-
-    const confirmAndSave = () => {
         const updatedRows = rows.map((row) =>
             row === selectedRow
-                ? { ...row, instructor: editedInstructor, startTime: editedStartTime.toLocaleTimeString(), endTime: editedEndTime.toLocaleTimeString(), section: editedSection, date: editedDate.toLocaleDateString() }
+                ? { ...row, instructor: editedInstructor, section: editedSection, date: editedDate.toLocaleDateString(), startTime: moment(editedStartTime).format('h:mm A'), endTime: moment(editedEndTime).format('h:mm A') }
                 : row
         );
-
         setRows(updatedRows);
-        setOpenSnackbar(true);
-        setOpenConfirmModal(false);  
-        setOpenModal(false); 
+        setOpenModal(false);
     };
 
-    const cancelSave = () => {
-        setOpenConfirmModal(false); 
+    const handleViewToggle = () => {
+        setViewMode(viewMode === 'table' ? 'calendar' : 'table');
     };
 
-    const cancelEdit = () => {
-        setOpenModal(false); 
-    };
-
-    const filteredRows = rows.filter(row => 
-        row.instructor.toLowerCase().includes(searchText.toLowerCase()) ||
-        row.startTime.toLowerCase().includes(searchText.toLowerCase()) ||
-        row.endTime.toLowerCase().includes(searchText.toLowerCase()) ||
-        row.section.toLowerCase().includes(searchText.toLowerCase()) ||
-        row.date.toLowerCase().includes(searchText.toLowerCase())
+    const filteredRows = rows.filter(
+        (row) =>
+            row.instructor.toLowerCase().includes(searchText.toLowerCase()) ||
+            row.section.toLowerCase().includes(searchText.toLowerCase()) ||
+            row.date.toLowerCase().includes(searchText.toLowerCase()) ||
+            row.startTime.toLowerCase().includes(searchText.toLowerCase()) ||
+            row.endTime.toLowerCase().includes(searchText.toLowerCase())
     );
 
     const displayedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+    const calendarEvents = rows.map((row) => ({
+        title: `${row.instructor} (${row.section})`,
+        start: moment(`${row.date} ${row.startTime}`, 'M/D/YYYY h:mm A').toDate(),
+        end: moment(`${row.date} ${row.endTime}`, 'M/D/YYYY h:mm A').toDate(),
+        resource: row,
+    }));
 
     return (
         <ThemeProvider theme={theme}>
             <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
                 <Appbar />
-                <Sidebar page={"schedule"} />
-                <div style={{ padding: '20px', flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px' }}>
-                    <TextField 
-                        label="Search...." 
-                        variant="outlined" 
-                        value={searchText} 
-                        onChange={handleSearch} 
-                        fullWidth 
-                        sx={{ marginBottom: '10px', width: '80vw' }}
-                    />
-                    <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
-                        <Table stickyHeader>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Instructor Name</TableCell>
-                                    <TableCell align="center">Time</TableCell>
-                                    <TableCell align="center">Section</TableCell>
-                                    <TableCell align="center">Date</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {displayedRows.map((row, index) => (
-                                    <TableRow key={index} onClick={() => handleEditClick(row)} style={{ cursor: 'pointer' }}>
-                                        <TableCell>{row.instructor}</TableCell>
-                                        <TableCell align="center">{`${row.startTime} - ${row.endTime}`}</TableCell>
-                                        <TableCell align="center">{row.section}</TableCell>
-                                        <TableCell align="center">{row.date}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                        <TablePagination
-                            rowsPerPageOptions={[10, 20, 30]}
-                            component="div"
-                            count={filteredRows.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
+                <Sidebar page="schedule" />
+                <div style={{ padding: '20px', flexGrow: 1 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', marginTop: '100px' }}>
+                        <TextField
+                            label="Search..."
+                            variant="outlined"
+                            value={searchText}
+                            onChange={handleSearch}
+                            sx={{ flex: 1 }}
                         />
-                    </TableContainer>
-
-                    <Modal open={openModal} onClose={cancelEdit}>
-                        <Box sx={{
-                            position: 'absolute', top: '50%', left: '50%',
-                            transform: 'translate(-50%, -50%)', width: 400,
-                            bgcolor: '#FFFFFF', p: 4, borderRadius: '15px',
-                            display: 'flex', flexDirection: 'column', gap: 2
-                        }}>
-                            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
-                                Edit Schedule
-                            </Typography>
-
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <DatePicker
-                                    label="Date"
-                                    value={editedDate}
-                                    onChange={(newValue) => setEditedDate(newValue)}
-                                    minDate={new Date()}  
-                                    sx={{ '& input': { backgroundColor: 'white' } }}
-                                />
-                            </LocalizationProvider>
-
-                            <TextField
-                                label="Instructor Name"
-                                value={editedInstructor}
-                                onChange={(e) => setEditedInstructor(e.target.value)}
-                                fullWidth
+                        <Button onClick={handleViewToggle} sx={{ marginLeft: '30px', backgroundColor: '#016565', color: '#FFFFFF' }}>
+                            {viewMode === 'table' ? 'Calendar View' : 'Table View'}
+                        </Button>
+                    </Box>
+                    {viewMode === 'table' ? (
+                        <TableContainer component={Paper}>
+                            <Table stickyHeader>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Instructor Name</TableCell>
+                                        <TableCell align="center">Time</TableCell>
+                                        <TableCell align="center">Section</TableCell>
+                                        <TableCell align="center">Date</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {displayedRows.map((row, index) => (
+                                        <TableRow key={index} onClick={() => handleEditClick(row)} style={{ cursor: 'pointer' }}>
+                                            <TableCell>{row.instructor}</TableCell>
+                                            <TableCell align="center">{`${row.startTime} - ${row.endTime}`}</TableCell>
+                                            <TableCell align="center">{row.section}</TableCell>
+                                            <TableCell align="center">{row.date}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                            <TablePagination
+                                rowsPerPageOptions={[10, 20, 30]}
+                                component="div"
+                                count={filteredRows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={(event, newPage) => setPage(newPage)}
+                                onRowsPerPageChange={(event) => setRowsPerPage(parseInt(event.target.value, 10))}
                             />
-                            <TextField
-                                label="Section"
-                                value={editedSection}
-                                onChange={(e) => setEditedSection(e.target.value)}
-                                fullWidth
-                            />
+                        </TableContainer>
+                    ) : (
+                        <Calendar
+                        localizer={localizer}
+                        events={calendarEvents}
+                        startAccessor="start"
+                        endAccessor="end"
+                        style={{
+                            height: '75vh',
+                            width: '100%',
+                            backgroundColor: 'white',
+                            color: 'black',
+                        }}
+                        eventPropGetter={(event) => {
+                            
+                            const isHighlighted =
+                                event.title.toLowerCase().includes(searchText.toLowerCase());
+                            return {
+                                style: {
+                                    backgroundColor: isHighlighted ? 'maroon' : '#d3d3d3', 
+                                    color: isHighlighted ? 'white' : 'black', 
+                                    borderRadius: '5px',
+                                    border: isHighlighted ? '1px solid white' : 'none',
+                                },
+                            };
+                        }}
+                        onSelectEvent={(event) => handleEditClick(event.resource)}
+                    />
+                    
+                    )}
 
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <TimePicker
-                                    label="Start Time"
-                                    value={editedStartTime}
-                                    onChange={(newValue) => setEditedStartTime(newValue)}
-                                    sx={{ '& input': { backgroundColor: 'white' } }}
-                                />
-                                <TimePicker
-                                    label="End Time"
-                                    value={editedEndTime}
-                                    onChange={(newValue) => setEditedEndTime(newValue)}
-                                    sx={{ '& input': { backgroundColor: 'white' } }}
-                                />
-                            </LocalizationProvider>
+<Modal open={openModal} onClose={() => setOpenModal(false)}>
+    <Box
+        sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: '#FFFFFF',
+            borderRadius: '15px',
+            boxShadow: 24,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+        }}
+    >
+        {/* Modal Header */}
+        <Box
+            sx={{
+                backgroundColor: '#016565', 
+                padding: '16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+            }}
+        >
+            <Typography
+                variant="h6"
+                sx={{
+                    color: '#FFFFFF',
+                    fontWeight: 'bold',
+                }}
+            >
+                Edit Schedule
+            </Typography>
+            <Button
+                onClick={() => setOpenModal(false)}
+                sx={{
+                    color: '#FFFFFF',
+                    background: 'none',
+                    minWidth: 'unset',
+                    padding: 0,
+                    '&:hover': {
+                        background: 'none',
+                    },
+                }}
+            >
+                ✕
+            </Button>
+        </Box>
 
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-                                <Button onClick={cancelEdit} variant="outlined" sx={{ width: '45%', color:'maroon' }}>
-                                    Cancel
-                                </Button>
-                                <Button onClick={handleSave} variant="contained" sx={{ width: '45%', backgroundColor:'maroon' }}>
-                                    Save
-                                </Button>
-                            </Box>
-                        </Box>
-                    </Modal>
+        {/* Modal Content Area */}
+        <Box
+            sx={{
+                padding: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+            }}
+        >
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                    label="Date"
+                    value={editedDate}
+                    onChange={(newValue) => setEditedDate(newValue)}
+                    sx={{
+                        '& input': { backgroundColor: '#f9f9f9' },
+                    }}
+                />
+                <TimePicker
+                    label="Start Time"
+                    value={editedStartTime}
+                    onChange={(newValue) => setEditedStartTime(newValue)}
+                />
+                <TimePicker
+                    label="End Time"
+                    value={editedEndTime}
+                    onChange={(newValue) => setEditedEndTime(newValue)}
+                />
+            </LocalizationProvider>
+            <TextField
+                label="Instructor Name"
+                value={editedInstructor}
+                onChange={(e) => setEditedInstructor(e.target.value)}
+                fullWidth
+                sx={{ '& input': { backgroundColor: '#f9f9f9' } }}
+            />
+            <TextField
+                label="Section"
+                value={editedSection}
+                onChange={(e) => setEditedSection(e.target.value)}
+                fullWidth
+                sx={{ '& input': { backgroundColor: '#f9f9f9' } }}
+            />
+        </Box>
 
-                    <Modal open={openConfirmModal} onClose={cancelSave}>
-                        <Box sx={{
-                            position: 'absolute', top: '50%', left: '50%',
-                            transform: 'translate(-50%, -50%)', width: 400,
-                            bgcolor: '#FFFFFF', p: 4, borderRadius: '15px',
-                            display: 'flex', flexDirection: 'column', gap: 2
-                        }}>
-                            <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bold', color:'darkgreen' }}>
-                                Are you sure you want to save the changes?
-                            </Typography>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-                                <Button onClick={cancelSave} variant="outlined" sx={{ width: '45%', color:'maroon' }}>
-                                    No
-                                </Button>
-                                <Button onClick={confirmAndSave} variant="contained" sx={{ width: '45%',backgroundColor:'maroon' }}>
-                                    Yes
-                                </Button>
-                            </Box>
-                        </Box>
-                    </Modal>
-                    <Modal open={openSnackbar} onClose={() => setOpenSnackbar(false)}>
-                        <Box sx={{
-                            position: 'absolute', top: '50%', left: '50%',
-                            transform: 'translate(-50%, -50%)', width: 400,
-                            bgcolor: '#FFFFFF', p: 4, borderRadius: '15px',
-                            display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'
-                        }}>
-                            <Typography variant="h6" sx={{ textAlign: 'center', mb: 2 }}>
-                                Schedule Updated!
-                            </Typography>
-                            <Button 
-                                variant="contained" 
-                                sx={{ bgcolor: '#800000', color: 'white' }} 
-                                onClick={() => setOpenSnackbar(false)}
-                            >
-                                Close
-                            </Button>
-                        </Box>
-                    </Modal>
-
-                </div>
-                </div>
+        {/* Modal Footer */}
+        <Box
+            sx={{
+                padding: '16px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                borderTop: '1px solid #e0e0e0',
+            }}
+        >
+            <Button
+                onClick={() => setOpenModal(false)}
+                sx={{
+                    color: '#016565',
+                    borderColor: '#016565',
+                    border: '1px solid',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                }}
+            >
+                Cancel
+            </Button>
+            <Button
+                onClick={handleSave}
+                sx={{
+                    backgroundColor: 'maroon',
+                    color: '#FFFFFF',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    '&:hover': {
+                        backgroundColor: '#a00000',
+                    },
+                }}
+            >
+                Save
+            </Button>
+        </Box>
+    </Box>
+</Modal>
+</div>
+            </div>
         </ThemeProvider>
     );
 }

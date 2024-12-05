@@ -22,7 +22,7 @@ function AppRoutes() {
     const [userRole, setUserRole] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
+  /*  useEffect(() => {
         const jwtToken = localStorage.getItem("jwtToken");
         if (!jwtToken) {
             navigate("/login");
@@ -31,7 +31,7 @@ function AppRoutes() {
 
         const role = localStorage.getItem("userRole");
         setUserRole(role);
-    }, [navigate]);
+    }, [navigate]);*/
 
     return (
         <Routes>

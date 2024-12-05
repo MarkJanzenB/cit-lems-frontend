@@ -4,7 +4,7 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import Sidebar from '../Sidebar/Sidebar';
 import Appbar from '../Appbar/Appbar.jsx';
-import { initialRows } from '../Dashboard/Schedule/ScheduleTab/Today.jsx'; // Import data from Today.jsx
+//import { initialRows } from '../Dashboard/Schedule/ScheduleTab/.jsx'; // Import data from Today.jsx
 import StyledPaper from '../MyPaper.jsx'; // Import the StyledPaper component
 
 const localizer = momentLocalizer(moment);
