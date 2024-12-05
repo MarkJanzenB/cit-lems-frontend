@@ -373,15 +373,17 @@ export default function Inventory() {
                                 <div className={transition ? 'fade-slide-up' : ''} style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
                                     <MyPaper width="30%" height="30%">
                                         <h1>Consumables</h1>
-                                        <img src={"/consumable.gif"} style={{ width: '200px', height: '200px' }} />
+                                        <img src={"/consumable.gif"} style={{width: '200px', height: '200px'}}
+                                             onClick={() => handleViewListClick(0)}/>
                                         <MyPaper width={"100%"} height={"30%"}>
                                             <h4>This is a short description about consumables</h4>
                                         </MyPaper>
                                         <Button onClick={() => handleViewListClick(0)}>View List</Button>
                                     </MyPaper>
                                     <MyPaper width="30%" height="30%">
-                                        <h1>Equipment</h1>
-                                        <img src={"/equipment.gif"} style={{ width: '200px', height: '200px' }} />
+                                    <h1>Equipment</h1>
+                                        <img src={"/equipment.gif"} style={{ width: '200px', height: '200px' }}
+                                             onClick={() => handleViewListClick(1)}/>
                                         <MyPaper width={"100%"} height={"30%"}>
                                             <h4>This is a short description about equipment</h4>
                                         </MyPaper>
@@ -389,7 +391,7 @@ export default function Inventory() {
                                     </MyPaper>
                                     <MyPaper width="30%" height="30%">
                                         <h1>Glassware</h1>
-                                        <img src={"/glassware.gif"} style={{ width: '200px', height: '200px' }} />
+                                        <img src={"/glassware.gif"} style={{ width: '200px', height: '200px' }} onClick={() => handleViewListClick(2)}/>
                                         <MyPaper width={"100%"} height={"30%"}>
                                             <h4>This is a short description about glassware</h4>
                                         </MyPaper>
@@ -397,7 +399,8 @@ export default function Inventory() {
                                     </MyPaper>
                                     <MyPaper width="30%" height="30%">
                                         <h1>Hazards</h1>
-                                        <img src={"/hazardous.gif"} style={{ width: '200px', height: '200px' }} />
+                                        <img src={"/hazardous.gif"} style={{ width: '200px', height: '200px' }}
+                                             onClick={() => handleViewListClick(3)}/>
                                         <MyPaper width={"100%"} height={"30%"}>
                                             <h4>This is a short description about hazardsssss</h4>
                                         </MyPaper>
@@ -423,42 +426,67 @@ export default function Inventory() {
                                     }}>
 
 
-                                        <ButtonGroup variant="outlined" aria-label="outlined button group" >
+                                        <ButtonGroup variant="outlined" aria-label="outlined button group">
                                             <Button
-                                                style={currentCategory === 0 ? { width: '200px', height: '80px', fontSize: '24px',  } : {}}
-                                                onClick={()=>handleViewListClick(0)}
+                                                style={currentCategory === 0 ? {
+                                                    width: '200px',
+                                                    height: '80px',
+                                                    fontSize: '24px',
+                                                } : {}}
+                                                onClick={() => handleViewListClick(0)}
                                             >
-                                                {currentCategory === 0 ? 'Consumables' : <img src="/consumable.gif" alt="Consumables" style={{ width: '50px', height: '50px' }} />}
+                                                {currentCategory === 0 ? 'Consumables' :
+                                                    <img src="/consumable.gif" alt="Consumables"
+                                                         style={{width: '50px', height: '50px'}}/>}
                                             </Button>
                                             <Button
-                                                style={currentCategory === 1 ? { width: '200px', height: '80px', fontSize: '24px', } : {}}
-                                                onClick={() =>handleViewListClick(1)}
+                                                style={currentCategory === 1 ? {
+                                                    width: '200px',
+                                                    height: '80px',
+                                                    fontSize: '24px',
+                                                } : {}}
+                                                onClick={() => handleViewListClick(1)}
                                             >
-                                                {currentCategory === 1 ? 'Equipment' : <img src="/equipment.gif" alt="Equipment" style={{ width: '50px', height: '50px' }} />}
+                                                {currentCategory === 1 ? 'Equipment' :
+                                                    <img src="/equipment.gif" alt="Equipment"
+                                                         style={{width: '50px', height: '50px'}}/>}
                                             </Button>
                                             <Button
-                                                style={currentCategory === 2 ? { width: '200px', height: '80px', fontSize: '24px', } : {}}
-                                                onClick={() =>handleViewListClick(2)}
+                                                style={currentCategory === 2 ? {
+                                                    width: '200px',
+                                                    height: '80px',
+                                                    fontSize: '24px',
+                                                } : {}}
+                                                onClick={() => handleViewListClick(2)}
                                             >
-                                                {currentCategory === 2 ? 'Glassware' : <img src="/glassware.gif" alt="Glassware" style={{width: '50px', height: '50px' }} />}
+                                                {currentCategory === 2 ? 'Glassware' :
+                                                    <img src="/glassware.gif" alt="Glassware"
+                                                         style={{width: '50px', height: '50px'}}/>}
                                             </Button>
                                             <Button
-                                                style={currentCategory === 3 ? { width: '200px', height: '80px', fontSize: '24px',  } : {}}
-                                                onClick={() =>handleViewListClick(3)}
+                                                style={currentCategory === 3 ? {
+                                                    width: '200px',
+                                                    height: '80px',
+                                                    fontSize: '24px',
+                                                } : {}}
+                                                onClick={() => handleViewListClick(3)}
                                             >
-                                                {currentCategory === 3 ? 'Hazards' : <img src="/hazardous.gif" alt="Hazards" style={{ width: '50px', height: '50px' }} />}
+                                                {currentCategory === 3 ? 'Hazards' :
+                                                    <img src="/hazardous.gif" alt="Hazards"
+                                                         style={{width: '50px', height: '50px'}}/>}
                                             </Button>
+
                                         </ButtonGroup>
-                                       <div style={{justifyContent:'space-between'}}>
-                                           <Button onClick={handleBack}><img src={"/close.gif"} style={{
-                                               width: '50px',
-                                               height: '50px',
-                                           }}/></Button>
-                                       </div>
+                                        <div style={{justifyContent: 'space-between'}}>
+                                            <Button onClick={handleBack}><img src={"/close.gif"} style={{
+                                                width: '50px',
+                                                height: '50px',
+                                            }}/></Button>
+                                        </div>
                                         {/*<h1>{categories[currentCategory]}</h1>*/}
                                     </div>
 
-
+                                    <br/>
                                     <CustomTable
                                         columns={columns}
                                         data={paginatedData}
@@ -519,6 +547,7 @@ export default function Inventory() {
                                             Next
                                         </Button>
                                     </Box>
+
                                 )}
 
                                 {currentStep === 2 && (
