@@ -20,13 +20,19 @@ const Appbar = ({ page }) => {
     setIsAuthenticated(!!jwtToken);
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("userRole");
+    navigate('/login');
+  };
+
   const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
-     bgcolor: '#FFF1DB',
+    bgcolor: '#FFF1DB',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
@@ -63,149 +69,143 @@ const Appbar = ({ page }) => {
   };
 
   return (
-    <AppBar className="appbar">
-      <Toolbar className="appbar-toolbar">
-        {isAuthenticated ? (
-            <img src={logo} alt="Logo" className="appbar-logo" />
-        ) : (
-            <Link to="/" style={{ textDecoration: 'none' }}>
+      <AppBar className="appbar">
+        <Toolbar className="appbar-toolbar">
+          {isAuthenticated ? (
               <img src={logo} alt="Logo" className="appbar-logo" />
-            </Link>
-        )}
-        <div style={{ flexGrow: 1 }} />
-        <Typography variant="h6" className="appbar-typography"></Typography>
-        {page === 'home' ? (
-          <>
-            <Button
-              variant={'outlined'}
-              sx={{
-                fontSize: '1.5em',
-                '&:hover': {
-                  backgroundColor: '#FFF1DB',
-                  color: '#BAFFC9',
-                },
-              }}
-              onClick={handleOpen}
-            >
-              <img src={m1} alt="menu" style={{ width: '50px', height: '50px' }} />
-            </Button>
-            <Modal
-              open={open}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                <Button style={closeButtonStyle} onClick={handleClose} sx={{...closeButtonStyle,
+          ) : (
+              <Link to="/" style={{ textDecoration: 'none' }}>
+                <img src={logo} alt="Logo" className="appbar-logo" />
+              </Link>
+          )}
+          <div style={{ flexGrow: 1 }} />
+          <Typography variant="h6" className="appbar-typography"></Typography>
+          {page === 'home' ? (
+              <>
+                <Button
+                    variant={'outlined'}
+                    sx={{
+                      fontSize: '1.5em',
+                      '&:hover': {
+                        backgroundColor: '#FFF1DB',
+                        color: '#BAFFC9',
+                      },
+                    }}
+                    onClick={handleOpen}
+                >
+                  <img src={m1} alt="menu" style={{ width: '50px', height: '50px' }} />
+                </Button>
+                <Modal
+                    open={open}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <Button style={closeButtonStyle} onClick={handleClose} sx={{...closeButtonStyle,
                       '&:hover': {
                         backgroundColor: '#056765',
                       }
-                }} >X</Button><br />
+                    }} >X</Button><br />
 
-                <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
-                  <Link to="/register" style={{ textDecoration: 'none' }}>
-                    <Box sx={{
-                      ...buttonStyle,
+                    <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
+                      <Link to="/register" style={{ textDecoration: 'none' }}>
+                        <Box sx={{
+                          ...buttonStyle,
+                          '&:hover': {
+                            bgcolor: '#056765',
+                            '& button': {
+                              color: '#FFF'
+                            }
+                          }
+                        }}>
+                          <Button sx={{
+                            fontFamily: 'monospace',
+                            fontWeight: 'bold',
+                            color: '#056765',
+                          }}>Create An Account</Button><br />
+                        </Box>
+                      </Link>
+                      <Link to="/login" style={{ textDecoration: 'none' }}>
+                        <Box sx={{
+                          ...buttonStyle,
+                          '&:hover': {
+                            bgcolor: '#056765',
+                            '& button': {
+                              color: '#FFF'
+                            }
+                          }
+                        }}>
+                          <Button sx={{
+                            fontFamily: 'monospace',
+                            fontWeight: 'bold',
+                            color: '#056765',
+                          }}>Sign In</Button><br />
+                        </Box>
+                      </Link>
+                    </Typography>
+                  </Box>
+                </Modal>
+              </>
+          ) : (
+              <>
+                <div className="vertical-line"></div>
+                <Button
+                    variant={'outlined'}
+                    sx={{
+                      fontSize: '1.5em',
                       '&:hover': {
-                        bgcolor: '#056765',
-                        '& button': {
-                          color: '#FFF'
-                        }
-                      }
-                    }}>
-                      <Button sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 'bold',
-                        color: '#056765',
-                      }}>Create An Account</Button><br />
-                    </Box>
-                  </Link>
-                  <Link to="/login" style={{ textDecoration: 'none' }}>
-                    <Box sx={{
-                      ...buttonStyle,
-                      '&:hover': {
-                        bgcolor: '#056765',
-                        '& button': {
-                          color: '#FFF'
-                        }
-                      }
-                    }}>
-                      <Button sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 'bold',
-                        color: '#056765',
-                      }}>Sign In</Button><br />
-                    </Box>
-                  </Link>
-                </Typography>
-              </Box>
-            </Modal>
-          </>
-        ) : (
-          <>
-            <div className="vertical-line"></div>
-            <Button
-              variant={'outlined'}
-              sx={{
-                fontSize: '1.5em',
-                '&:hover': {
-                  backgroundColor: '#FFF1DB',
-                  color: 'white',
-                },
-              }}
-              onClick={handleOpen}
-            >
-              <img src={profile} alt="Profile" style={{ width: '50px', height: '50px' }} />
-            </Button>
-            <Modal
-              open={open}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br />
-                <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
-                  <Box sx={buttonStyle}>
-                    <Link to="/editprofile">
-                    <Button sx={{
-                      fontFamily: 'monospace',
-                      fontWeight: 'bold',
-                      // color: 'green',
-                      '&:hover': { color: 'green' }
-                    }}>Edit Profile</Button></Link><br />
-
+                        backgroundColor: '#FFF1DB',
+                        color: 'white',
+                      },
+                    }}
+                    onClick={handleOpen}
+                >
+                  <img src={profile} alt="Profile" style={{ width: '50px', height: '50px' }} />
+                </Button>
+                <Modal
+                    open={open}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br />
+                    <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
+                      <Box sx={buttonStyle}>
+                        <Link to="/editprofile">
+                          <Button sx={{
+                            fontFamily: 'monospace',
+                            fontWeight: 'bold',
+                            '&:hover': { color: 'green' }
+                          }}>Edit Profile</Button></Link><br />
+                      </Box>
+                      <Box sx={buttonStyle}>
+                        <Button sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 'bold',
+                          '&:hover': { color: 'green' }
+                        }}>Settings</Button><br />
+                      </Box>
+                      <Box sx={buttonStyle}>
+                        <Button sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 'bold',
+                          '&:hover': { color: 'green' }
+                        }}>Help</Button><br />
+                      </Box>
+                      <Box sx={buttonStyle}>
+                        <Button onClick={handleLogout} sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 'bold',
+                          '&:hover': { color: 'green' }
+                        }}>Log Out</Button><br />
+                      </Box>
+                    </Typography>
                   </Box>
-                  <Box sx={buttonStyle}>
-                    <Button sx={{
-                      fontFamily: 'monospace',
-                      fontWeight: 'bold',
-                      // color: '#056765',
-                      '&:hover': { color: 'green' }
-                    }}>Settings</Button><br />
-                  </Box>
-                  <Box sx={buttonStyle}>
-                    <Button sx={{
-                      fontFamily: 'monospace',
-                      fontWeight: 'bold',
-                      // color: '#056765',
-                      '&:hover': { color: 'green' }
-                    }}>Help</Button><br />
-                  </Box>
-                  <Box sx={buttonStyle}>
-                    <Link to="/login" style={{ textDecoration: 'none' }}>
-                      <Button sx={{
-                        fontFamily: 'monospace',
-                        fontWeight: 'bold',
-                        // color: '#056765',
-                        '&:hover': { color: 'green' }
-                    }}>Log Out</Button></Link><br />
-                  </Box>
-                </Typography>
-              </Box>
-            </Modal>
-          </>
-        )}
-      </Toolbar>
-    </AppBar>
+                </Modal>
+              </>
+          )}
+        </Toolbar>
+      </AppBar>
   );
 };
 
