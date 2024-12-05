@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Login from './Authentication/Login.jsx';
 import Register from './Authentication/Register.jsx';
 import Dashboard from './Dashboard/Dashboard.jsx';
@@ -19,25 +19,28 @@ import List from "./Dashboard/History/HistoryTab/List.jsx";
 import UnauthorizedPage from './UnauthorizedPage.jsx';
 import EditProfile from "./Settings/EditProfile.jsx";
 import PrivateRoute from './PrivateRoute.jsx';
-import useLocalStorageListener from '../hooks/useLocalStorageListener'; // Import the custom hook
-
+import useLocalStorageListener from '../hooks/useLocalStorageListener';
 
 function AppRoutes() {
     const [userRole, setUserRole] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation();
 
-    useLocalStorageListener(); // Use the custom hook
+    useLocalStorageListener();
 
     useEffect(() => {
         const jwtToken = localStorage.getItem("jwtToken");
-        if (!jwtToken) {
+        console.log("AppRoutes: jwtToken =", jwtToken);
+        if (!jwtToken && location.pathname !== '/register') {
+            console.log("AppRoutes: No jwtToken, navigating to /login");
             navigate("/login");
             return;
         }
 
         const role = localStorage.getItem("userRole");
+        console.log("AppRoutes: userRole =", role);
         setUserRole(role);
-    }, [navigate]);
+    }, [navigate, location.pathname]);
 
     return (
         <Routes>
