@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Appbar from "../../../Appbar/Appbar.jsx";
 import Sidebar from "../../../Sidebar/Sidebar.jsx";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TablePagination, Modal, Box, TextField, Typography, Checkbox, FormControlLabel } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TablePagination, Modal, Box, TextField, Typography, Checkbox, FormControlLabel, useMediaQuery } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const returnItemsData = Array.from({ length: 20 }, (_, index) => ({
@@ -26,7 +26,20 @@ const theme = createTheme({
     palette: {
         primary: { main: '#016565' },
         secondary: { main: '#000000' }
-    }
+    },
+    components: {
+        MuiTableCell: {
+            styleOverrides: {
+                head: {
+                    backgroundColor: '#016565',
+                    color: '#FFFFFF',
+                },
+                body: {
+                    fontSize: 14,
+                },
+            },
+        },
+    },
 });
 
 export default function ReturnItems() {
@@ -41,6 +54,8 @@ export default function ReturnItems() {
     const [selectedSerialNumbers, setSelectedSerialNumbers] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [breakageDescription, setBreakageDescription] = useState('');
+    const [searchQuery, setSearchQuery] = useState("");
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -71,27 +86,25 @@ export default function ReturnItems() {
         setConfirmModalOpen(false);
     };
 
- const handleConfirmReport = () => {
-    setConfirmModalOpen(false);
-    setIncidentReportModalOpen(false); // Close the incident report modal
-    if (selectedItems.length > 0) {
-        setCombinedSuccessModalOpen(true);
-    } else {
-        setSuccessModalOpen(true);
-    }
-};
+    const handleConfirmReport = () => {
+        setConfirmModalOpen(false);
+        setIncidentReportModalOpen(false); // Close the incident report modal
+        if (selectedItems.length > 0) {
+            setCombinedSuccessModalOpen(true);
+        } else {
+            setSuccessModalOpen(true);
+        }
+    };
 
     const handleCloseSuccessModal = () => {
         setSuccessModalOpen(false);
         setOpenModal(false);
-
     };
 
     const handleCloseCombinedSuccessModal = () => {
         setCombinedSuccessModalOpen(false);
         setOpenModal(false);
     };
-
 
     const handleCloseSerialNumberModal = () => {
         setSerialNumberModalOpen(false);
@@ -113,7 +126,20 @@ export default function ReturnItems() {
         setBreakageDescription(event.target.value);
     };
 
-    const displayedRows = returnItemsData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const filteredRows = returnItemsData.filter((row) => {
+        return (
+            row.instructor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            row.time.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            row.yearSec.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            row.dateBorrowed.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    });
+
+    const displayedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     return (
         <ThemeProvider theme={theme}>
@@ -121,8 +147,16 @@ export default function ReturnItems() {
                 <Appbar />
                 <Sidebar page={"borrowhistory"} style={{ position: 'fixed', height: '100vh', width: '250px' }} />
                 <div style={{ marginLeft: '15px', width: 'calc(100% - 270px)', padding: '20px', marginTop: '100px' }}>
+                    <TextField
+                        label="Search"
+                        variant="outlined"
+                        fullWidth
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        sx={{ marginBottom: '10px', width: isSmallScreen ? '90vw' : '80vw' }}
+                    />
                     <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
-                        <Table>
+                        <Table stickyHeader>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Instructor</TableCell>
@@ -145,7 +179,7 @@ export default function ReturnItems() {
                         <TablePagination
                             rowsPerPageOptions={[10, 20, 30]}
                             component="div"
-                            count={returnItemsData.length}
+                            count={filteredRows.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}
