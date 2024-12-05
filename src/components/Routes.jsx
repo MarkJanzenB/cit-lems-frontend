@@ -13,7 +13,7 @@ import UpcomingSchedule from "./Dashboard/Schedule/ScheduleTab/UpcomingSchedule.
 import Calendar from "./Calendar/Calendar.jsx";
 import Report from "./Dashboard/Report/Report.jsx";
 import Damages from "./Dashboard/Report/ReportTab/Damages.jsx";
-import ReturnItems from "./Dashboard/Report/ReportTab/ReturnItems.jsx";
+import ReturnItems from "./Dashboard/History/HistoryTab/ReturnItems.jsx";
 import List from "./Dashboard/History/HistoryTab/List.jsx";
 import UnauthorizedPage from './UnauthorizedPage.jsx';
 import EditProfile from "./Settings/EditProfile.jsx";
@@ -60,12 +60,13 @@ function AppRoutes() {
             <Route path="/report/*">
                 <Route path="" element={<Report />} />
                 <Route path="damages" element={<Damages />} />
-                <Route path="returnitems" element={<ReturnItems />} />
             </Route>
 
             {/* History Routes */}
-            <Route path="/borrowhistory/list" element={<List />} />
-
+            <Route path="/borrowhistory/*">
+                <Route path="list" element={<List />} />
+                <Route path="returnitems" element={<ReturnItems />} />
+            </Route>
             {/* Settings Routes */}
             <Route path={"/editprofile"} element={<EditProfile />} />
 
