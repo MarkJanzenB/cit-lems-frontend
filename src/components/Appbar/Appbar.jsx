@@ -26,7 +26,7 @@ const Appbar = ({ page }) => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
-     bgcolor: '#056765',
+     bgcolor: '#FFF1DB',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
@@ -43,7 +43,7 @@ const Appbar = ({ page }) => {
     textDecoration: 'none',
     backgroundColor: 'white',
     '&:hover': {
-      backgroundColor: '#056765',
+      backgroundColor: '#FFF1DB',
     }
   };
 
@@ -56,9 +56,9 @@ const Appbar = ({ page }) => {
     width: '30px',
     height: '30px',
     cursor: 'pointer',
-    backgroundColor: '#FFF1DB',
+    backgroundColor: '#FFFFFF',
     '&:hover': {
-      backgroundColor: '#056765',
+      backgroundColor: '#FFF1DB',
     }
   };
 
@@ -82,7 +82,7 @@ const Appbar = ({ page }) => {
                 fontSize: '1.5em',
                 '&:hover': {
                   backgroundColor: '#FFF1DB',
-                  color: '#056765',
+                  color: '#BAFFC9',
                 },
               }}
               onClick={handleOpen}
@@ -95,7 +95,12 @@ const Appbar = ({ page }) => {
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
-                <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br />
+                <Button style={closeButtonStyle} onClick={handleClose} sx={{...closeButtonStyle,
+                      '&:hover': {
+                        backgroundColor: '#056765',
+                      }
+                }} >X</Button><br />
+
                 <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
                   <Link to="/register" style={{ textDecoration: 'none' }}>
                     <Box sx={{
@@ -164,8 +169,8 @@ const Appbar = ({ page }) => {
                     <Button sx={{
                       fontFamily: 'monospace',
                       fontWeight: 'bold',
-                      // color: 'white',
-                      // '&:hover': { color: 'white' }
+                      // color: 'green',
+                      '&:hover': { color: 'green' }
                     }}>Edit Profile</Button></Link><br />
 
                   </Box>
@@ -174,7 +179,7 @@ const Appbar = ({ page }) => {
                       fontFamily: 'monospace',
                       fontWeight: 'bold',
                       // color: '#056765',
-                      // '&:hover': { color: 'white' }
+                      '&:hover': { color: 'green' }
                     }}>Settings</Button><br />
                   </Box>
                   <Box sx={buttonStyle}>
@@ -182,7 +187,7 @@ const Appbar = ({ page }) => {
                       fontFamily: 'monospace',
                       fontWeight: 'bold',
                       // color: '#056765',
-                      // '&:hover': { color: 'white' }
+                      '&:hover': { color: 'green' }
                     }}>Help</Button><br />
                   </Box>
                   <Box sx={buttonStyle}>
@@ -191,8 +196,8 @@ const Appbar = ({ page }) => {
                         fontFamily: 'monospace',
                         fontWeight: 'bold',
                         // color: '#056765',
-                        // '&:hover': { color: 'white' }
-                      }}>Log Out</Button></Link><br />
+                        '&:hover': { color: 'green' }
+                    }}>Log Out</Button></Link><br />
                   </Box>
                 </Typography>
               </Box>
