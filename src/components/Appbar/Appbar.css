@@ -43,11 +43,11 @@ margin: 5px; /* Adjust spacing as needed */
 }
 
 
-.appbar-button {
-  color: #056765;
- font-weight: bold;
- margin-left: 16px;
-}
+/*.appbar-button {*/
+/*  color: #056765;*/
+/* font-weight: bold;*/
+/* margin-left: 16px;*/
+/*}*/
 
 .appbar-button-signup {
  margin-left: 8px;

@@ -1,52 +1,76 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Login from './Authentication/Login.jsx';
 import Register from './Authentication/Register.jsx';
 import Dashboard from './Dashboard/Dashboard.jsx';
 import Home from './Landingpage/Home.jsx';
-import Schedule from "./Dashboard/Schedule/Schedule.jsx";// Add a new Home component for the root path
-//inventory tab
+import Schedule from "./Dashboard/Schedule/Schedule.jsx";
 import Inventory from "./Dashboard/Inventory/Inventory.jsx";
-// import InventoryST from "./Dashboard/ST/InventoryST.jsx";
-//Schedule tab
-import Request from "./Dashboard/Schedule/ScheduleTab/Request.jsx"
-import Today from "./Dashboard/Schedule/ScheduleTab/Today.jsx"
-import UpcomingSchedule from "./Dashboard/Schedule/ScheduleTab/UpcomingSchedule.jsx"
+import Export from "./Dashboard/Inventory/Export.jsx";
+import Request from "./Dashboard/Schedule/ScheduleTab/Request.jsx";
+import Today from "./Dashboard/Schedule/ScheduleTab/Today.jsx";
+import UpcomingSchedule from "./Dashboard/Schedule/ScheduleTab/UpcomingSchedule.jsx";
 import Calendar from "./Calendar/Calendar.jsx";
-//report tab
 import Report from "./Dashboard/Report/Report.jsx";
 import Damages from "./Dashboard/Report/ReportTab/Damages.jsx";
 import ReturnItems from "./Dashboard/Report/ReportTab/ReturnItems.jsx";
-//history tab
 import List from "./Dashboard/History/HistoryTab/List.jsx";
-import Consumables from "./Dashboard/Inventory/Inventory Tabs/Consumables.jsx";
-import Equipments from "./Dashboard/Inventory/Inventory Tabs/Equipments.jsx";
-import Glassware from "./Dashboard/Inventory/Inventory Tabs/Glassware.jsx";
-import Hazards from "./Dashboard/Inventory/Inventory Tabs/Hazards.jsx";
+import UnauthorizedPage from './UnauthorizedPage.jsx';
+import EditProfile from "./Settings/EditProfile.jsx";
 
 function AppRoutes() {
+    const [userRole, setUserRole] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const jwtToken = localStorage.getItem("jwtToken");
+        if (!jwtToken) {
+            navigate("/login");
+            return;
+        }
+
+        const role = localStorage.getItem("userRole");
+        setUserRole(role);
+    }, [navigate]);
+
     return (
         <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path={"/schedule"} element={<Schedule />} />
-            <Route path={"/inventory"} element={<Inventory />} />
-            <Route path={"/report"} element={<Report />} />
-            <Route path={"/borrowhistory/list"} element={<List/>} />
-            <Route path="/schedule/request" element={<Request />} />
-            <Route path="/schedule/today" element={<Today />} />
-            <Route path ="/schedule/upcoming" element={<UpcomingSchedule />}/>
-            <Route path ="/report/damages" element={<Damages />}/>
-            <Route path ="/report/returnitems" element={<ReturnItems />}/>
-            <Route path ="/schedule/calendar" element={<Calendar />}/>
-            {/*<Route path={"inventory/consumables"} element={<Consumables/>}/>*/}
-            {/*<Route path={"inventory/equipments"} element={<Equipments/>}/>*/}
-            {/*<Route path={"inventory/glassware"} element={<Glassware/>}/>*/}
-            {/*<Route path={"inventory/hazards"} element={<Hazards/>}/>*/}
-            {/*<Route path ="/inventory/allitems" element={<InventoryST />}/>*/}
+            <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
+            {/* Role-based Dashboard Routes */}
+            <Route path="/dashboard" element={<Dashboard />} />
+
+            {/* Schedule Routes */}
+            <Route path="/schedule/*">
+                <Route path="request" element={<Request />} />
+                <Route path="today" element={<Today />} />
+                <Route path="upcoming" element={<UpcomingSchedule />} />
+                <Route path="calendar" element={<Calendar />} />
+            </Route>
+
+            {/* Inventory Routes */}
+            <Route path="/inventory" element={<Inventory userRole={userRole} />} />
+            <Route path="/inventory/export" element={<Export />} />
+
+            {/* Report Routes */}
+            <Route path="/report/*">
+                <Route path="" element={<Report />} />
+                <Route path="damages" element={<Damages />} />
+                <Route path="returnitems" element={<ReturnItems />} />
+            </Route>
+
+            {/* History Routes */}
+            <Route path="/borrowhistory/list" element={<List />} />
+
+            {/* Settings Routes */}
+            <Route path={"/editprofile"} element={<EditProfile />} />
+
+            {/* Fallback for undefined routes */}
+            <Route path="*" element={<UnauthorizedPage />} />
         </Routes>
     );
 }
