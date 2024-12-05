@@ -16,6 +16,7 @@ import Damages from "./Dashboard/Report/ReportTab/Damages.jsx";
 import ReturnItems from "./Dashboard/Report/ReportTab/ReturnItems.jsx";
 import List from "./Dashboard/History/HistoryTab/List.jsx";
 import UnauthorizedPage from './UnauthorizedPage.jsx';
+import EditProfile from "./Settings/EditProfile.jsx";
 
 function AppRoutes() {
     const [userRole, setUserRole] = useState(null);
@@ -64,6 +65,9 @@ function AppRoutes() {
 
             {/* History Routes */}
             <Route path="/borrowhistory/list" element={<List />} />
+
+            {/* Settings Routes */}
+            <Route path={"/editprofile"} element={<EditProfile />} />
 
             {/* Fallback for undefined routes */}
             <Route path="*" element={<UnauthorizedPage />} />

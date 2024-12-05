@@ -12,7 +12,7 @@ function App() {
                 <Helmet>
                     <title>LEMS</title>
                 </Helmet>
-                <Routes />
+                <Routes/>
             </BrowserRouter>
         </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Button, Typography } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
 import './Appbar.css';
@@ -13,6 +13,12 @@ const Appbar = ({ page }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const jwtToken = localStorage.getItem("jwtToken");
+    setIsAuthenticated(!!jwtToken);
+  }, []);
 
   const style = {
     position: 'absolute',
@@ -20,7 +26,7 @@ const Appbar = ({ page }) => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: '#FFF1DB',
+     bgcolor: '#056765',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
@@ -35,7 +41,7 @@ const Appbar = ({ page }) => {
     display: 'block',
     textAlign: 'center',
     textDecoration: 'none',
-    backgroundColor: '#FFF1DB',
+    backgroundColor: 'white',
     '&:hover': {
       backgroundColor: '#056765',
     }
@@ -59,9 +65,13 @@ const Appbar = ({ page }) => {
   return (
     <AppBar className="appbar">
       <Toolbar className="appbar-toolbar">
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <img src={logo} alt="Logo" className="appbar-logo" />
-        </Link>
+        {isAuthenticated ? (
+            <img src={logo} alt="Logo" className="appbar-logo" />
+        ) : (
+            <Link to="/" style={{ textDecoration: 'none' }}>
+              <img src={logo} alt="Logo" className="appbar-logo" />
+            </Link>
+        )}
         <div style={{ flexGrow: 1 }} />
         <Typography variant="h6" className="appbar-typography"></Typography>
         {page === 'home' ? (
@@ -134,7 +144,7 @@ const Appbar = ({ page }) => {
                 fontSize: '1.5em',
                 '&:hover': {
                   backgroundColor: '#FFF1DB',
-                  color: '#056765',
+                  color: 'white',
                 },
               }}
               onClick={handleOpen}
@@ -150,27 +160,29 @@ const Appbar = ({ page }) => {
                 <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br />
                 <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
                   <Box sx={buttonStyle}>
+                    <Link to="/editprofile">
                     <Button sx={{
                       fontFamily: 'monospace',
                       fontWeight: 'bold',
-                      color: '#056765',
-                      '&:hover': { color: 'green' }
-                    }}>Edit Profile</Button><br />
+                      // color: 'white',
+                      // '&:hover': { color: 'white' }
+                    }}>Edit Profile</Button></Link><br />
+
                   </Box>
                   <Box sx={buttonStyle}>
                     <Button sx={{
                       fontFamily: 'monospace',
                       fontWeight: 'bold',
-                      color: '#056765',
-                      '&:hover': { color: 'green' }
+                      // color: '#056765',
+                      // '&:hover': { color: 'white' }
                     }}>Settings</Button><br />
                   </Box>
                   <Box sx={buttonStyle}>
                     <Button sx={{
                       fontFamily: 'monospace',
                       fontWeight: 'bold',
-                      color: '#056765',
-                      '&:hover': { color: 'green' }
+                      // color: '#056765',
+                      // '&:hover': { color: 'white' }
                     }}>Help</Button><br />
                   </Box>
                   <Box sx={buttonStyle}>
@@ -178,8 +190,8 @@ const Appbar = ({ page }) => {
                       <Button sx={{
                         fontFamily: 'monospace',
                         fontWeight: 'bold',
-                        color: '#056765',
-                        '&:hover': { color: 'green' }
+                        // color: '#056765',
+                        // '&:hover': { color: 'white' }
                       }}>Log Out</Button></Link><br />
                   </Box>
                 </Typography>
