@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Appbar from "../../../Appbar/Appbar.jsx";
-import Sidebar from "../../../Sidebar/Sidebar.jsx";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TextField, useMediaQuery, Select, MenuItem, Typography } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import Appbar from '../../../Appbar/Appbar.jsx';
+import Sidebar from '../../../Sidebar/Sidebar.jsx';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TextField, useMediaQuery, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme({
@@ -17,8 +17,8 @@ const theme = createTheme({
                     color: '#FFFFFF',
                 },
                 body: {
-                    fontSize: 14,
-                    padding: '8px', // Adjust padding to match Resolved component
+                    fontSize: 16, // Increased font size
+                    padding: '10px', // Adjusted padding
                 },
             },
         },
@@ -38,21 +38,21 @@ const generateSampleData = (numRows) => {
             instructor: `Instructor ${i + 1}`,
             photo: `Photo ${i + 1}`,
             accountable: `Accountable ${i + 1}`,
-            status: 'Unresolved'
+            status: 'Resolved'
         });
     }
     return sampleData;
 };
 
-export default function Damages() {
-    const [damagesData, setDamagesData] = useState([]);
+export default function Resolved() {
+    const [resolvedData, setResolvedData] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState("");
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
-        setDamagesData(generateSampleData(100)); // Generate 100 rows of sample data
+        setResolvedData(generateSampleData(100)); // Generate 100 rows of sample data
     }, []);
 
     const handleChangePage = (event, newPage) => {
@@ -68,14 +68,7 @@ export default function Damages() {
         setSearchQuery(event.target.value);
     };
 
-    const handleStatusChange = (id, newStatus) => {
-        const updatedData = damagesData.map(item =>
-            item.reportId === id ? { ...item, status: newStatus } : item
-        );
-        setDamagesData(updatedData);
-    };
-
-    const filteredRows = damagesData.filter((row) => {
+    const filteredRows = resolvedData.filter((row) => {
         return (
             row.serialNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
             row.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -97,8 +90,8 @@ export default function Damages() {
                 <Appbar page={"report"} />
                 <Sidebar page={"report"} />
                 <div style={{ padding: '20px', flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '100px' }}>
-                    {/*<Typography variant="h6" style={{ fontFamily: 'Arial, sans-serif', fontSize: '18px', color: '#000', textAlign: 'left' }}>*/}
-                    {/*    Damages Report*/}
+                    {/*<Typography variant="h6" style={{ fontFamily: 'Arial, sans-serif', fontSize: '20px', color: '#000', textAlign: 'left' }}>*/}
+                    {/*    Resolved Report*/}
                     {/*</Typography>*/}
                     <TextField
                         label="Search"
@@ -106,7 +99,7 @@ export default function Damages() {
                         fullWidth
                         value={searchQuery}
                         onChange={handleSearchChange}
-                        sx={{ marginBottom: '10px', width: isSmallScreen ? '90vw' : '80vw' }}
+                        sx={{ marginBottom: '10px', width: isSmallScreen ? '90vw' : '80vw', fontSize: '16px' }} // Increased font size
                     />
                     <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
                         <Table stickyHeader>
@@ -134,15 +127,7 @@ export default function Damages() {
                                         <TableCell>{row.instructor}</TableCell>
                                         <TableCell>{row.photo}</TableCell>
                                         <TableCell>{row.accountable}</TableCell>
-                                        <TableCell>
-                                            <Select
-                                                value={row.status}
-                                                onChange={(e) => handleStatusChange(row.reportId, e.target.value)}
-                                            >
-                                                <MenuItem value="Unresolved">Unresolved</MenuItem>
-                                                <MenuItem value="Resolved">Resolved</MenuItem>
-                                            </Select>
-                                        </TableCell>
+                                        <TableCell>{row.status}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

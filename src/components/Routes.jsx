@@ -13,6 +13,7 @@ import UpcomingSchedule from "./Dashboard/Schedule/ScheduleTab/UpcomingSchedule.
 import Calendar from "./Calendar/Calendar.jsx";
 import Report from "./Dashboard/Report/Report.jsx";
 import Damages from "./Dashboard/Report/ReportTab/Damages.jsx";
+import Resolved from "./Dashboard/Report/ReportTab/Resolved.jsx";
 import ReturnItems from "./Dashboard/History/HistoryTab/ReturnItems.jsx";
 import List from "./Dashboard/History/HistoryTab/List.jsx";
 import UnauthorizedPage from './UnauthorizedPage.jsx';
@@ -22,16 +23,16 @@ function AppRoutes() {
     const [userRole, setUserRole] = useState(null);
     const navigate = useNavigate();
 
-  /*  useEffect(() => {
-        const jwtToken = localStorage.getItem("jwtToken");
-        if (!jwtToken) {
-            navigate("/login");
-            return;
-        }
+      useEffect(() => {
+          const jwtToken = localStorage.getItem("jwtToken");
+          if (!jwtToken) {
+              navigate("/login");
+              return;
+          }
 
-        const role = localStorage.getItem("userRole");
-        setUserRole(role);
-    }, [navigate]);*/
+          const role = localStorage.getItem("userRole");
+          setUserRole(role);
+      }, [navigate]);
 
     return (
         <Routes>
@@ -60,6 +61,7 @@ function AppRoutes() {
             <Route path="/report/*">
                 <Route path="" element={<Report />} />
                 <Route path="damages" element={<Damages />} />
+                <Route path="resolved" element={<Resolved />} />
             </Route>
 
             {/* History Routes */}
