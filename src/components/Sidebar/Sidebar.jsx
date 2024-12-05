@@ -38,7 +38,7 @@ export default function Sidebar({ page }) {
         navigate('/report/damages');
     };
     const handleReturnItems = () => {
-        navigate('/report/returnitems');
+        navigate('/borrowhistory/returnitems');
     };
     const handleBorrowHistory = () => {
         navigate('/borrowhistory/list');
@@ -87,9 +87,6 @@ export default function Sidebar({ page }) {
                         <button className={`sidebar-button ${isActive('/report/damages') ? 'active' : ''}`}
                                 onClick={handleDamages} style={{display: 'block'}}>Damages
                         </button>
-                        <button className={`sidebar-button ${isActive('/report/returnitems') ? 'active' : ''}`}
-                                onClick={handleReturnItems} style={{display: 'block'}}>Return Items
-                        </button>
                     </>
                 )}
                 {page === 'borrowhistory' && (
@@ -97,12 +94,8 @@ export default function Sidebar({ page }) {
                         <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
                                 onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
                         </button>
-                    </>
-                )}
-                {page === 'inventory/categories' && (
-                    <>
-                        <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
-                                onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
+                        <button className={`sidebar-button ${isActive('/borrowhistory/returnitems') ? 'active' : ''}`}
+                                onClick={handleReturnItems} style={{display: 'block'}}>Return Items
                         </button>
                     </>
                 )}

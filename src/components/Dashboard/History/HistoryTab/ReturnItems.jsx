@@ -47,7 +47,7 @@ export default function ReturnItems() {
         <ThemeProvider theme={theme}>
             <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
                 <Appbar />
-                <Sidebar page={"report"} style={{ position: 'fixed', height: '100vh', width: '250px' }} />
+                <Sidebar page={"borrowhistory"} style={{ position: 'fixed', height: '100vh', width: '250px' }} />
                 <div style={{ marginLeft: '15px', width: 'calc(100% - 270px)', padding: '20px', marginTop: '100px' }}>
                     <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
                         <Table>
@@ -77,9 +77,6 @@ export default function ReturnItems() {
                                         <TableCell>{row.photo}</TableCell>
                                         <TableCell>{row.accountable}</TableCell>
                                         <TableCell>{row.status}</TableCell>
-                                        <TableCell>
-                                            <Button variant="contained" color="secondary" onClick={() => handleDelete(row.id)}>Delete</Button>
-                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
