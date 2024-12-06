@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import Login from './Authentication/Login.jsx';
 import Register from './Authentication/Register.jsx';
 import Dashboard from './Dashboard/Dashboard.jsx';
@@ -54,7 +54,7 @@ function AppRoutes() {
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
 
             {/* Schedule Routes */}
-            <Route path="/schedule/*" element={<PrivateRoute><Schedule /></PrivateRoute>}>
+            <Route path="/schedule" element={<PrivateRoute><Schedule /></PrivateRoute>}>
                 <Route path="request" element={<Request />} />
                 <Route path="today" element={<Today />} />
                 <Route path="upcoming" element={<UpcomingSchedule />} />
@@ -66,13 +66,13 @@ function AppRoutes() {
             <Route path="/inventory/export" element={<PrivateRoute><Export /></PrivateRoute>} />
 
             {/* Report Routes */}
-            <Route path="/report/*" element={<PrivateRoute><Report /></PrivateRoute>}>
+            <Route path="/report" element={<PrivateRoute><Report /></PrivateRoute>}>
                 <Route path="damages" element={<Damages />} />
                 <Route path="resolved" element={<Resolved />} />
             </Route>
 
             {/* History Routes */}
-            <Route path="/borrowhistory/*" element={<PrivateRoute><ReturnItems /></PrivateRoute>}>
+            <Route path="/borrowhistory" element={<PrivateRoute><ReturnItems /></PrivateRoute>}>
                 <Route path="list" element={<List />} />
                 <Route path="returnitems" element={<ReturnItems />} />
             </Route>
