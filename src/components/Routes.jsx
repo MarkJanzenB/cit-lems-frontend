@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Login from './Authentication/Login.jsx';
 import Register from './Authentication/Register.jsx';
 import Dashboard from './Dashboard/Dashboard.jsx';
@@ -31,7 +31,7 @@ function AppRoutes() {
     useEffect(() => {
         const jwtToken = localStorage.getItem("jwtToken");
         console.log("AppRoutes: jwtToken =", jwtToken);
-        if (!jwtToken && location.pathname !== '/register') {
+        if (!jwtToken && location.pathname !== '/' && location.pathname !== '/register' && location.pathname !== '/login') {
             console.log("AppRoutes: No jwtToken, navigating to /login");
             navigate("/login");
             return;
