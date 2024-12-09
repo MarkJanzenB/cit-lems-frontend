@@ -116,7 +116,7 @@ export default function Request() {
     const displayedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const calendarEvents = filteredRows.map((row) => ({
-        title: `${row.teacher} (${row.material})`, //
+        title: `${row.teacher} (${row.material})`, 
         start: moment(`${row.date} ${row.time}`, 'M/D/YYYY h:mm A').toDate(),
         end: moment(`${row.date} ${row.time}`, 'M/D/YYYY h:mm A').add(1, 'hour').toDate(),
         resource: row,
