@@ -6,7 +6,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import profile from '/src/assets/static/img/profile2.gif';
 import m1 from '/src/assets/static/img/menu.png';
-import logo from '/src/assets/static/img/LEMS1.png'; // Correct path to the logo image
+import logo from '/src/assets/static/img/LEMS1.png';
 
 const Appbar = ({ page }) => {
   const navigate = useNavigate();
@@ -215,7 +215,10 @@ const Appbar = ({ page }) => {
                             fontFamily: 'monospace',
                             fontWeight: 'bold',
                             color: '#056765',
-                          }}>Log out</Button><br />
+                          }}
+                                    onClick={handleLogout}>
+                          >
+                            Log out</Button><br />
                         </Box>
                       </Link>
                     </Typography>
