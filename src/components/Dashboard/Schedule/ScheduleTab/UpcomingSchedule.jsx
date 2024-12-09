@@ -53,6 +53,8 @@ export default function UpcomingSchedule() {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchText, setSearchText] = useState('');
     const [openModal, setOpenModal] = useState(false);
+    const [openConfirmModal, setOpenConfirmModal] = useState(false);
+    const [openSuccessModal, setOpenSuccessModal] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
     const [editedInstructor, setEditedInstructor] = useState('');
     const [editedSection, setEditedSection] = useState('');
@@ -76,14 +78,30 @@ export default function UpcomingSchedule() {
         setOpenModal(true);
     };
 
-    const handleSave = () => {
+    const handleSaveClick = () => {
+        setOpenConfirmModal(true); // Open confirmation modal
+    };
+    const handleConfirmSave = () => {
         const updatedRows = rows.map((row) =>
             row === selectedRow
-                ? { ...row, instructor: editedInstructor, section: editedSection, date: editedDate.toLocaleDateString(), startTime: moment(editedStartTime).format('h:mm A'), endTime: moment(editedEndTime).format('h:mm A') }
+                ? {
+                      ...row,
+                      instructor: editedInstructor,
+                      section: editedSection,
+                      date: editedDate.toLocaleDateString(),
+                      startTime: moment(editedStartTime).format('h:mm A'),
+                      endTime: moment(editedEndTime).format('h:mm A'),
+                  }
                 : row
         );
         setRows(updatedRows);
-        setOpenModal(false);
+        setOpenModal(false); // Close edit modal
+        setOpenConfirmModal(false); // Close confirmation modal
+        setOpenSuccessModal(true); // Open success modal
+    };
+
+    const handleCloseSuccessModal = () => {
+        setOpenSuccessModal(false);
     };
 
     const handleViewToggle = () => {
@@ -306,7 +324,7 @@ export default function UpcomingSchedule() {
                 Cancel
             </Button>
             <Button
-                onClick={handleSave}
+                onClick={handleSaveClick}
                 sx={{
                     backgroundColor: 'maroon',
                     color: '#FFFFFF',
@@ -321,8 +339,63 @@ export default function UpcomingSchedule() {
             </Button>
         </Box>
     </Box>
-</Modal>
-</div>
+        </Modal>
+        {/* Confirmation Modal */}
+        <Modal open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
+                                <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 300,
+                                bgcolor: 'white',
+                                borderRadius: '15px',
+                                boxShadow: 24,
+                                padding: '20px',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <Typography variant="h6">Are you sure you want to save this?</Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
+                                <Button onClick={() => setOpenConfirmModal(false)}>No</Button>
+                                <Button onClick={handleConfirmSave} variant="contained" color="primary">
+                                    Yes
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Modal>
+
+                    {/* Success Modal */}
+                    <Modal open={openSuccessModal} onClose={handleCloseSuccessModal}>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 300,
+                                bgcolor: 'white',
+                                borderRadius: '15px',
+                                boxShadow: 24,
+                                padding: '20px',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <Typography variant="h6" color="green">
+                                Save successfully!
+                            </Typography>
+                            <Button
+                                onClick={() => setOpenSuccessModal(false)}
+                                variant="contained"
+                                color="primary"
+                                sx={{ marginTop: '20px' }}
+                            >
+                                OK
+                            </Button>
+                        </Box>
+                    </Modal>
+                </div>
             </div>
         </ThemeProvider>
     );
