@@ -2,21 +2,20 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import {Link, useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import { Box, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import axios from "axios";
 
-
 const register = async (credentials) => {
     try {
-        console.log("Request payload:", credentials); // Log the request payload
+        console.log("Request payload:", credentials);
         const response = await axios.post("http://localhost:8080/user/register", credentials);
-        console.log("Response data:", response.data); // Log the response data
+        console.log("Response data:", response.data);
         return response.data;
     } catch (error) {
-        console.error("Error:", error.response ? error.response.data : error.message); // Log the error response
-        throw error; // Re-throw the error to be handled by the caller
+        console.error("Error:", error.response ? error.response.data : error.message);
+        throw error;
     }
 };
 
@@ -27,19 +26,18 @@ export default function Register() {
         insti_id: '',
         email: '',
         password: '',
-        role: {role_id:0},
-
+        role: { role_id: 0 },
     });
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    
-
     const [showAccountTypeForm, setShowAccountTypeForm] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogoClick = () => {
-        navigate('/'); 
+        navigate('/');
     };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === "role") {
@@ -55,7 +53,7 @@ export default function Register() {
         }
     };
 
-    const handleNext = async(e) => {
+    const handleNext = async (e) => {
         e.preventDefault();
         if (!credentials.email.endsWith('@cit.edu')) {
             setError('Email must end with @cit.edu');
@@ -63,13 +61,14 @@ export default function Register() {
         }
 
         const isUserAlrdyExists = await axios.get(`http://localhost:8080/user/isuseralrdyexists?instiId=${credentials.insti_id}`);
-        if(isUserAlrdyExists.data){
+        if (isUserAlrdyExists.data) {
             setError("Institute ID already exists. Sign in instead?");
             return;
         }
         setShowAccountTypeForm(true);
         setError('');
     };
+
     const handleAccountTypeNext = async (e) => {
         e.preventDefault();
         if (!credentials.first_name || !credentials.last_name || !credentials.insti_id || !credentials.email || !credentials.password || !credentials.role) {
@@ -78,95 +77,34 @@ export default function Register() {
         }
         try {
             await register(credentials);
-            await autoLogin(credentials);
             console.log('Form submitted');
-            setSuccess('Successfully Registered! Redirecting to dashboard in 5 seconds');
+            setSuccess('Successfully Registered! Redirecting to Login form in 5 seconds');
             setError('');
+            setTimeout(() => {
+                navigate("/login");
+            }, 5000);
         } catch (e) {
             console.error("Error submitting form: ", e);
             setError('Error submitting form');
             setSuccess('');
         }
-        // try {
-        //     await register(credentials);
-        //     console.log('Form submitted');
-        // } catch (e) {
-        //     console.error("Error submitting form: ", e);
-        //     setError('Error submitting form');
-        //     setSuccess('');
-        // }
     };
-    // const handlePopoverClose = () => {
-    //     setPopover({ ...popover, open: false , anchorEl: null});
-    // };
-
-    const navigate = useNavigate();
-
-    // const handleBack = () => {
-    //     navigate('/'); // Adjust the path as needed
-    // };
 
     const handleLoginRedirect = () => {
-        navigate('/login'); // Adjust the path as needed
+        navigate('/login');
     };
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     if (!credentials.email.endsWith('@cit.edu')) {
-    //         setError('Email must end with @cit.edu');
-    //         return;
-    //     }
-    //     try {
-    //         await register(credentials);
-    //         console.log('Form submitted:', credentials);
-    //         setError('');
-    //         setSuccess('User successfully created');
-    //     } catch (e) {
-    //         console.error("Error submitting form: ", e);
-    //         setError('Error submitting form');
-    //         setSuccess('');
-    //     }
-    // };
-    function testing(){
-        console.log(credentials);
-    }
-
-    const autoLogin = async (credentials) => {
-        const loginCredentials = {
-            insti_id: credentials.insti_id,
-            password: credentials.password,
-        };
-        try {
-            console.log("Login credentials: ", loginCredentials);
-            const response = await axios.post("http://localhost:8080/user/login", loginCredentials);
-            console.log("Login Response data:", response.data);
-            localStorage.setItem("jwtToken", response.data);
-            setTimeout(() => {
-                navigate("/dashboard");
-            }, 5000);
-        } catch (error) {
-            console.error("Error:", error.response ? error.response.data : error.message);
-            throw error;
-        }
-    };
-
 
     return (
         <>
-            {/*needs adjustment, dapat dili sha scrollable v and h kumbaga fixed ang page.*/}
-           {/* <div style={{backgroundColor: '#056765'}}>
-            <Link to={"/"}><Button sx={{ backgroundColor:'#056765'}}><img src={"/ybb.gif"} alt={"back"} style={{ width: '50px', height: '50px' }} /></Button></Link>
-            </div> */}
             <div className="register-container">
                 <div className="register-background" />
-
-
                 <Box className="register-paper">
                     {!showAccountTypeForm ? (
                         <form onSubmit={handleNext}>
-                            <Box component="section" sx={{ p: 2}}>
+                            <Box component="section" sx={{ p: 2 }}>
                                 <h1>CREATE LEMS ACCOUNT</h1>
                             </Box>
-                            <Box component="section" sx={{p: 2}}>
+                            <Box component="section" sx={{ p: 2 }}>
                                 <div className="form-group">
                                     <TextField
                                         label="ID Number"
@@ -233,13 +171,13 @@ export default function Register() {
                                     />
                                 </div>
                                 <Button type="submit" variant="contained"
-                                        style={{backgroundColor: '#800000', color: 'white', width: '300px'}}
+                                        style={{ backgroundColor: '#800000', color: 'white', width: '300px' }}
                                         className="next-button">NEXT</Button>
                             </Box>
                         </form>
                     ) : (
                         <form onSubmit={handleAccountTypeNext}>
-                            <Box component="section" sx={{p: 2}}>
+                            <Box component="section" sx={{ p: 2 }}>
                                 <h1>SELECT ACCOUNT TYPE</h1>
                                 <FormControl fullWidth margin="normal" required>
                                     <InputLabel>Account Type</InputLabel>
@@ -248,15 +186,13 @@ export default function Register() {
                                         name="role"
                                         value={credentials.role_id}
                                         onChange={handleChange}
-                                        sx={{color:'#000'}}
+                                        sx={{ color: '#000' }}
                                     >
                                         <MenuItem value={3}>Laboratory In-Charge</MenuItem>
                                         <MenuItem value={2}>Laboratory Assistant</MenuItem>
                                         <MenuItem value={1}>Science Teacher</MenuItem>
                                     </Select>
                                 </FormControl>
-
-                                {/* Sign Up Button */}
                                 <Button
                                     variant="contained"
                                     fullWidth
@@ -272,15 +208,15 @@ export default function Register() {
                     {success && <Typography color="success" sx={{ mt: 2 }}>{success}</Typography>}
                 </Box>
                 <div className="image-side">
-                    <h1 style={{ color: '#800000', fontSize:"2em"}}>Welcome Back to Your Laboratory Management Hub</h1>
+                    <h1 style={{ color: '#800000', fontSize: "2em" }}>Welcome Back to Your Laboratory Management Hub</h1>
                     <p className="custom-paragraph">
                         Revisit your streamlined laboratory experience with our application that efficiently tracks borrowing and breakages. Sign in now to continue managing your lab with ease!
-                    </p><br/>
+                    </p><br />
                     <Button
                         variant="contained"
                         style={{ backgroundColor: '#800000', color: 'white' }}
                         onClick={handleLoginRedirect}
-                        sx={{ width: '130px', height: '35px', fontSize:'1em', lineHeight: '1.5' }}
+                        sx={{ width: '130px', height: '35px', fontSize: '1em', lineHeight: '1.5' }}
                     >
                         SIGN IN
                     </Button>
@@ -294,13 +230,12 @@ export default function Register() {
                             width: '100px',
                             height: 'auto',
                             cursor: 'pointer',
-                            zIndex: '3', 
+                            zIndex: '3',
                         }}
                         onClick={handleLogoClick}
                     />
                 </div>
             </div>
-
         </>
     );
 }

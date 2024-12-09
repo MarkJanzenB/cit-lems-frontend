@@ -9,24 +9,24 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 const history = createBrowserHistory();
 
 function App() {
-  return (
-    <HelmetProvider>
-      <div className="MainBG">
-        <HistoryRouter
-          history={history}
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <Helmet>
-            <title>LEMS</title>
-          </Helmet>
-          <Routes />
-        </HistoryRouter>
-      </div>
-    </HelmetProvider>
-  );
+    return (
+        <HelmetProvider>
+            <div className="MainBG">
+                <HistoryRouter
+                    history={history}
+                    future={{
+                        v7_startTransition: true,
+                        v7_relativeSplatPath: true,
+                    }}
+                >
+                    <Helmet>
+                        <title>LEMS</title>
+                    </Helmet>
+                    <Routes />
+                </HistoryRouter>
+            </div>
+        </HelmetProvider>
+    );
 }
 
 export default App;

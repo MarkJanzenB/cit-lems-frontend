@@ -7,7 +7,7 @@ const CustomTablePagination = ({ count, page, rowsPerPage, onPageChange, onRowsP
             {roleid != 1 && <Button onClick={onAddClick} style={{marginRight: 'auto'}}>Add</Button>}
             {/*<Button onClick={onAddClick} style={{marginRight: 'auto'}}>Add</Button>*/}
             <TablePagination
-                rowsPerPageOptions={[10, 25, 50]}
+                rowsPerPageOptions={[5, 10, 15]}
                 component="div"
                 count={count}
                 rowsPerPage={rowsPerPage}

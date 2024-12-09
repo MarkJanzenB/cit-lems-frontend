@@ -1,32 +1,40 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode'; // This is the correct import for version 4.0.0
+import { Navigate, useLocation } from 'react-router-dom';
 
-const PrivateRoute = ({ roleComponents, allowedRoles }) => {
-    const token = localStorage.getItem('token');
+const PrivateRoute = ({ children }) => {
+    const location = useLocation();
+    const jwtToken = localStorage.getItem("jwtToken");
 
-    if (!token) {
-        return <Navigate to="/login" replace />;
+    console.log("PrivateRoute: jwtToken =", jwtToken);
+    console.log("PrivateRoute: location.pathname =", location.pathname);
+
+    if (!jwtToken) {
+        console.log("PrivateRoute: No jwtToken, redirecting to /login");
+        return <Navigate to="/login" state={{ from: location }} />;
     }
 
-    try {
-        const payload = jwtDecode(token);
+    // Check if the path is valid
+    const validPaths = [
+        "/dashboard",
+        "/schedule/request",
+        "/schedule/today",
+        "/schedule/upcoming",
+        "/schedule/calendar",
+        "/inventory",
+        "/inventory/export",
+        "/report/damages",
+        "/report/resolved",
+        "/borrowhistory/list",
+        "/borrowhistory/returnitems",
+        "/editprofile"
+    ];
 
-        // Debug logs
-        console.log("Decoded Token:", payload);
-        const userRole = payload.role_id;
-        console.log("User Role:", userRole);
-
-        if (allowedRoles.includes(userRole)) {
-            const Component = roleComponents[userRole] || roleComponents.default;
-            return Component ? <Component /> : <Navigate to="/unauthorized" replace />;
-        } else {
-            return <Navigate to="/unauthorized" replace />;
-        }
-    } catch (error) {
-        console.error("Error decoding token:", error);
-        return <Navigate to="/login" replace />;
+    if (!validPaths.includes(location.pathname)) {
+        console.log("PrivateRoute: Invalid path, redirecting to previous page or /dashboard");
+        return <Navigate to={location.state?.from || "/dashboard"} />;
     }
+
+    return children;
 };
 
 export default PrivateRoute;

@@ -3,7 +3,6 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './Sidebar.css';
 import { Button } from "@mui/material";
 
-
 export default function Sidebar({ page }) {
     const navigate = useNavigate();
     const location = useLocation();
@@ -37,6 +36,9 @@ export default function Sidebar({ page }) {
     const handleDamages = () => {
         navigate('/report/damages');
     };
+    const handleResolved = () => {
+        navigate('/report/resolved');
+    };
     const handleReturnItems = () => {
         navigate('/borrowhistory/returnitems');
     };
@@ -55,7 +57,7 @@ export default function Sidebar({ page }) {
                     marginBottom: '3px',
                     marginLeft: '16px'
                 }}/>
-                    <h1 style={{color: "#F2EE9D"}}>{label.toUpperCase()}</h1>
+                    <h1 style={{color: "#F2EE9D", fontFamily: "Poppins"}}>{label.toUpperCase()}</h1>
                 </Button></Link>
             </h2>
             <div className="sidebar-buttons">
@@ -86,6 +88,9 @@ export default function Sidebar({ page }) {
                     <>
                         <button className={`sidebar-button ${isActive('/report/damages') ? 'active' : ''}`}
                                 onClick={handleDamages} style={{display: 'block'}}>Damages
+                        </button>
+                        <button className={`sidebar-button ${isActive('/report/resolved') ? 'active' : ''}`}
+                                onClick={handleResolved} style={{display: 'block'}}>Resolved
                         </button>
                     </>
                 )}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../../../Sidebar/Sidebar.jsx';
 import Appbar from '../../../Appbar/Appbar';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, Modal, Box, TextField, Typography, Checkbox, FormControlLabel } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Button, Modal, Box, TextField, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const teacherNames = ['Mr. Topacio', 'Ms. Smith', 'Dr. Johnson', 'Prof. Brown', 'Mrs. Davis'];
@@ -15,8 +15,13 @@ const dummyData = Array.from({ length: 100 }, (_, index) => ({
 }));
 
 const itemsBorrowed = [
-    { name: 'Testtube', quantity: 2, serialNumbers: ['SN001', 'SN002'] },
-    { name: 'DM13 APFSDS', quantity: 1, serialNumbers: ['WAT003'] },
+    { id: 1, name: 'Item placeholder', quantity: 11, serialNumbers: ['WAT003'], status: 'Borrowed' },
+    { id: 2, name: 'Item placeholder', quantity: 1, serialNumbers: ['ASDASDW'], status: 'Returned' },
+    { id: 3, name: 'Item placeholder', quantity: 1, serialNumbers: ['ASDWA'], status: 'Returned with damage report' },
+    { id: 4, name: 'Item placeholder', quantity: 1, serialNumbers: ['WAASDASD03'], status: 'Borrowed' },
+    { id: 5, name: 'Item placeholder', quantity: 1, serialNumbers: ['WAT00ASDAS3'], status: 'Returned' },
+    { id: 6, name: 'Item placeholder', quantity: 1, serialNumbers: ['WAASDAS03'], status: 'Returned with damage report' },
+    { id: 7, name: 'Item placeholder', quantity: 1, serialNumbers: ['WATGFDAVD3'], status: 'Borrowed' },
 ];
 
 const theme = createTheme({
@@ -55,13 +60,9 @@ export default function List() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [openModal, setOpenModal] = useState(false);
-    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-    const [successModalOpen, setSuccessModalOpen] = useState(false);
     const [serialNumberModalOpen, setSerialNumberModalOpen] = useState(false);
     const [selectedSerialNumbers, setSelectedSerialNumbers] = useState([]);
     const [filterText, setFilterText] = useState('');
-    const [selectedItems, setSelectedItems] = useState([]);
-    const [breakageDescription, setBreakageDescription] = useState('');
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -80,24 +81,6 @@ export default function List() {
         setOpenModal(false);
     };
 
-    const handleOpenConfirmModal = () => {
-        setConfirmModalOpen(true);
-    };
-
-    const handleCloseConfirmModal = () => {
-        setConfirmModalOpen(false);
-    };
-
-    const handleConfirmReport = () => {
-        setConfirmModalOpen(false);
-        setSuccessModalOpen(true);
-    };
-
-    const handleCloseSuccessModal = () => {
-        setSuccessModalOpen(false);
-        setOpenModal(false);
-    };
-
     const handleFilterChange = (event) => {
         setFilterText(event.target.value);
     };
@@ -109,18 +92,6 @@ export default function List() {
 
     const handleCloseSerialNumberModal = () => {
         setSerialNumberModalOpen(false);
-    };
-
-    const handleItemSelection = (item) => {
-        setSelectedItems((prevSelectedItems) =>
-            prevSelectedItems.includes(item)
-                ? prevSelectedItems.filter((i) => i !== item)
-                : [...prevSelectedItems, item]
-        );
-    };
-
-    const handleBreakageDescriptionChange = (event) => {
-        setBreakageDescription(event.target.value);
     };
 
     const filteredData = dummyData.filter(row => row.name.toLowerCase().includes(filterText.toLowerCase()));
@@ -142,15 +113,15 @@ export default function List() {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>#</TableCell>
-                                    <TableCell>Borrow History</TableCell>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Description</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                                     <TableRow key={row.id} onClick={handleOpenModal} style={{ cursor: 'pointer' }}>
-                                        <TableCell>{row.id}</TableCell>
-                                        <TableCell>{`Schedule of ${row.name}`}</TableCell>
+                                        <TableCell>{row.name}</TableCell>
+                                        <TableCell>{row.description}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -174,29 +145,31 @@ export default function List() {
                             top: '50%',
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
-                            width: 500,
+                            width: '90%',
+                            maxHeight: '90%',
                             bgcolor: '#F2EE9D',
                             boxShadow: 24,
                             p: 4,
                             display: 'flex',
                             flexDirection: 'column',
                             gap: 2,
-                            borderRadius:'25px'
+                            borderRadius: '25px',
+                            overflow: 'auto'
                         }}
                     >
-                        <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', color: '#016565', textAlign:'center' }}>
-                            Report a Breakage
+                        <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
+                            Borrowed Items
                         </Typography>
                         <Typography variant="body1">Teacher's name: Mr. Topacio</Typography>
                         <Typography variant="body1">Schedule: Nov 21, 2024 | 10:00 AM - 12:00 PM</Typography>
                         <Typography variant="body1">Items borrowed list:</Typography>
-                        <TableContainer component={Paper}>
+                        <TableContainer component={Paper} style={{ width: '100%', height: '100%' }} stickyHeader>
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Item Name</TableCell>
-                                        <TableCell>Quantity Borrowed</TableCell>
-                                        <TableCell>Select</TableCell>
+                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Item Name</TableCell>
+                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Quantity Borrowed</TableCell>
+                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Status</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -208,16 +181,7 @@ export default function List() {
                                                 </Button>
                                             </TableCell>
                                             <TableCell>{item.quantity}</TableCell>
-                                            <TableCell>
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            checked={selectedItems.includes(item.name)}
-                                                            onChange={() => handleItemSelection(item.name)}
-                                                        />
-                                                    }
-                                                />
-                                            </TableCell>
+                                            <TableCell>{item.status}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -225,7 +189,6 @@ export default function List() {
                         </TableContainer>
                         <Box display="flex" justifyContent="space-between" mt={2}>
                             <Button variant="outlined" sx={{ color: '#800000', borderColor: '#800000' }} onClick={handleCloseModal}>Close</Button>
-                            <Button variant="contained" sx={{ backgroundColor: '#800000', color: '#FFF', '&:hover': { backgroundColor: '#5c0000' } }} onClick={handleOpenConfirmModal}>Report</Button>
                         </Box>
                     </Box>
                 </Modal>
@@ -263,61 +226,6 @@ export default function List() {
                             </Table>
                         </TableContainer>
                         <Button variant="contained" onClick={handleCloseSerialNumberModal} sx={{ mt: 2, color: 'white', backgroundColor: 'maroon' }}>Close</Button>
-                    </Box>
-                </Modal>
-
-                <Modal open={confirmModalOpen} onClose={handleCloseConfirmModal}>
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: 400,
-                            boxShadow: 24,
-                            bgcolor: '#F2EE9D',
-                            p: 4,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 2,
-                            borderRadius: '15px',
-                            textAlign: 'center'
-                        }}>
-                        <Typography sx={{ fontWeight: 'bold', color: '#016565' }} variant="h6">
-                            Are you sure you want to report this breakage?
-                        </Typography>
-                        <TextField
-                            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
-                            label="Description of Breakage"
-                            variant="outlined"
-                            fullWidth
-                            value={breakageDescription}
-                            onChange={handleBreakageDescriptionChange}
-                        />
-                        <Box display="flex" justifyContent="space-around" mt={2}>
-                            <Button variant="contained" sx={{ backgroundColor: 'maroon' }} onClick={handleConfirmReport}>Yes</Button>
-                            <Button variant="outlined" sx={{ backgroundColor: 'maroon', color: 'white' }} onClick={handleCloseConfirmModal}>No</Button>
-                        </Box>
-                    </Box>
-                </Modal>
-
-                <Modal open={successModalOpen} onClose={handleCloseSuccessModal}>
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: 300,
-                            bgcolor: '#F2EE9D',
-                            boxShadow: 24,
-                            p: 4,
-                            borderRadius: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#016565' }}>Breakage Successfully Reported</Typography>
-                        <Button variant="contained" onClick={handleCloseSuccessModal} sx={{ mt: 2, color: 'white', backgroundColor: 'maroon' }}>OK</Button>
                     </Box>
                 </Modal>
             </div>

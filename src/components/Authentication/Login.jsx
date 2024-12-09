@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import {jwtDecode} from 'jwt-decode'; // Ensure correct import for jwt-decode
+import { jwtDecode } from 'jwt-decode'; // Ensure correct import for jwt-decode
 import './Login.css'; // Preserves your existing styles
 
 export default function Login() {
@@ -46,7 +46,8 @@ export default function Login() {
       try {
         // Decode the JWT token
         const decoded = jwtDecode(token);
-        console.log("Decoded Token:", decoded);
+        // console.log("Decoded Token:", decoded);
+
 
         // Validate the token structure
         if (decoded && decoded.role_id && decoded.sub) {
@@ -57,11 +58,11 @@ export default function Login() {
           setError(''); // Clear errors
           navigate('/dashboard'); // Redirect after successful login
         } else {
-          setError('Invalid token structure received');
+          setError('Login failed: Invalid token structure');
         }
       } catch (decodeError) {
         console.error("Error decoding token:", decodeError);
-        setError('Failed to decode token. Please try again.');
+        setError('Incorrect password.');
       }
     } catch (error) {
       console.error("Error during login request:", error);
@@ -69,7 +70,7 @@ export default function Login() {
       // Handle HTTP and network errors
       if (error.response) {
         if (error.response.status === 401) {
-          setError('Invalid Institutional ID or password');
+          setError('Incorrect Institutional ID or password');
         } else {
           setError(`Server error: ${error.response.data || 'Please try again later.'}`);
         }

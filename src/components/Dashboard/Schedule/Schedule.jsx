@@ -1,12 +1,11 @@
+// Schedule.jsx
 import React from 'react';
-import Appbar from "../../Appbar/Appbar";
-import Sidebar from "../../Sidebar/Sidebar.jsx";
+import { Outlet } from 'react-router-dom';
+
 export default function Schedule() {
     return (
-        <>
-        <Appbar/>
-        <Sidebar/>
-        </>
-
+        <div>
+            <Outlet />
+        </div>
     );
 }
