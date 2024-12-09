@@ -166,7 +166,7 @@ export default function Request() {
                             startAccessor="start"
                             endAccessor="end"
                             style={{
-                                height: '75vh',
+                                height: '70vh',
                                 width: '100%',
                                 backgroundColor: 'white',
                                 color: 'black',
