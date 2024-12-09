@@ -216,7 +216,7 @@ const Appbar = ({ page }) => {
                             fontWeight: 'bold',
                             color: '#056765',
                           }}
-                                    onClick={handleLogout}>
+                                    onClick={handleLogout}
                           >
                             Log out</Button><br />
                         </Box>

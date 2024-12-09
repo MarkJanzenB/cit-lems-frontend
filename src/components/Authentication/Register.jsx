@@ -77,10 +77,12 @@ export default function Register() {
         }
         try {
             await register(credentials);
-            await autoLogin(credentials);
             console.log('Form submitted');
             setSuccess('Successfully Registered! Redirecting to Login form in 5 seconds');
             setError('');
+            setTimeout(() => {
+                navigate("/login");
+            }, 5000);
         } catch (e) {
             console.error("Error submitting form: ", e);
             setError('Error submitting form');
@@ -90,25 +92,6 @@ export default function Register() {
 
     const handleLoginRedirect = () => {
         navigate('/login');
-    };
-
-    const autoLogin = async (credentials) => {
-        const loginCredentials = {
-            insti_id: credentials.insti_id,
-            password: credentials.password,
-        };
-        try {
-            console.log("Login credentials: ", loginCredentials);
-            const response = await axios.post("http://localhost:8080/user/login", loginCredentials);
-            console.log("Login Response data:", response.data);
-            localStorage.setItem("jwtToken", response.data);
-            setTimeout(() => {
-                navigate("/login");
-            }, 5000);
-        } catch (error) {
-            console.error("Error:", error.response ? error.response.data : error.message);
-            throw error;
-        }
     };
 
     return (
