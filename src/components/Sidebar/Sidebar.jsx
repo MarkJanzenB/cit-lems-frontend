@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 export default function Sidebar({ page }) {
     const navigate = useNavigate();
     const location = useLocation();
+    const userRole = parseInt(localStorage.getItem("userRole"));
 
     const labels = {
         schedule: 'Schedule',
@@ -79,9 +80,11 @@ export default function Sidebar({ page }) {
                         <button className={`sidebar-button ${isActive('/inventory') ? 'active' : ''}`}
                                 onClick={handleCategoryPage} style={{display: 'block'}}>Categories
                         </button>
-                        <button className={`sidebar-button ${isActive('/inventory/export') ? 'active' : ''}`}
-                                onClick={handleExport} style={{display: 'block'}}>Export Inventory
-                        </button>
+                        {userRole !== 1 && (
+                            <button className={`sidebar-button ${isActive('/inventory/export') ? 'active' : ''}`}
+                                    onClick={handleExport} style={{display: 'block'}}>Export Inventory
+                            </button>
+                        )}
                     </>
                 )}
                 {page === 'report' && (
