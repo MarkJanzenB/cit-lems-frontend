@@ -170,35 +170,54 @@ const Appbar = ({ page }) => {
                   <Box sx={style}>
                     <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br />
                     <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
-                      <Box sx={buttonStyle} >
-                        <Link to="/editprofile">
+                      <Link to="/editprofile" style={{ textDecoration: 'none' }}>
+                        <Box sx={{
+                          ...buttonStyle,
+                          '&:hover': {
+                            bgcolor: '#056765',
+                            '& button': {
+                              color: '#FFF'
+                            }
+                          }
+                        }}>
                           <Button sx={{
                             fontFamily: 'monospace',
                             fontWeight: 'bold',
-                            '&:hover': { color: 'green' }
-                          }}>Edit Profile</Button></Link><br />
-                      </Box>
-                      <Box sx={buttonStyle}>
-                        <Button sx={{
-                          fontFamily: 'monospace',
-                          fontWeight: 'bold',
-                          '&:hover': { color: 'green' }
-                        }}>Settings</Button><br />
-                      </Box>
-                      <Box sx={buttonStyle}>
-                        <Button sx={{
-                          fontFamily: 'monospace',
-                          fontWeight: 'bold',
-                          '&:hover': { color: 'green' }
-                        }}>Help</Button><br />
-                      </Box>
-                      <Box sx={buttonStyle}>
-                        <Button onClick={handleLogout} sx={{
-                          fontFamily: 'monospace',
-                          fontWeight: 'bold',
-                          '&:hover': { color: 'green' }
-                        }}>Log Out</Button><br />
-                      </Box>
+                            color: '#056765',
+                          }}>Edit Profile</Button><br />
+                        </Box>
+                      </Link>
+                      {/*<Box sx={buttonStyle}>*/}
+                      {/*  <Button sx={{*/}
+                      {/*    fontFamily: 'monospace',*/}
+                      {/*    fontWeight: 'bold',*/}
+                      {/*    '&:hover': { color: 'green' }*/}
+                      {/*  }}>Settings</Button><br />*/}
+                      {/*</Box>*/}
+                      {/*<Box sx={buttonStyle}>*/}
+                      {/*  <Button sx={{*/}
+                      {/*    fontFamily: 'monospace',*/}
+                      {/*    fontWeight: 'bold',*/}
+                      {/*    '&:hover': { color: 'green' }*/}
+                      {/*  }}>Help</Button><br />*/}
+                      {/*</Box>*/}
+                      <Link to="/login" style={{ textDecoration: 'none' }}>
+                        <Box sx={{
+                          ...buttonStyle,
+                          '&:hover': {
+                            bgcolor: '#056765',
+                            '& button': {
+                              color: '#FFF'
+                            }
+                          }
+                        }}>
+                          <Button sx={{
+                            fontFamily: 'monospace',
+                            fontWeight: 'bold',
+                            color: '#056765',
+                          }}>Log out</Button><br />
+                        </Box>
+                      </Link>
                     </Typography>
                   </Box>
                 </Modal>
