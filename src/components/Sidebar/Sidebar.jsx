@@ -57,7 +57,7 @@ export default function Sidebar({ page }) {
                     marginBottom: '3px',
                     marginLeft: '16px'
                 }}/>
-                    <h1 style={{color: "#F2EE9D"}}>{label.toUpperCase()}</h1>
+                    <h1 style={{color: "#F2EE9D", fontFamily: "Poppins"}}>{label.toUpperCase()}</h1>
                 </Button></Link>
             </h2>
             <div className="sidebar-buttons">

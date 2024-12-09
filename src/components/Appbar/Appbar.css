@@ -31,6 +31,9 @@ margin: 5px; /* Adjust spacing as needed */
     font-style: normal;
 }
 
+.h1{
+    font-family: "Space Grotesk", sans-serif;
+}
 .appbar-typography {
     font-family: "Space Grotesk", sans-serif;
     font-optical-sizing: auto;

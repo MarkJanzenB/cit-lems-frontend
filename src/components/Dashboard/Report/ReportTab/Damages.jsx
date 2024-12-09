@@ -47,7 +47,7 @@ const generateSampleData = (numRows) => {
 export default function Damages() {
     const [damagesData, setDamagesData] = useState([]);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const [searchQuery, setSearchQuery] = useState("");
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -60,7 +60,7 @@ export default function Damages() {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        setRowsPerPage(parseInt(event.target.value, 5));
         setPage(0);
     };
 
@@ -107,7 +107,7 @@ export default function Damages() {
                         value={searchQuery}
                         onChange={handleSearchChange}
                         sx={{ marginBottom: '10px', width: isSmallScreen ? '90vw' : '80vw' }}
-                    />
+                    /><br/>
                     <TableContainer component={Paper} style={{ width: '100%', height: '100%' }}>
                         <Table stickyHeader>
                             <TableHead>
@@ -148,7 +148,7 @@ export default function Damages() {
                             </TableBody>
                         </Table>
                         <TablePagination
-                            rowsPerPageOptions={[10, 20, 30]}
+                            rowsPerPageOptions={[5, 10, 15]}
                             component="div"
                             count={filteredRows.length}
                             rowsPerPage={rowsPerPage}

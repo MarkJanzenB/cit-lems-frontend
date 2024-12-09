@@ -109,11 +109,11 @@ export default function Request() {
 
     return (
         <ThemeProvider theme={theme}>
-            <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
-                <Appbar />
-                <Sidebar page="schedule" />
+            <div style={{ display:'flex', height: '100vh', width: '100vw' }}>
+                <Appbar page="schedule"/>
+                    <Sidebar page={"schedule"} />
                 <div style={{ padding: '20px', flexGrow: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', marginTop: '100px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', marginTop: '100px',}}>
                         <TextField
                             label="Search..."
                             variant="outlined"
@@ -126,30 +126,30 @@ export default function Request() {
                         </Button>
                     </Box>
                     {viewMode === 'table' ? (
-                        <TableContainer component={Paper}>
+                        <TableContainer component={Paper} >
                             <Table stickyHeader>
                                 <TableHead>
                                     <TableRow> {/* display ang header sa table*/}
-                                        <TableCell>ID</TableCell>
-                                        <TableCell align="center">Date</TableCell>
-                                        <TableCell align="center">Time</TableCell>
-                                        <TableCell align="center">Teacher</TableCell>
-                                        <TableCell align="center">Material</TableCell>
+                                        <TableCell style={{fontFamily:'Poppins'}}>ID</TableCell>
+                                        <TableCell style={{fontFamily:'Poppins'}} align="center">Date</TableCell>
+                                        <TableCell style={{fontFamily:'Poppins'}} align="center">Time</TableCell>
+                                        <TableCell style={{fontFamily:'Poppins'}} align="center">Teacher</TableCell>
+                                        <TableCell style={{fontFamily:'Poppins'}} align="center">Material</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {displayedRows.map((row, index) => (
                                         <TableRow key={index} onClick={() => handleEditClick(row)} style={{ cursor: 'pointer' }}>
-                                            <TableCell>{row.id}</TableCell>  
-                                            <TableCell align="center">{row.date}</TableCell>
-                                            <TableCell align="center">{row.time}</TableCell>
-                                            <TableCell align="center">{row.teacher}</TableCell>
-                                            <TableCell align="center">{row.material}</TableCell>
+                                            <TableCell>{row.id}</TableCell>
+                                            <TableCell style={{fontFamily:'Poppins'}} align="center">{row.date}</TableCell>
+                                            <TableCell style={{fontFamily:'Poppins'}} align="center">{row.time}</TableCell>
+                                            <TableCell style={{fontFamily:'Poppins'}} align="center">{row.teacher}</TableCell>
+                                            <TableCell style={{fontFamily:'Poppins'}} align="center">{row.material}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
-                            <TablePagination    /* in one page 10 row ang displayed*/
+                            <TablePagination style={{fontFamily:'Poppins'}}   /* in one page 10 row ang displayed*/
                                 rowsPerPageOptions={[10, 20, 30]}
                                 component="div"
                                 count={filteredRows.length}
@@ -160,7 +160,7 @@ export default function Request() {
                             />
                         </TableContainer>
                     ) : (
-                        <Calendar 
+                        <Calendar
                             localizer={localizer}
                             events={calendarEvents}
                             startAccessor="start"
@@ -203,7 +203,7 @@ export default function Request() {
                         {/* Modal Header */}
                         <Box
                           sx={{
-                              backgroundColor: '#016565', 
+                              backgroundColor: '#016565',
                               display: 'flex',
                               justifyContent: 'space-between',
                               alignItems: 'center',
@@ -213,7 +213,7 @@ export default function Request() {
                               variant="h6"
                               sx={{
                                   fontWeight: 'bold',
-                                  color: '#FFFFFF', 
+                                  color: '#FFFFFF',
                                   padding:'15px',
                               }}
                           >
@@ -246,7 +246,7 @@ export default function Request() {
                                 backgroundColor: '#f9f9f9',
                             }}
                         >
-                         
+
 
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker

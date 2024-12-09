@@ -170,7 +170,7 @@ const Appbar = ({ page }) => {
                   <Box sx={style}>
                     <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br />
                     <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
-                      <Box sx={buttonStyle}>
+                      <Box sx={buttonStyle} >
                         <Link to="/editprofile">
                           <Button sx={{
                             fontFamily: 'monospace',
