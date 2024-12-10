@@ -71,6 +71,9 @@ export default function Inventory() {
     const [newItem, setNewItem] = useState({
         item_name: '',
         unique_id: '',
+        unit:'',
+        item_category:{category_id: 1},
+        description:'',
         group_id: null,
         inventory: {inventory_id:0},
         quantity: 1,
@@ -326,7 +329,15 @@ export default function Inventory() {
 
     const handleAddItem = () => {
         if(newItemCategory == 1){
-            axios.post("http://localhost:8080/inventory/addinventory", newConsumable, {
+            axios.post("http://localhost:8080/inventory/addinventory", {
+                unit: newItem.unit,
+                name: newItem.item_name,
+                description: newItem.description,
+                item_category:{
+                    category_id:newItemCategory
+                },
+                quantity: newItem.quantity
+            }, {
                 headers: {
                     "Authorization": `Bearer ${jwtToken}`
                 }
@@ -353,13 +364,14 @@ export default function Inventory() {
                 }
             })
                 .then(response => {
-                    setError("Item already exists. Did you mean add stock?");
+                    setError("Item already exists. To add stock please click the item from the list.");
                 })
                 .catch(error => {
                     if(error.response.status == 409){
                         axios.post("http://localhost:8080/inventory/addinventory", {
-                            unit: null,
+                            unit: newItem.unit,
                             name: newItem.item_name,
+                            description: newItem.description,
                             item_category:{
                                 category_id:newItemCategory
                             },
@@ -748,6 +760,7 @@ export default function Inventory() {
                                 {/*        onClick={handleModalBack}>*/}
                                 {/*    Back*/}
                                 {/*</Button>*/}
+                                {error && <Typography color="error" sx={{mt:2}}>{error}</Typography>}
                                 <Button
                                     variant="contained"
                                     sx={{
