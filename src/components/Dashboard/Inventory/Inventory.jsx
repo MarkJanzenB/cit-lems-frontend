@@ -72,7 +72,8 @@ export default function Inventory() {
         item_name: '',
         unique_id: '',
         group_id: null,
-        inventory: {inventory_id:0}
+        inventory: {inventory_id:0},
+        quantity: 1,
     });
 
     const [newConsumable, setNewConsumable] = useState({
@@ -362,7 +363,7 @@ export default function Inventory() {
                             item_category:{
                                 category_id:newItemCategory
                             },
-                            quantity: 1
+                            quantity: newItem.quantity
                         },{
                             headers:{
                                 "Authorization": `Bearer ${jwtToken}`
@@ -370,7 +371,7 @@ export default function Inventory() {
                         })
                             .then(response => {
                                 newInvId.current = response.data.inventory_id;
-                                axios.post("http://localhost:8080/item/insertitem", {
+                                axios.post(`http://localhost:8080/item/insertitem?bulkSize=${newItem.quantity}`, {
                                     item_name: newItem.item_name,
                                     unique_id: newItem.unique_id,
                                     group_id: newItem.group_id,
