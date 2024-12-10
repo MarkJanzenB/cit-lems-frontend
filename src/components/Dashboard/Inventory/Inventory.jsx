@@ -46,6 +46,7 @@ export default function Inventory() {
     const [editConsumable, setEditConsumable] = useState(false);
     const [editDataName, setEditDataName] = useState('');
     const [editData, setEditData] = useState({});
+    const [editDataOldQty, setEditDataOldQty] = useState(0);
     const [message, setMessage] = useState('');
 
     const theme = createTheme({
@@ -213,6 +214,7 @@ export default function Inventory() {
         if (roleid != 1) {
             setEditData(row);
             setEditDataName(row.name);
+            setEditDataOldQty(row.quantity);
             if (row.item_category.category_id == 1) {
                 setEditConsumable(true);
             } else {
@@ -468,24 +470,122 @@ export default function Inventory() {
 
     const handleSave = () => {
         console.log(editData)
-        axios.put(`http://localhost:8080/inventory/updateinventory?id=${editData.inventory_id}`, editData, {
-            headers: {
-                "Authorization": `Bearer ${jwtToken}`
-            }
-        })
+        if(editData.item_category.category_id == 1){
+            axios.put(`http://localhost:8080/inventory/updateinventory?id=${editData.inventory_id}`, editData, {
+                headers: {
+                    "Authorization": `Bearer ${jwtToken}`
+                }
+            })
+                .then(response => {
+                    setSnackbarText("Item successfully updated");
+                    setOpenSnackbar(true);
+                    setOpenModalEdit(false);
+                    fetchData(currentCategory);
+                })
+                .catch(error => {
+                    if(error.response.status == 409){
+                        setError(error.response.data);
+                    }else{
+                        console.log("Error when updating inventory for consumables");
+                        setError("An unexpected error occurred. Please check the details and try again.");
+                    }
+                })
+        }else{
+            const bulkSize = editData.quantity - editDataOldQty;
+            axios.put(`http://localhost:8080/inventory/updateinventory?id=${editData.inventory_id}`, editData, {
+                headers: {
+                    "Authorization": `Bearer ${jwtToken}`
+                }
+            })
             .then(response => {
-                setSnackbarText("Item successfully updated");
-                setOpenSnackbar(true);
-                setOpenModalEdit(false);
-                fetchData(currentCategory);
+                axios.put(`http://localhost:8080/item/updateitems?itemToEdit=${editDataName}`, {
+                    item_name: editData.name
+                }, {
+                    headers: {
+                        "Authorization": `Bearer ${jwtToken}`
+                    }
+                })
+                .then(resposne => {
+                    if(bulkSize > 0){
+                        axios.post(`http://localhost:8080/item/insertitem?bulkSize=${bulkSize}`, {
+                            item_name: editData.name,
+                            inventory: {
+                                inventory_id: editData.inventory_id
+                            }
+                        },{
+                            headers:{
+                                "Authorization": `Bearer ${jwtToken}`
+                            }
+                        })
+                        .then(response => {
+                            setSnackbarText("Item successfully updated");
+                            setOpenSnackbar(true);
+                            setOpenModalEdit(false);
+                            fetchData(currentCategory);
+                        })
+                        .catch(error => {
+                            if(error.response.status == 400){
+                                setError(error.response.data);
+                            }else if(error.response.status == 409){
+                                setError(error.response.data);
+                            }
+                            console.log("Error when adding items");
+                            setError("An unexpected error occurred. Please check the details and try again.");
+                        })
+                    }else if(bulkSize < 0){
+                        axios.delete(`http://localhost:8080/item/deleteitems?bulkSize=${Math.abs(bulkSize)}`, {
+                            data: { // Important learnings: since delete requests usually should not have bodies so by default it doesn't check the body, that is why we put it in our Request config the data
+                                item_name: editData.name
+                            },
+                            headers: {
+                                "Authorization": `Bearer ${jwtToken}`
+                            }
+                        })
+                        .then(response => {
+                            setSnackbarText("Item successfully updated");
+                            setOpenSnackbar(true);
+                            setOpenModalEdit(false);
+                            fetchData(currentCategory);
+                        })
+                        .catch(error => {
+                            if(error.response.status == 400){
+                                setError(error.response.data);
+                            }else if(error.response.status == 404){
+                                setError(error.response.data);
+                            }
+                            console.log("Error when deleting items", editData.name);
+                            setError("An unexpected error occurred. Please check the details and try again.");
+                        })
+                    }else{
+                        setSnackbarText("Item successfully updated");
+                        setOpenSnackbar(true);
+                        setOpenModalEdit(false);
+                        fetchData(currentCategory);
+                    }
+                })
+                .catch(error => {
+                    if(error.response.status == 400){
+                        setError(error.response.data);
+                    }else if(error.response.status == 404){
+                        setError(error.response.data);
+                    }
+                    console.log("Error when updating items for non consumabeles");
+                    setError("An unexpected error occurred. Please check the details and try again.");
+                })
+                // setSnackbarText("Item successfully updated");
+                // setOpenSnackbar(true);
+                // setOpenModalEdit(false);
+                // fetchData(currentCategory);
             })
             .catch(error => {
                 if(error.response.status == 409){
                     setError(error.response.data);
                 }else{
+                    console.log("Error when updating inventory for non consumabeles");
                     setError("An unexpected error occurred. Please check the details and try again.");
                 }
             })
+        }
     }
 
     const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
