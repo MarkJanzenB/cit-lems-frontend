@@ -1,3 +1,4 @@
+// src/components/Routes.jsx
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Login from './Authentication/Login.jsx';
@@ -6,6 +7,7 @@ import Dashboard from './Dashboard/Dashboard.jsx';
 import Home from './Landingpage/Home.jsx';
 import Schedule from "./Dashboard/Schedule/Schedule.jsx";
 import Inventory from "./Dashboard/Inventory/Inventory.jsx";
+import InventoryST from "./Dashboard/Inventory/InventoryST.jsx";
 import Export from "./Dashboard/Inventory/Export.jsx";
 import Request from "./Dashboard/Schedule/ScheduleTab/Request.jsx";
 import Today from "./Dashboard/Schedule/ScheduleTab/Today.jsx";
@@ -20,6 +22,7 @@ import UnauthorizedPage from './UnauthorizedPage.jsx';
 import EditProfile from "./Settings/EditProfile.jsx";
 import PrivateRoute from './PrivateRoute.jsx';
 import useLocalStorageListener from '../hooks/useLocalStorageListener';
+import BorrowList from './BorrowList/BorrowList.jsx';
 
 function AppRoutes() {
     const [userRole, setUserRole] = useState(null);
@@ -30,15 +33,12 @@ function AppRoutes() {
 
     useEffect(() => {
         const jwtToken = localStorage.getItem("jwtToken");
-        console.log("AppRoutes: jwtToken =", jwtToken);
         if (!jwtToken && location.pathname !== '/' && location.pathname !== '/register' && location.pathname !== '/login') {
-            console.log("AppRoutes: No jwtToken, navigating to /login");
             navigate("/login");
             return;
         }
 
         const role = localStorage.getItem("userRole");
-        console.log("AppRoutes: userRole =", role);
         setUserRole(role);
     }, [navigate, location.pathname]);
 
@@ -63,7 +63,9 @@ function AppRoutes() {
 
             {/* Inventory Routes */}
             <Route path="/inventory" element={<PrivateRoute><Inventory userRole={userRole} /></PrivateRoute>} />
-            <Route path="/inventory/export" element={<PrivateRoute><Export /></PrivateRoute>} />
+            <Route path="/inventoryST" element={<PrivateRoute allowedRoles={[1]}><InventoryST /></PrivateRoute>} />
+            <Route path="/inventory/export" element={<PrivateRoute allowedRoles={[2, 3]}><Export /></PrivateRoute>} />
+            <Route path="/borrowlist" element={<PrivateRoute allowedRoles={[1]}><BorrowList /></PrivateRoute>} />
 
             {/* Report Routes */}
             <Route path="/report" element={<PrivateRoute><Report /></PrivateRoute>}>

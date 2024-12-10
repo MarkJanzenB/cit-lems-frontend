@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../../../Sidebar/Sidebar.jsx';
 import Appbar from '../../../Appbar/Appbar';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Modal, Box, TextField, Typography, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Modal, Box, TextField, Typography, Button, Snackbar, Alert } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -59,6 +59,8 @@ export default function Request() {
     const [editedDate, setEditedDate] = useState(null); //store ang edited date sa table
     const [editedTime, setEditedTime] = useState(null); // store edited time sa table
     const [viewMode, setViewMode] = useState('table'); // toggle between table nd calendar view
+    const [openConfirmModal, setOpenConfirmModal] = useState(false);
+    const [openSuccessModal, setOpenSuccessModal] = useState(false);
 
     const handleSearch = (event) => {    // filter ang specific row include teacher,material, date or time
         setSearchText(event.target.value);
@@ -74,19 +76,32 @@ export default function Request() {
         setOpenModal(true);
     };
 
-    const handleSave = () => {     // if i click save mo update sa specific row ang changes or edited data
+    const handleSave = () => {
+        setOpenConfirmModal(true); // Open confirmation modal after clicking save
+    };
+
+    const handleConfirmSave = () => {
         const updatedRows = rows.map((row) =>
             row === selectedRow
                 ? { ...row, teacher: editedTeacher, material: editedMaterial, date: editedDate.toLocaleDateString(), time: moment(editedTime).format('h:mm A') }
                 : row
         );
         setRows(updatedRows);
-        setOpenModal(false);
+        setOpenModal(false); // Close edit modal
+        setOpenConfirmModal(false); // Close confirmation modal
+        setOpenSuccessModal(true); // Show success modal
     };
+  
 
     const handleViewToggle = () => {             
         setViewMode(viewMode === 'table' ? 'calendar' : 'table');
     };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') return;
+        setOpenSnackbar(false);
+    };
+
 
     const filteredRows = rows
         .filter((row) => new Date(row.date) > new Date()) // Only include future dates
@@ -101,7 +116,7 @@ export default function Request() {
     const displayedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const calendarEvents = filteredRows.map((row) => ({
-        title: `${row.teacher} (${row.material})`, //
+        title: `${row.teacher} (${row.material})`, 
         start: moment(`${row.date} ${row.time}`, 'M/D/YYYY h:mm A').toDate(),
         end: moment(`${row.date} ${row.time}`, 'M/D/YYYY h:mm A').add(1, 'hour').toDate(),
         resource: row,
@@ -166,7 +181,7 @@ export default function Request() {
                             startAccessor="start"
                             endAccessor="end"
                             style={{
-                                height: '75vh',
+                                height: '70vh',
                                 width: '100%',
                                 backgroundColor: 'white',
                                 color: 'black',
@@ -335,7 +350,61 @@ export default function Request() {
                         </Box>
                     </Box>
                 </Modal>
+                {/* Confirmation Modal */}
+                <Modal open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 300,
+                                bgcolor: 'white',
+                                borderRadius: '15px',
+                                boxShadow: 24,
+                                padding: '20px',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <Typography variant="h6">Are you sure you want to save?</Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
+                                <Button onClick={() => setOpenConfirmModal(false)}>No</Button>
+                                <Button onClick={handleConfirmSave} variant="contained" color="primary">
+                                    Yes
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Modal>
 
+                     {/* Success Modal */}
+                     <Modal open={openSuccessModal} onClose={() => setOpenSuccessModal(false)}>
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 300,
+                                bgcolor: 'white',
+                                borderRadius: '15px',
+                                boxShadow: 24,
+                                padding: '20px',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <Typography variant="h6" sx={{ color: 'green' }}>
+                                Save Successfully!
+                            </Typography>
+                            <Button
+                                onClick={() => setOpenSuccessModal(false)}
+                                variant="contained"
+                                color="primary"
+                                sx={{ marginTop: '20px' }}
+                            >
+                                OK
+                            </Button>
+                        </Box>
+                    </Modal>
                 </div>
             </div>
         </ThemeProvider>

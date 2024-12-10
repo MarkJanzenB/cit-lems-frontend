@@ -101,7 +101,7 @@ export default function Today() {
     const handleConfirmSave = (confirm) => {
         if (confirm) {
             const updatedRows = rows.map((row) =>
-                row.instructor === selectedRow.instructor && row.time === selectedRow.time
+                row.time === selectedRow.time 
                     ? { ...row, instructor: selectedRow.instructor, section: selectedRow.section }
                     : row
             );
@@ -111,6 +111,8 @@ export default function Today() {
         setConfirmModal(false);
         setOpenModal(false);
     };
+    
+    
 
     return (
         <ThemeProvider theme={theme}>

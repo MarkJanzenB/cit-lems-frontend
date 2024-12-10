@@ -12,6 +12,7 @@ import CustomTable from "../../Table and Pagination/Table.jsx";
 import CustomTablePagination from "../../Table and Pagination/Pagination.jsx";
 import axios from "axios";
 import CloseIcon from '@mui/icons-material/Close';
+import {useNavigate} from "react-router-dom";
 
 const columns = [
     { field: 'name', headerName: 'Name' },
@@ -25,6 +26,7 @@ const columns = [
 
 
 export default function Inventory() {
+    const navigate = useNavigate();
     const roleid = localStorage.getItem("userRole");
     const jwtToken = localStorage.getItem("jwtToken");
     const [error, setError] = useState('');
@@ -531,10 +533,27 @@ export default function Inventory() {
                             {!showTable && (
                                 <div className={transition ? 'fade-slide-up' : ''} style={{ display: 'flex', justifyContent: 'center' }}>
                                     <MyPaper width={"95%"} height={"8%"}>
-                                        <Button onClick={()=>handleViewAllItemsClick(4)}>View All Items</Button>
+                                        {roleid != 1 ? (
+                                            <Button onClick={() => handleViewAllItemsClick(4)}>View All Items</Button>
+                                        ) : (
+                                            <Button
+                                                onClick={() => navigate('/inventoryST')}
+                                                sx={{
+                                                    backgroundColor: 'green',
+                                                    color: 'yellow',
+                                                    "&:hover": {
+                                                        backgroundColor: '#9ACD32', // Yellow-green color for hover
+                                                    },
+                                                    transition: 'background-color 0.3s ease', // Smooth transition for hover effect
+                                                }}
+                                            >
+                                                CLICK ME TO BORROW
+                                            </Button>
+                                        )}
                                     </MyPaper>
                                 </div>
                             )}
+
                             {showTable && (
                                 <>
                                     <div className="table-slide-up" style={{
@@ -926,7 +945,7 @@ export default function Inventory() {
                                     </Box>
                                 )}
                             </Box>
-                        
+
                         </Modal>
                     </div>
                 </div>
