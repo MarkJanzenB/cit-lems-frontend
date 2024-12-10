@@ -197,30 +197,63 @@ export default function ReturnItems() {
                             transform: 'translate(-50%, -50%)',
                             width: '90%',
                             maxHeight: '90%',
-                            bgcolor: '#F2EE9D',
+                            bgcolor: '#FFF',
                             boxShadow: 24,
                             p: 4,
                             display: 'flex',
                             flexDirection: 'column',
                             gap: 2,
                             borderRadius: '25px',
-                            overflow: 'auto'
+                            overflow: 'auto',
+                            color: '#016565',
                         }}
                     >
-                        <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
+                        <div style={{position: 'absolute', top: 24, right: 8}}>
+                            <Button onClick={handleCloseModal}><img src={"/exit.gif"} style={{
+                                width: '30px',
+                                height: '30px',
+                            }}/></Button>
+                        </div>
+                        <Typography variant="h6" component="h2"
+                                    sx={{fontWeight: 'bold', color: '#016565', textAlign: 'center'}}>
                             Borrowed Items
                         </Typography>
-                        <Typography variant="body1">Teacher's name: Mr. Instructor</Typography>
+
+                        <Typography variant="body1"> Teacher's name: Mr. Instructor</Typography>
                         <Typography variant="body1">Schedule: Nov 21, 2024 | 10:00 AM - 12:00 PM</Typography>
                         <Typography variant="body1">Items borrowed list:</Typography>
-                        <TableContainer component={Paper} style={{ width: '100%', height: '100%' }} stickyHeader>
+                        <TableContainer component={Paper} style={{width: '100%', height: '100%'}} stickyHeader>
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Item Name</TableCell>
-                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Quantity Borrowed</TableCell>
-                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Quantity To Return</TableCell>
-                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Unreturned items Broken or lost?</TableCell>
+                                        <TableCell sx={{
+                                            position: 'sticky',
+                                            top: 0,
+                                            backgroundColor: '#F2EE9D',
+                                            zIndex: 1,
+                                            color: '#016565'
+                                        }}>Item Name</TableCell>
+                                        <TableCell sx={{
+                                            position: 'sticky',
+                                            top: 0,
+                                            backgroundColor: '#F2EE9D',
+                                            zIndex: 1,
+                                            color: '#016565'
+                                        }}>Quantity Borrowed</TableCell>
+                                        <TableCell sx={{
+                                            position: 'sticky',
+                                            top: 0,
+                                            backgroundColor: '#F2EE9D',
+                                            zIndex: 1,
+                                            color: '#016565'
+                                        }}>Quantity To Return</TableCell>
+                                        <TableCell sx={{
+                                            position: 'sticky',
+                                            top: 0,
+                                            backgroundColor: '#F2EE9D',
+                                            zIndex: 1,
+                                            color: '#016565'
+                                        }}>Unreturned items Broken or lost?</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -265,8 +298,13 @@ export default function ReturnItems() {
                             </Table>
                         </TableContainer>
                         <Box display="flex" justifyContent="space-between" mt={2}>
-                            <Button variant="outlined" sx={{ color: '#800000', borderColor: '#800000' }} onClick={handleCloseModal}>Close</Button>
-                            <Button variant="contained" sx={{ backgroundColor: '#800000', color: '#FFF', '&:hover': { backgroundColor: '#5c0000' } }} onClick={handleOpenConfirmModal}>Return Items</Button>
+                            <Button variant="outlined" sx={{color: '#800000', borderColor: '#800000'}}
+                                    onClick={handleCloseModal}>Close</Button>
+                            <Button variant="contained" sx={{
+                                backgroundColor: '#800000',
+                                color: '#FFF',
+                                '&:hover': {backgroundColor: '#5c0000'}
+                            }} onClick={handleOpenConfirmModal}>Return Items</Button>
                         </Box>
                     </Box>
                 </Modal>
@@ -279,7 +317,7 @@ export default function ReturnItems() {
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
                             width: 300,
-                            bgcolor: '#F2EE9D',
+                            bgcolor: '#FFF',
                             boxShadow: 24,
                             p: 4,
                             borderRadius: '15px',
@@ -316,7 +354,7 @@ export default function ReturnItems() {
                             transform: 'translate(-50%, -50%)',
                             width: 400,
                             boxShadow: 24,
-                            bgcolor: '#F2EE9D',
+                            bgcolor: '#FFF',
                             p: 4,
                             display: 'flex',
                             flexDirection: 'column',
@@ -346,7 +384,7 @@ export default function ReturnItems() {
                             transform: 'translate(-50%, -50%)',
                             width: 400,
                             boxShadow: 24,
-                            bgcolor: '#F2EE9D',
+                            bgcolor: '#FFF',
                             p: 4,
                             display: 'flex',
                             flexDirection: 'column',
@@ -380,7 +418,7 @@ export default function ReturnItems() {
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
                             width: 300,
-                            bgcolor: '#F2EE9D',
+                            bgcolor: '#FFF',
                             boxShadow: 24,
                             p: 4,
                             borderRadius: '15px',
@@ -400,7 +438,7 @@ export default function ReturnItems() {
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
                             width: 300,
-                            bgcolor: '#F2EE9D',
+                            bgcolor: '#FFF',
                             boxShadow: 24,
                             p: 4,
                             borderRadius: '15px',

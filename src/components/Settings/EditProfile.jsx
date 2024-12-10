@@ -40,15 +40,15 @@ export default function EditProfile() {
             <div style={{ width: '2px', height: '70%', borderLeft: '2px dashed #FFFFFF'}}></div>
             <MyPaper width="50%" height="80%" style={{ backgroundColor: "#FFFFBA", borderRadius: '50px', display: 'flex' }}>
 
-
-
-
-
-
                 <div style={{width: '100%', padding: '20px'}}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h1 style={{fontSize: '50px', textAlign:'center', marginLeft:'250px'}}>Basic Information</h1>
-                        <Button onClick={handleCancel} style={{fontSize:'xx-large'}}>X</Button>
+                        <h1 style={{fontSize: '50px', textAlign:'center', marginLeft:'180px'}}>Basic Information</h1>
+                        <div style={{position: 'absolute', top: 24, right: 8}}>
+                            <Button onClick={handleCancel}><img src={"/exit.gif"} style={{
+                                width: '30px',
+                                height: '30px',
+                            }}/></Button>
+                        </div>
                     </div>
                     <br/>
                     <TextField
@@ -56,32 +56,32 @@ export default function EditProfile() {
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                        InputProps={{style: {fontSize: '40px'}}}
-                        InputLabelProps={{ style: { fontSize: '40px' } }}
+                        InputProps={{style: {fontSize: '20px'}}}
+                        InputLabelProps={{ style: { fontSize: '20px' } }}
                     />
                     <TextField
                         label="Last Name"
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                        InputProps={{ style: { fontSize: '40px' } }}
-                        InputLabelProps={{ style: { fontSize: '40px' } }}
+                        InputProps={{ style: { fontSize: '20px' } }}
+                        InputLabelProps={{ style: { fontSize: '20px' } }}
                     />
                     <TextField
                         label="ID Number"
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                        InputProps={{ style: { fontSize: '40px' } }}
-                        InputLabelProps={{ style: { fontSize: '40px' } }}
+                        InputProps={{ style: { fontSize: '20px' } }}
+                        InputLabelProps={{ style: { fontSize: '20px' } }}
                     />
                     <TextField
                         label="Email"
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                        InputProps={{ style: { fontSize: '40px' } }}
-                        InputLabelProps={{ style: { fontSize: '40px' } }}
+                        InputProps={{ style: { fontSize: '20px' } }}
+                        InputLabelProps={{ style: { fontSize: '20px' } }}
                     />
                 <Box sx={buttonStyle}>
                     <Button>Save</Button>

@@ -171,11 +171,18 @@ export default function Today() {
                                 display: 'flex', flexDirection: 'column', gap: 2
                             }}
                         >
-                            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
+                            {/*<div style={{position: 'absolute', top: 24, right: 8}}>*/}
+                            {/*    <Button onClick={() => setOpenModal(false)}><img src={"/exit.gif"} style={{*/}
+                            {/*        width: '30px',*/}
+                            {/*        height: '30px',*/}
+                            {/*    }}/></Button>*/}
+                            {/*</div>*/}
+                            <Typography variant="h6" component="h2"
+                                        sx={{fontWeight: 'bold', color: '#016565', textAlign: 'center'}}>
                                 Edit Schedule
                             </Typography>
                             <TextField
-                                sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                sx={{backgroundColor: '#FFFFFF', borderRadius: '10px'}}
                                 label="Date"
                                 variant="outlined"
                                 fullWidth
@@ -183,7 +190,7 @@ export default function Today() {
                                 disabled
                             />
                             <TextField
-                                sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                sx={{backgroundColor: '#FFFFFF', borderRadius: '10px'}}
                                 label="Time"
                                 variant="outlined"
                                 fullWidth
@@ -191,7 +198,7 @@ export default function Today() {
                                 disabled
                             />
                             <TextField
-                                sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                sx={{backgroundColor: '#FFFFFF', borderRadius: '10px'}}
                                 label="Instructor Name"
                                 variant="outlined"
                                 fullWidth
@@ -200,7 +207,7 @@ export default function Today() {
                                 onChange={handleInputChange}
                             />
                             <TextField
-                                sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                sx={{backgroundColor: '#FFFFFF', borderRadius: '10px'}}
                                 label="Section"
                                 variant="outlined"
                                 fullWidth
@@ -208,16 +215,16 @@ export default function Today() {
                                 value={selectedRow ? selectedRow.section : ''}
                                 onChange={handleInputChange}
                             />
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                            <div style={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
                                 <Button
                                     onClick={handleSave}
-                                    sx={{ backgroundColor: 'maroon', color: '#FFFFFF' }}
+                                    sx={{backgroundColor: 'maroon', color: '#FFFFFF'}}
                                 >
                                     Save Changes
                                 </Button>
                                 <Button
                                     onClick={() => setOpenModal(false)}
-                                    sx={{ backgroundColor: '#FFFFFF', color: 'maroon', border: '1px solid maroon' }}
+                                    sx={{backgroundColor: '#FFFFFF', color: 'maroon', border: '1px solid maroon'}}
                                 >
                                     Cancel
                                 </Button>
