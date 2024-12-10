@@ -47,6 +47,10 @@ export default function Sidebar({ page }) {
         navigate('/borrowhistory/list');
     };
 
+    const handleBorrowList = () => {
+        navigate('/borrowlist');
+    };
+
     const isActive = (path) => location.pathname === path;
 
     return (
@@ -83,6 +87,11 @@ export default function Sidebar({ page }) {
                         {userRole !== 1 && (
                             <button className={`sidebar-button ${isActive('/inventory/export') ? 'active' : ''}`}
                                     onClick={handleExport} style={{display: 'block'}}>Export Inventory
+                            </button>
+                        )}
+                        {userRole === 1 && (
+                            <button className={`sidebar-button ${isActive('/borrowlist') ? 'active' : ''}`}
+                                    onClick={handleBorrowList} style={{display: 'block'}}>Your Borrow List
                             </button>
                         )}
                     </>

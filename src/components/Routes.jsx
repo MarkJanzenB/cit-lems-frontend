@@ -1,3 +1,4 @@
+// src/components/Routes.jsx
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Login from './Authentication/Login.jsx';
@@ -21,6 +22,7 @@ import UnauthorizedPage from './UnauthorizedPage.jsx';
 import EditProfile from "./Settings/EditProfile.jsx";
 import PrivateRoute from './PrivateRoute.jsx';
 import useLocalStorageListener from '../hooks/useLocalStorageListener';
+import BorrowList from './BorrowList/BorrowList.jsx';
 
 function AppRoutes() {
     const [userRole, setUserRole] = useState(null);
@@ -63,6 +65,7 @@ function AppRoutes() {
             <Route path="/inventory" element={<PrivateRoute><Inventory userRole={userRole} /></PrivateRoute>} />
             <Route path="/inventoryST" element={<PrivateRoute allowedRoles={[1]}><InventoryST /></PrivateRoute>} />
             <Route path="/inventory/export" element={<PrivateRoute allowedRoles={[2, 3]}><Export /></PrivateRoute>} />
+            <Route path="/borrowlist" element={<PrivateRoute allowedRoles={[1]}><BorrowList /></PrivateRoute>} />
 
             {/* Report Routes */}
             <Route path="/report" element={<PrivateRoute><Report /></PrivateRoute>}>
