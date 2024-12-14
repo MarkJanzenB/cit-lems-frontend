@@ -13,7 +13,8 @@ import CustomTablePagination from "../../Table and Pagination/Pagination.jsx";
 import axios from "axios";
 import CloseIcon from '@mui/icons-material/Close';
 import {useNavigate} from "react-router-dom";
-
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 const columns = [
     { field: 'name', headerName: 'Name' },
     { field: 'description', headerName: 'Description' },
@@ -122,7 +123,25 @@ export default function Inventory() {
         setOpenModalEdit(false);
         setError('');
     }
+    const handleQuantityChange = (increment) => {
+        setNewItem(prevState => {
+            const newQuantity = prevState.quantity + increment;
+            return {
+                ...prevState,
+                quantity: Math.max(0, newQuantity) // Ensure quantity doesn't go below 0
+            };
+        });
+    };
 
+    const handleQuantityChangeEdit = (increment) => {
+        setEditData(prevState => {
+            const newQuantity = prevState.quantity + increment;
+            return {
+                ...prevState,
+                quantity: Math.max(0, newQuantity) // Ensure quantity doesn't go below 0
+            };
+        });
+    };
     const handleSnackbarClose = (event, reason) => {
         setOpenSnackbar(false);
     }
@@ -231,30 +250,30 @@ export default function Inventory() {
     };
 
 
-    const handleInputChange = async (e) => {
-        const {name, value} = e.target;
-        if (name === 'category') {
-            setNewItemCategory(value);
-            if (message === "New Item?! Click the dropdown below and choose a category where your item belongs.") {
-                setMessage('');
-            }
-        } else {
-            setNewItem(prevState => ({
-                ...prevState,
-                [name]: value
-            }));
+const handleInputChange = async (e) => {
+    const { name, value } = e.target;0
+    if (name === 'category') {
+        setNewItemCategory(value);
+        if (message === "New Item?! Click the dropdown below and choose a category where your item belongs.") {
             setMessage('');
-            if (value === '') {
-                setMessage('');
-            } else {
-                setMessage('');
-                if (name === 'item_name' || name === 'name') {
-                    await checkItemExists(value);
-                }
-            }
+        }
+    } else {
+        setNewItem(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+        setMessage('');
+        if ((name === 'item_name' || name === 'name') && value !== '') {
+            await checkItemExists(value);
+        }
+    }
+};
+    const handleBlurOrEnter = async (e) => {
+        const { name, value } = e.target;
+        if ((name === 'item_name' || name === 'name') && value !== '') {
+            await checkItemExists(value);
         }
     };
-
 
     const checkItemExists = async (itemName) => {
         try {
@@ -760,10 +779,6 @@ export default function Inventory() {
                             )}
                         </MyPaper>
                         <Modal open={openModal} onClose={handleModalClose}>
-
-
-
-                            {/*dili pani final, will try to figure out saons ni maporma ang add feature*/}
                             <Box
                                 sx={{
                                     position: 'absolute',
@@ -780,30 +795,33 @@ export default function Inventory() {
                                     borderRadius: '25px',
                                 }}
                             >
-                                <div style={{position: 'absolute', top: 24, right: 8}}>
+                                <div style={{ position: 'absolute', top: 24, right: 8 }}>
                                     <Button onClick={handleModalClose}><img src={"/exit.gif"} style={{
                                         width: '30px',
                                         height: '30px',
-
                                     }}/></Button>
                                 </div>
-                                <Typography variant="h6" component="div"
-                                            sx={{fontWeight: 'bold', color: '#016565', textAlign: 'center'}}>
+                                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}>
                                     ADD ITEM
                                 </Typography>
                                 <TextField
                                     name="item_name"
                                     value={newItem.item_name}
                                     onChange={handleInputChange}
-                                    sx={{backgroundColor: '#FFFFFF', borderRadius: '10px'}}
+                                    onBlur={handleBlurOrEnter}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleBlurOrEnter(e);
+                                        }
+                                    }}
+                                    sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
                                     label="Name"
                                     variant="outlined"
                                     fullWidth
                                     required={true}
                                     autoComplete={'off'}
                                 />
-                                {message &&
-                                    <Typography color="primary" sx={{mt: 0.5, fontSize: '14px'}}>{message}</Typography>}
+                                {message && <Typography color="primary" sx={{ mt: 0.5, fontSize: '14px' }}>{message}</Typography>}
 
                                 <FormControl required>
                                     <InputLabel id="demo-simple-select-label">Category</InputLabel>
@@ -821,61 +839,72 @@ export default function Inventory() {
                                         <MenuItem value={3}>Glasswares</MenuItem>
                                         <MenuItem value={4}>Hazards</MenuItem>
                                     </Select>
+                                </FormControl>
 
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <TextField
+                                        name="quantity"
+                                        value={newItem.quantity}
+                                        onChange={handleInputChange}
+                                        sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', flexGrow: 1 }}
+                                        label="Quantity"
+                                        variant="outlined"
+                                        required={true}
+                                        autoComplete={'off'}
+                                    />
+                                    <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                                        <Button onClick={() => handleQuantityChange(-10)}>-10</Button>
+                                        <Button onClick={() => handleQuantityChange(-5)}>-5</Button>
+                                        <Button onClick={() => handleQuantityChange(-1)}>-1</Button>
+                                        <Button onClick={() => handleQuantityChange(1)}>+1</Button>
+                                        <Button onClick={() => handleQuantityChange(5)}>+5</Button>
+                                        <Button onClick={() => handleQuantityChange(10)}>+10</Button>
+                                    </ButtonGroup>
+                                </Box>
+
+                                <FormControl required>
+                                    <InputLabel id="unit-select-label">Unit</InputLabel>
+                                    <Select
+                                        name="unit"
+                                        labelId="unit-select-label"
+                                        value={newItem.unit}
+                                        onChange={handleInputChange}
+                                        sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
+                                        label="Unit"
+                                        fullWidth
+                                    >
+                                        <MenuItem value="units">Units</MenuItem>
+                                        <MenuItem value="grams">Grams</MenuItem>
+                                        <MenuItem value="kilograms">Kilograms</MenuItem>
+                                        <MenuItem value="liters">Liters</MenuItem>
+                                        <MenuItem value="meters">Meters</MenuItem>
+                                        <MenuItem value="pieces">Pieces</MenuItem>
+                                    </Select>
                                 </FormControl>
                                 <TextField
-                                    name="quantity"
-                                    value={newItem.quantity}
-                                    onChange={handleInputChange}
-                                    sx={{backgroundColor: '#FFFFFF', borderRadius: '10px'}}
-                                    label="Quantity"
-                                    variant="outlined"
-                                    fullWidth
-                                    required={true}
-                                    autoComplete={'off'}
-                                />
-                                <TextField
-                                    name="unit"
-                                    value={newItem.unit}
-                                    onChange={handleInputChange}
-                                    sx={{backgroundColor: '#FFFFFF', borderRadius: '10px'}}
-                                    label="Unit"
-                                    variant="outlined"
-                                    fullWidth
-                                    required={true}
-                                    autoComplete={'off'}
-                                />
-                                <TextField
                                     name="description"
-                                    value={editData.description}
+                                    value={newItem.description}
                                     onChange={handleInputChange}
-                                    sx={{backgroundColor: '#FFFFFF', borderRadius: '10px'}}
+                                    sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
                                     label="Description"
                                     variant="outlined"
                                     fullWidth
                                     required={true}
                                     autoComplete={'off'}
                                 />
-                                {/*<Button variant="outlined" sx={{color: '#800000', borderColor: '#800000'}}*/}
-                                {/*        onClick={handleModalBack}>*/}
-                                {/*    Back*/}
-                                {/*</Button>*/}
-                                {error && <Typography color="error" sx={{mt:2}}>{error}</Typography>}
+                                {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
                                 <Button
                                     variant="contained"
                                     sx={{
                                         backgroundColor: '#800000',
                                         color: '#FFF',
-                                        '&:hover': {backgroundColor: '#5c0000'}
+                                        '&:hover': { backgroundColor: '#5c0000' }
                                     }}
                                     onClick={handleAddItem}
                                 >
                                     Add Item
                                 </Button>
-
-
                             </Box>
-                            {/*    enddddddddddddddddddddddddddddd*/}
                         </Modal>
                         <Modal open={openModalEdit} onClose={handleModalEditClose}>
                             <Box>
@@ -907,8 +936,9 @@ export default function Inventory() {
                                             label="Name"
                                             variant="outlined"
                                             fullWidth
-                                            required={true}
                                             autoComplete={'off'}
+                                            disabled={true} // This will prevent user input
+
                                         />
                                         <TextField
                                             name="description"
@@ -921,17 +951,27 @@ export default function Inventory() {
                                             required={true}
                                             autoComplete={'off'}
                                         />
-                                        {/* Improve: Modify to only allow decimals as input */}
-                                        <TextField
-                                            name="quantity"
-                                            value={editData.quantity}
-                                            onChange={handleInputChangeEdit}
-                                            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
-                                            label="Quantity"
-                                            variant="outlined"
-                                            fullWidth required={true}
-                                            autoComplete={'off'}
-                                        />
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <TextField
+                                                name="quantity"
+                                                value={editData.quantity}
+                                                onChange={handleInputChangeEdit}
+                                                sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', flexGrow: 1 }}
+                                                label="Quantity"
+                                                variant="outlined"
+                                                fullWidth
+                                                required={true}
+                                                autoComplete={'off'}
+                                            />
+                                            <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                                                <Button onClick={() => handleQuantityChangeEdit(-10)}>-10</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(-5)}>-5</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(-1)}>-1</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(1)}>+1</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(5)}>+5</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(10)}>+10</Button>
+                                            </ButtonGroup>
+                                        </Box>
                                         <TextField
                                             name="unit"
                                             value={editData.unit}
@@ -939,9 +979,11 @@ export default function Inventory() {
                                             sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
                                             label="Unit"
                                             variant="outlined"
-                                            fullWidth required={true}
+                                            fullWidth
                                             autoComplete={'off'}
+                                            disabled={true} // This will prevent user input
                                         />
+
                                         <TextField
                                             name="status"
                                             value={editData.status}
@@ -949,11 +991,11 @@ export default function Inventory() {
                                             sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
                                             label="Status"
                                             variant="outlined"
-                                            fullWidth required={true}
+                                            fullWidth
+                                            required={true}
                                             autoComplete={'off'}
                                         />
-
-                                        {error && <Typography color="error" sx={{mt:2}}>{error}</Typography>}
+                                        {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
                                         <Box display="flex" justifyContent="space-between" mt={2}>
                                             <Button variant="outlined" sx={{ color: '#800000', borderColor: '#800000' }} onClick={handleModalEditClose}>
                                                 Cancel
@@ -995,8 +1037,8 @@ export default function Inventory() {
                                             label="Name"
                                             variant="outlined"
                                             fullWidth
-                                            required={true}
                                             autoComplete={'off'}
+                                            disabled={true} // This will prevent user input
                                         />
                                         <TextField
                                             name="description"
@@ -1009,18 +1051,27 @@ export default function Inventory() {
                                             required={true}
                                             autoComplete={'off'}
                                         />
-                                        {/* Improve: Modify to only allow decimals as input */}
-                                        <TextField
-                                            name="quantity"
-                                            value={editData.quantity}
-                                            onChange={handleInputChangeEdit}
-                                            sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
-                                            label="Quantity"
-                                            variant="outlined"
-                                            fullWidth
-                                            required={true}
-                                            autoComplete={'off'}
-                                        />
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <TextField
+                                                name="quantity"
+                                                value={editData.quantity}
+                                                onChange={handleInputChangeEdit}
+                                                sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', flexGrow: 1 }}
+                                                label="Quantity"
+                                                variant="outlined"
+                                                fullWidth
+                                                required={true}
+                                                autoComplete={'off'}
+                                            />
+                                            <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                                                <Button onClick={() => handleQuantityChangeEdit(-10)}>-10</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(-5)}>-5</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(-1)}>-1</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(1)}>+1</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(5)}>+5</Button>
+                                                <Button onClick={() => handleQuantityChangeEdit(10)}>+10</Button>
+                                            </ButtonGroup>
+                                        </Box>
                                         <TextField
                                             name="unit"
                                             value={editData.unit}
@@ -1028,8 +1079,9 @@ export default function Inventory() {
                                             sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
                                             label="Unit"
                                             variant="outlined"
-                                            fullWidth required={true}
+                                            fullWidth
                                             autoComplete={'off'}
+                                            disabled={true} // This will prevent user input
                                         />
                                         <TextField
                                             name="status"
@@ -1038,11 +1090,11 @@ export default function Inventory() {
                                             sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
                                             label="Status"
                                             variant="outlined"
-                                            fullWidth required={true}
+                                            fullWidth
+                                            required={true}
                                             autoComplete={'off'}
                                         />
-
-                                        {error && <Typography color="error" sx={{mt:2}}>{error}</Typography>}
+                                        {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
                                         <Box display="flex" justifyContent="space-between" mt={2}>
                                             <Button variant="outlined" sx={{ color: '#800000', borderColor: '#800000' }} onClick={handleModalEditClose}>
                                                 Cancel
@@ -1055,11 +1107,9 @@ export default function Inventory() {
                                                 Save
                                             </Button>
                                         </Box>
-
                                     </Box>
                                 )}
                             </Box>
-
                         </Modal>
                     </div>
                 </div>

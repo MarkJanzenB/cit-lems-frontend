@@ -40,12 +40,11 @@ body, html {
   background-image: url("src/assets/static/img/Cebu_Institute_of_Technology_University_logo.png");
   width: 720px;
   top: 25%;
-  height: 700px;
+  height: 600px;
   left: 60.5%;
   display: inline-block;
   position: absolute;
   background-size: cover;
-  opacity: initial;
   background-repeat:no-repeat;
 }
 
@@ -56,7 +55,6 @@ body, html {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
   z-index: 1;
 }
 

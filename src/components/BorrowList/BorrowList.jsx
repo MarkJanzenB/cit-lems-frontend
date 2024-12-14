@@ -103,7 +103,6 @@ export default function BorrowList() {
         },
     ];
 
-
     const [borrowList, setBorrowList] = useState(sampleBorrowList);
     const [view, setView] = useState("grid");
     const [openSnackbar, setOpenSnackbar] = useState(false);
