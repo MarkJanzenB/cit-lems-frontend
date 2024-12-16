@@ -82,7 +82,7 @@ function AppRoutes() {
             <Route path="/borrowcart" element={<PrivateRoute allowedRoles={[1]}><BorrowCart /></PrivateRoute>} />
 
             {/* Settings Routes */}
-            <Route path="/editprofile" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
+            <Route path="/updateuser" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
 
             {/* Fallback for undefined routes */}
             <Route path="*" element={<UnauthorizedPage />} />
