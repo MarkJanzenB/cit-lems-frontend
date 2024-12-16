@@ -51,6 +51,10 @@ export default function Sidebar({ page }) {
         navigate('/borrowhistory/borrowlist');
     };
 
+    const handleBorrowCart = () => {
+        navigate('/borrowcart');
+    };
+
     const isActive = (path) => location.pathname === path;
 
     return (
@@ -89,6 +93,9 @@ export default function Sidebar({ page }) {
                                     onClick={handleExport} style={{display: 'block'}}>Export Inventory
                             </button>
                         )}
+                        <button className={`sidebar-button ${isActive('/borrowcart') ? 'active' : ''}`}
+                                onClick={handleBorrowCart} style={{display: 'block'}}>Borrow Cart
+                        </button>
                     </>
                 )}
                 {page === 'report' && (
@@ -101,6 +108,7 @@ export default function Sidebar({ page }) {
                         </button>
                     </>
                 )}
+
                 {page === 'borrowhistory' && (
                     <>
                         <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}

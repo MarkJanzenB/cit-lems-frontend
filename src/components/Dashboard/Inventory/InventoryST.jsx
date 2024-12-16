@@ -52,36 +52,41 @@ export default function InventoryST() {
     };
 
     const handleModalOpen = (item) => {
-        const currentDate = new Date();
-        const formattedDate = currentDate.toISOString().split('T')[0];
-
         setFormData({
             itemName: item.name,
-            quantity: '',
-            instructor: currentUser,
-            section: '',
-            date: formattedDate,
+            quantity: 1, // Default to 1
+            maxQuantity: item.quantity,
             itemPhoto: item.image_url || 'https://via.placeholder.com/140', // Use a placeholder if item has no image
+            category: item.category, // Add category field
         });
         setOpenModal(true);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'quantity') {
+            const quantity = Math.min(value, formData.maxQuantity);
+            setFormData({ ...formData, [name]: quantity });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleModalClose = () => {
         setOpenModal(false);
     };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
 
     const handleFormSubmit = async () => {
-        // Display a message when the "Borrow" button is clicked
-        setSnackbarText(`Borrow request for ${formData.itemName} submitted successfully. Check your Borrow List for status.`);
+        // Add the item to the Borrow Cart
+        const borrowCart = JSON.parse(localStorage.getItem('borrowCart')) || [];
+        borrowCart.push(formData);
+        localStorage.setItem('borrowCart', JSON.stringify(borrowCart));
+
+        // Display a message when the item is added to the Borrow Cart
+        setSnackbarText(`${formData.itemName} added to Borrow Cart.`);
         setOpenSnackbar(true);
         setOpenModal(false);
-        // Simulate a network request or navigate to the borrow list if needed
-        // navigate('/borrowlist'); // Uncomment this line to navigate after submission
     };
 
     const fetchItems = async () => {
@@ -147,6 +152,9 @@ export default function InventoryST() {
                                                 {item.description}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
+                                                Category: {item.category}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
                                                 Quantity: {item.quantity}
                                             </Typography>
                                             <Button
@@ -194,8 +202,16 @@ export default function InventoryST() {
                     <TextField
                         name="itemName"
                         value={formData.itemName}
-                        onChange={handleInputChange}
                         label="Item Name"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        disabled
+                    />
+                    <TextField
+                        name="category"
+                        value={formData.category}
+                        label="Category"
                         variant="outlined"
                         fullWidth
                         margin="normal"
@@ -204,40 +220,13 @@ export default function InventoryST() {
                     <TextField
                         name="quantity"
                         value={formData.quantity}
-                        onChange={handleInputChange}
                         label="Quantity"
+                        type="number"
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                    />
-                    <TextField
-                        name="instructor"
-                        value={formData.instructor}
                         onChange={handleInputChange}
-                        label="Instructor"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        disabled
-                    />
-                    <TextField
-                        name="section"
-                        value={formData.section}
-                        onChange={handleInputChange}
-                        label="Section"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        name="date"
-                        value={formData.date}
-                        onChange={handleInputChange}
-                        label="Date"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        disabled
+                        inputProps={{ min: 1, max: formData.maxQuantity }}
                     />
                     <Box display="flex" justifyContent="space-between" mt={2}>
                         <Button variant="outlined" onClick={handleModalClose}>
@@ -248,7 +237,7 @@ export default function InventoryST() {
                             sx={{ backgroundColor: '#016565', color: '#FFF', '&:hover': { backgroundColor: '#014d4d' } }}
                             onClick={handleFormSubmit}
                         >
-                            Borrow
+                            Add to Borrow Cart
                         </Button>
                     </Box>
                 </Box>

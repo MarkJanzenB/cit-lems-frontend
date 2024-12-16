@@ -22,6 +22,7 @@ import EditProfile from "./Settings/EditProfile.jsx";
 import PrivateRoute from './PrivateRoute.jsx';
 import useLocalStorageListener from '../hooks/useLocalStorageListener';
 import BorrowList from './Dashboard/History/BorrowList.jsx';
+import BorrowCart from './BorrowCart/BorrowCart';
 
 function AppRoutes() {
     const [userRole, setUserRole] = useState(null);
@@ -76,6 +77,9 @@ function AppRoutes() {
             <Route path="/borrowhistory/list" element={<PrivateRoute><List /></PrivateRoute>} />
             <Route path="/borrowhistory/returnitems" element={<PrivateRoute><ReturnItems /></PrivateRoute>} />
             <Route path="/borrowhistory/borrowlist" element={<PrivateRoute allowedRoles={[1]}><BorrowList /></PrivateRoute>} />
+
+            {/* Borrow Cart Route */}
+            <Route path="/borrowcart" element={<PrivateRoute><BorrowCart /></PrivateRoute>} />
 
             {/* Settings Routes */}
             <Route path="/editprofile" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
