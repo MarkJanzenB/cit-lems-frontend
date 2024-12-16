@@ -48,7 +48,11 @@ export default function Sidebar({ page }) {
     };
 
     const handleBorrowList = () => {
-        navigate('/borrowlist');
+        navigate('/borrowhistory/borrowlist');
+    };
+
+    const handleBorrowCart = () => {
+        navigate('/borrowcart');
     };
 
     const isActive = (path) => location.pathname === path;
@@ -90,8 +94,8 @@ export default function Sidebar({ page }) {
                             </button>
                         )}
                         {userRole === 1 && (
-                            <button className={`sidebar-button ${isActive('/borrowlist') ? 'active' : ''}`}
-                                    onClick={handleBorrowList} style={{display: 'block'}}>Your Borrow List
+                            <button className={`sidebar-button ${isActive('/borrowcart') ? 'active' : ''}`}
+                                    onClick={handleBorrowCart} style={{display: 'block'}}>Borrow Cart
                             </button>
                         )}
                     </>
@@ -106,14 +110,22 @@ export default function Sidebar({ page }) {
                         </button>
                     </>
                 )}
+
                 {page === 'borrowhistory' && (
                     <>
                         <button className={`sidebar-button ${isActive('/borrowhistory/list') ? 'active' : ''}`}
                                 onClick={handleBorrowHistory} style={{display: 'block'}}>Borrow Schedule
                         </button>
-                        <button className={`sidebar-button ${isActive('/borrowhistory/returnitems') ? 'active' : ''}`}
-                                onClick={handleReturnItems} style={{display: 'block'}}>Return Items
-                        </button>
+                        {userRole != 1 && (
+                            <button className={`sidebar-button ${isActive('/borrowhistory/returnitems') ? 'active' : ''}`}
+                                    onClick={handleReturnItems} style={{display: 'block'}}>Return Items
+                            </button>
+                        )}
+                        {userRole === 1 && (
+                            <button className={`sidebar-button ${isActive('/borrowhistory/borrowlist') ? 'active' : ''}`}
+                                    onClick={handleBorrowList} style={{display: 'block'}}>Borrow List
+                            </button>
+                        )}
                     </>
                 )}
             </div>

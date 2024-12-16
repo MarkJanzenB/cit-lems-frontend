@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Appbar from "../../../Appbar/Appbar.jsx";
-import Sidebar from "../../../Sidebar/Sidebar.jsx";
+import Appbar from "../../Appbar/Appbar.jsx";
+import Sidebar from "../../Sidebar/Sidebar.jsx";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TablePagination, Modal, Box, TextField, Typography, Checkbox, FormControlLabel, useMediaQuery } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 

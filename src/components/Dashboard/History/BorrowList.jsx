@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Appbar from "../../components/Appbar/Appbar.jsx";
-import Sidebar from "../../components/Sidebar/Sidebar.jsx";
+import Appbar from "../../Appbar/Appbar.jsx";
+import Sidebar from "../../Sidebar/Sidebar.jsx";
 import {
     Button, Box, Grid, Card, CardContent, CardMedia, Typography, Snackbar, IconButton, Table,
     TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, ToggleButton, ToggleButtonGroup,
@@ -193,7 +193,7 @@ export default function BorrowList() {
         <ThemeProvider theme={theme}>
             <Appbar page={"borrow-list"} />
             <div className="inventory-container">
-                <Sidebar page={"inventory"} />
+                <Sidebar page={"borrowhistory"} />
                 <div className="inventory-content">
                     <Box
                         sx={{

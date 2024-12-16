@@ -1,4 +1,3 @@
-// src/components/Routes.jsx
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Login from './Authentication/Login.jsx';
@@ -16,13 +15,14 @@ import Calendar from "./Calendar/Calendar.jsx";
 import Report from "./Dashboard/Report/Report.jsx";
 import Damages from "./Dashboard/Report/ReportTab/Damages.jsx";
 import Resolved from "./Dashboard/Report/ReportTab/Resolved.jsx";
-import ReturnItems from "./Dashboard/History/HistoryTab/ReturnItems.jsx";
-import List from "./Dashboard/History/HistoryTab/List.jsx";
+import ReturnItems from "./Dashboard/History/ReturnItems.jsx";
+import List from "./Dashboard/History/List.jsx";
 import UnauthorizedPage from './UnauthorizedPage.jsx';
 import EditProfile from "./Settings/EditProfile.jsx";
 import PrivateRoute from './PrivateRoute.jsx';
 import useLocalStorageListener from '../hooks/useLocalStorageListener';
-import BorrowList from './BorrowList/BorrowList.jsx';
+import BorrowList from './Dashboard/History/BorrowList.jsx';
+import BorrowCart from './BorrowCart/BorrowCart';
 
 function AppRoutes() {
     const [userRole, setUserRole] = useState(null);
@@ -65,7 +65,6 @@ function AppRoutes() {
             <Route path="/inventory" element={<PrivateRoute><Inventory userRole={userRole} /></PrivateRoute>} />
             <Route path="/inventoryST" element={<PrivateRoute allowedRoles={[1]}><InventoryST /></PrivateRoute>} />
             <Route path="/inventory/export" element={<PrivateRoute allowedRoles={[2, 3]}><Export /></PrivateRoute>} />
-            <Route path="/borrowlist" element={<PrivateRoute allowedRoles={[1]}><BorrowList /></PrivateRoute>} />
 
             {/* Report Routes */}
             <Route path="/report" element={<PrivateRoute><Report /></PrivateRoute>}>
@@ -74,10 +73,13 @@ function AppRoutes() {
             </Route>
 
             {/* History Routes */}
-            <Route path="/borrowhistory" element={<PrivateRoute><ReturnItems /></PrivateRoute>}>
-                <Route path="list" element={<List />} />
-                <Route path="returnitems" element={<ReturnItems />} />
-            </Route>
+            <Route path="/borrowhistory" element={<PrivateRoute><ReturnItems userRole={userRole} /></PrivateRoute>} />
+            <Route path="/borrowhistory/list" element={<PrivateRoute><List /></PrivateRoute>} />
+            <Route path="/borrowhistory/returnitems" element={<PrivateRoute><ReturnItems /></PrivateRoute>} />
+            <Route path="/borrowhistory/borrowlist" element={<PrivateRoute allowedRoles={[1]}><BorrowList /></PrivateRoute>} />
+
+            {/* Borrow Cart Route */}
+            <Route path="/borrowcart" element={<PrivateRoute allowedRoles={[1]}><BorrowCart /></PrivateRoute>} />
 
             {/* Settings Routes */}
             <Route path="/editprofile" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
