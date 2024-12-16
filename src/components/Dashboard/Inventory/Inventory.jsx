@@ -692,6 +692,7 @@ const handleInputChange = async (e) => {
                                         rowsPerPageOptions={[5, 10, 15]}
                                         onAddClick={handleAddClick}
                                         roleid={roleid}
+                                        isAtInventory={true}
                                         isInventoryPage={true}
                                     />
 
