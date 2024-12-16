@@ -3,7 +3,7 @@ import MyPaper from "../MyPaper.jsx";
 import profile from '/src/assets/static/img/profile2.gif';
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Box } from "@mui/material";
+import {Box, InputLabel} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getJWTUid } from "../Authentication/jwt.jsx";
@@ -68,42 +68,46 @@ export default function EditProfile() {
                         </div>
                     </div>
                     <br />
+                    <Box display="flex" alignItems="center" marginBottom="16px">
+                        <InputLabel style={{ fontSize: '20px', marginRight: '16px' }}>First Name</InputLabel>
+                        <TextField
+                            placeholder="First Name"
+                            variant="outlined"
+                            sx={{ width: '80%' }} // Adjust the width as needed
+                            InputProps={{ style: { fontSize: '20px' } }}
+                            value={fetchedData ? fetchedData.first_name : ''}
+                        />
+                    </Box>
+                    <Box display="flex" alignItems="center" marginBottom="16px">
+                    <InputLabel style={{ fontSize: '20px', marginRight: '16px' }}>Last Name</InputLabel>
                     <TextField
-                        label="First Name"
+                        placeholder="Last Name"
                         variant="outlined"
-                        fullWidth
-                        margin="normal"
+                        sx={{ width: '80%' }}
                         InputProps={{ style: { fontSize: '20px' } }}
-                        InputLabelProps={{ style: { fontSize: '20px' } }}
-                        value={fetchedData ? fetchedData.first_name : ''}
-                    />
-                    <TextField
-                        label="Last Name"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        InputProps={{ style: { fontSize: '20px' } }}
-                        InputLabelProps={{ style: { fontSize: '20px' } }}
                         value={fetchedData ? fetchedData.last_name : ''}
                     />
+                    </Box>
+                    <Box display="flex" alignItems="center" marginBottom="16px">
+                    <InputLabel style={{  fontSize: '20px', marginRight: '16px' }}>ID Number</InputLabel>
                     <TextField
-                        label="ID Number"
+                        placeholder="ID Number"
                         variant="outlined"
-                        fullWidth
-                        margin="normal"
+                        sx={{ width: '80%' }}
                         InputProps={{ style: { fontSize: '20px' } }}
-                        InputLabelProps={{ style: { fontSize: '20px' } }}
                         value={fetchedData ? fetchedData.insti_id : ''}
                     />
+                    </Box>
+                    <Box display="flex" alignItems="center" marginBottom="16px">
+                    <InputLabel style={{  fontSize: '20px', marginRight: '64px' }}>Email</InputLabel>
                     <TextField
-                        label="Email"
+                        placeholder="Email"
                         variant="outlined"
-                        fullWidth
-                        margin="normal"
+                        sx={{ width: '80%' }}
                         InputProps={{ style: { fontSize: '20px' } }}
-                        InputLabelProps={{ style: { fontSize: '20px' } }}
                         value={fetchedData ? fetchedData.email : ''}
                     />
+                    </Box>
                     <Box sx={buttonStyle}>
                         <Button>Save</Button>
                     </Box>
