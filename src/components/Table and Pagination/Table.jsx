@@ -1,8 +1,7 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 
-const CustomTable = ({ columns, data, onRowClick, onRemoveClick, roleid }) => {
-    //removed the page from the props
+const CustomTable = ({ columns, data, onRowClick, onRemoveClick, roleid, showRemoveColumn, isInventoryPage }) => {
     const handleActionClick = (id) => {
         onRemoveClick(id);
     };
@@ -15,7 +14,7 @@ const CustomTable = ({ columns, data, onRowClick, onRemoveClick, roleid }) => {
                         {columns.map((column) => (
                             <TableCell key={column.field}>{column.headerName}</TableCell>
                         ))}
-                        {roleid != 1 && <TableCell>RemoveItem</TableCell>}
+                        {showRemoveColumn && roleid != 1 && isInventoryPage && <TableCell>RemoveItem</TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -24,7 +23,7 @@ const CustomTable = ({ columns, data, onRowClick, onRemoveClick, roleid }) => {
                             {columns.map((column) => (
                                 <TableCell key={column.field} style={{fontFamily:'Poppins'}}>{row[column.field]}</TableCell>
                             ))}
-                            {roleid != 1 && (
+                            {showRemoveColumn && roleid != 1 && isInventoryPage && (
                                 <TableCell>
                                     <Button variant="contained" color="secondary" onClick={(e) => { e.stopPropagation(); handleActionClick(row.inventory_id); }}>
                                         Remove

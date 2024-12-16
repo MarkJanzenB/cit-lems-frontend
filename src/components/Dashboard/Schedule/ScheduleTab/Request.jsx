@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../../../Sidebar/Sidebar.jsx';
 import Appbar from '../../../Appbar/Appbar';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Modal, Box, TextField, Typography, Button, Snackbar, Alert } from '@mui/material';
+import { Modal, Box, TextField, Typography, Button, Select, MenuItem } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -9,6 +9,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import CustomTable from "../../../Table and Pagination/Table.jsx";
+import CustomTablePagination from "../../../Table and Pagination/Pagination.jsx";
+import MyPaper from "../../../MyPaper.jsx";
 
 const generateRandomFutureDate = () => {
     const today = new Date();
@@ -25,9 +28,41 @@ const initialRows = [
     { id: 5, date: generateRandomFutureDate(), time: '2:00 PM', teacher: 'Mrs. Taylor', material: 'Slides' },
 ];
 
+const columns = [
+    { field: 'id', headerName: 'ID' },
+    { field: 'date', headerName: 'Date' },
+    { field: 'time', headerName: 'Time' },
+    { field: 'teacher', headerName: 'Teacher' },
+    { field: 'material', headerName: 'Material' },
+    {
+        field: 'status',
+        headerName: 'Status',
+        renderCell: (params) => (
+            <Select
+                value={params.row.status}
+                onChange={(e) => handleStatusChange(e, params.row.id)}
+                fullWidth
+            >
+                <MenuItem value="Approved">Approved</MenuItem>
+                <MenuItem value="Rescheduled">Rescheduled</MenuItem>
+                <MenuItem value="Rejected">Rejected</MenuItem>
+            </Select>
+        )
+    },
+];
+
+const handleStatusChange = (event, id) => {
+    const newStatus = event.target.value;
+    setRows((prevRows) =>
+        prevRows.map((row) =>
+            row.id === id ? { ...row, status: newStatus } : row
+        )
+    );
+};
+
 const theme = createTheme({
     palette: {
-        primary: { main: '#016565' }, // Header sa table screen kay green
+        primary: { main: '#016565' },
         secondary: { main: '#000000' },
     },
     components: {
@@ -48,26 +83,26 @@ const theme = createTheme({
 const localizer = momentLocalizer(moment);
 
 export default function Request() {
-    const [rows, setRows] = useState(initialRows); //store ang list of requests
-    const [page, setPage] = useState(0); // display 1st table
-    const [rowsPerPage, setRowsPerPage] = useState(10); //table limit kay 10
+    const [rows, setRows] = useState(initialRows);
     const [searchText, setSearchText] = useState('');
-    const [openModal, setOpenModal] = useState(false); //display ang modal if i click specific row
-    const [selectedRow, setSelectedRow] = useState(null); // display ang edited data sa row
-    const [editedTeacher, setEditedTeacher] = useState(''); // store ang edited teacher name sa table
-    const [editedMaterial, setEditedMaterial] = useState(''); // store and edited BM sa table
-    const [editedDate, setEditedDate] = useState(null); //store ang edited date sa table
-    const [editedTime, setEditedTime] = useState(null); // store edited time sa table
-    const [viewMode, setViewMode] = useState('table'); // toggle between table nd calendar view
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [editedTeacher, setEditedTeacher] = useState('');
+    const [editedMaterial, setEditedMaterial] = useState('');
+    const [editedDate, setEditedDate] = useState(null);
+    const [editedTime, setEditedTime] = useState(null);
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [selectedTeacher, setSelectedTeacher] = useState('');
+    const [view, setView] = useState('table'); // State to manage the current view
 
-    const handleSearch = (event) => {    // filter ang specific row include teacher,material, date or time
+    const handleSearch = (event) => {
         setSearchText(event.target.value);
-        setPage(0);
     };
 
-    const handleEditClick = (row) => {    // if iclick nako ang specific row, ang data sa specific row mo display sa modal
+    const handleEditClick = (row) => {
         setSelectedRow(row);
         setEditedTeacher(row.teacher);
         setEditedMaterial(row.material);
@@ -77,7 +112,7 @@ export default function Request() {
     };
 
     const handleSave = () => {
-        setOpenConfirmModal(true); // Open confirmation modal after clicking save
+        setOpenConfirmModal(true);
     };
 
     const handleConfirmSave = () => {
@@ -87,24 +122,21 @@ export default function Request() {
                 : row
         );
         setRows(updatedRows);
-        setOpenModal(false); // Close edit modal
-        setOpenConfirmModal(false); // Close confirmation modal
-        setOpenSuccessModal(true); // Show success modal
-    };
-  
-
-    const handleViewToggle = () => {             
-        setViewMode(viewMode === 'table' ? 'calendar' : 'table');
+        setOpenModal(false);
+        setOpenConfirmModal(false);
+        setOpenSuccessModal(true);
     };
 
-    const handleSnackbarClose = (event, reason) => {
-        if (reason === 'clickaway') return;
-        setOpenSnackbar(false);
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
     };
 
+    const handleRowsPerPageChange = (newRowsPerPage) => {
+        setRowsPerPage(newRowsPerPage);
+    };
 
     const filteredRows = rows
-        .filter((row) => new Date(row.date) > new Date()) // Only include future dates
+        .filter((row) => new Date(row.date) > new Date())
         .filter(
             (row) =>
                 row.teacher.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -116,64 +148,60 @@ export default function Request() {
     const displayedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const calendarEvents = filteredRows.map((row) => ({
-        title: `${row.teacher} (${row.material})`, 
+        title: `${row.teacher} (${row.material})`,
         start: moment(`${row.date} ${row.time}`, 'M/D/YYYY h:mm A').toDate(),
         end: moment(`${row.date} ${row.time}`, 'M/D/YYYY h:mm A').add(1, 'hour').toDate(),
         resource: row,
     }));
 
+    const toggleView = () => {
+        setView((prevView) => (prevView === 'table' ? 'calendar' : 'table'));
+    };
+
     return (
         <ThemeProvider theme={theme}>
-            <div style={{ display:'flex', height: '100vh', width: '100vw' }}>
-                <Appbar page="schedule"/>
-                    <Sidebar page={"schedule"} />
+            <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
+                <Appbar page="schedule" />
+                <Sidebar page={"schedule"} />
                 <div style={{ padding: '20px', flexGrow: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', marginTop: '100px',}}>
+
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '20px',
+                        marginTop: '100px'
+                    }}>
+
                         <TextField
                             label="Search..."
                             variant="outlined"
                             value={searchText}
                             onChange={handleSearch}
-                            sx={{ flex: 1 }}
+                            sx={{flex: 1}}
                         />
-                        <Button onClick={handleViewToggle} sx={{ marginLeft: '30px', backgroundColor: '#016565', color: '#FFFFFF' }}>
-                            {viewMode === 'table' ? 'Calendar View' : 'Table View'}
+                        <Button onClick={toggleView} sx={{marginLeft: '20px'}}>
+                            {view === 'table' ? 'Switch to Calendar View' : 'Switch to Table View'}
                         </Button>
                     </Box>
-                    {viewMode === 'table' ? (
-                        <TableContainer component={Paper} >
-                            <Table stickyHeader>
-                                <TableHead>
-                                    <TableRow> {/* display ang header sa table*/}
-                                        <TableCell style={{fontFamily:'Poppins'}}>ID</TableCell>
-                                        <TableCell style={{fontFamily:'Poppins'}} align="center">Date</TableCell>
-                                        <TableCell style={{fontFamily:'Poppins'}} align="center">Time</TableCell>
-                                        <TableCell style={{fontFamily:'Poppins'}} align="center">Teacher</TableCell>
-                                        <TableCell style={{fontFamily:'Poppins'}} align="center">Material</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {displayedRows.map((row, index) => (
-                                        <TableRow key={index} onClick={() => handleEditClick(row)} style={{ cursor: 'pointer' }}>
-                                            <TableCell>{row.id}</TableCell>
-                                            <TableCell style={{fontFamily:'Poppins'}} align="center">{row.date}</TableCell>
-                                            <TableCell style={{fontFamily:'Poppins'}} align="center">{row.time}</TableCell>
-                                            <TableCell style={{fontFamily:'Poppins'}} align="center">{row.teacher}</TableCell>
-                                            <TableCell style={{fontFamily:'Poppins'}} align="center">{row.material}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                            <TablePagination style={{fontFamily:'Poppins'}}   /* in one page 10 row ang displayed*/
-                                rowsPerPageOptions={[10, 20, 30]}
-                                component="div"
-                                count={filteredRows.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                onPageChange={(event, newPage) => setPage(newPage)}
-                                onRowsPerPageChange={(event) => setRowsPerPage(parseInt(event.target.value, 10))}
+
+                    {view === 'table' ? (
+                        <MyPaper>
+                            <CustomTable
+                                columns={columns}
+                                data={displayedRows}
+                                onRowClick={handleEditClick}
                             />
-                        </TableContainer>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <CustomTablePagination
+                                    count={filteredRows.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onPageChange={handlePageChange}
+                                    onRowsPerPageChange={handleRowsPerPageChange}
+                                />
+                            </Box>
+                        </MyPaper>
                     ) : (
                         <Calendar
                             localizer={localizer}
@@ -201,157 +229,165 @@ export default function Request() {
                         />
                     )}
 
-                <Modal open={openModal} onClose={() => setOpenModal(false)}>
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: 400,
-                            bgcolor: '#FFFFFF',
-                            borderRadius: '15px',
-                            boxShadow: 24,
-                            overflow: 'hidden',
-                        }}
-                    >
-                        {/* Modal Header */}
-                        <Box
-                          sx={{
-                              backgroundColor: '#016565',
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                          }}
-                      >
-                          <Typography
-                              variant="h6"
-                              sx={{
-                                  fontWeight: 'bold',
-                                  color: '#FFFFFF',
-                                  padding:'15px',
-                              }}
-                          >
-                              Edit Request
-                          </Typography>
-                          <Button
-                              onClick={() => setOpenModal(false)}
-                              sx={{
-                                  color: '#FFFFFF',
-                                  background: 'none',
-                                  paddingLeft: '7px',
-                                  minWidth: 'unset',
-                                  '&:hover': {
-                                      background: 'none',
-                                  },
-                              }}
-                          >
-                              ✕
-                          </Button>
-                      </Box>
-
-
-                        {/* Modal Content */}
+                    <Modal open={openModal} onClose={() => setOpenModal(false)}>
                         <Box
                             sx={{
-                                padding: '16px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '16px',
-                                backgroundColor: '#f9f9f9',
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 400,
+                                bgcolor: '#FFFFFF',
+                                borderRadius: '15px',
+                                boxShadow: 24,
+                                overflow: 'hidden',
                             }}
                         >
+                            <Box
+                                sx={{
+                                    backgroundColor: '#016565',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        color: '#FFFFFF',
+                                        padding: '15px',
+                                    }}
+                                >
+                                    Edit Request
+                                </Typography>
+                                <Button
+                                    onClick={() => setOpenModal(false)}
+                                    sx={{
+                                        color: '#FFFFFF',
+                                        background: 'none',
+                                        paddingLeft: '7px',
+                                        minWidth: 'unset',
+                                        '&:hover': {
+                                            background: 'none',
+                                        },
+                                    }}
+                                >
+                                    ✕
+                                </Button>
+                            </Box>
 
+                            <Box
+                                sx={{
+                                    padding: '16px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '16px',
+                                    backgroundColor: '#f9f9f9',
+                                }}
+                            >
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DatePicker
+                                        label="Date"
+                                        value={editedDate}
+                                        onChange={(newValue) => setEditedDate(newValue)}
+                                        sx={{
+                                            '& .MuiInputBase-root': {
+                                                backgroundColor: '#FFFFFF',
+                                            },
+                                        }}
+                                    />
+                                    <TimePicker
+                                        label="Time"
+                                        value={editedTime}
+                                        onChange={(newValue) => setEditedTime(newValue)}
+                                        sx={{
+                                            '& .MuiInputBase-root': {
+                                                backgroundColor: '#FFFFFF',
+                                            },
+                                        }}
+                                    />
+                                </LocalizationProvider>
 
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <DatePicker
-                                    label="Date"
-                                    value={editedDate}
-                                    onChange={(newValue) => setEditedDate(newValue)}
+                                <TextField
+                                    label="Teacher"
+                                    value={editedTeacher}
+                                    onChange={(e) => setEditedTeacher(e.target.value)}
+                                    fullWidth
+                                    InputProps={{
+                                        readOnly: true,
+                                        style: {
+                                            backgroundColor: '#f0f0f0',
+                                            color: '#a0a0a0',
+                                        },
+                                    }}
                                     sx={{
                                         '& .MuiInputBase-root': {
-                                            backgroundColor: '#FFFFFF',
+                                            backgroundColor: '#f0f0f0',
                                         },
                                     }}
                                 />
-                                <TimePicker
-                                    label="Time"
-                                    value={editedTime}
-                                    onChange={(newValue) => setEditedTime(newValue)}
+                                <TextField
+                                    label="Material"
+                                    value={editedMaterial}
+                                    onChange={(e) => setEditedMaterial(e.target.value)}
+                                    fullWidth
+                                    InputProps={{
+                                        readOnly: true,
+                                        style: {
+                                            backgroundColor: '#f0f0f0',
+                                            color: '#a0a0a0',
+                                        },
+                                    }}
                                     sx={{
                                         '& .MuiInputBase-root': {
-                                            backgroundColor: '#FFFFFF',
+                                            backgroundColor: '#f0f0f0',
                                         },
                                     }}
                                 />
-                            </LocalizationProvider>
+                            </Box>
 
-                            <TextField
-                                label="Teacher"
-                                value={editedTeacher}
-                                onChange={(e) => setEditedTeacher(e.target.value)}
-                                fullWidth
+                            <Box
                                 sx={{
-                                    '& .MuiInputBase-root': {
-                                        backgroundColor: '#FFFFFF',
-                                    },
-                                }}
-                            />
-                            <TextField
-                                label="Material"
-                                value={editedMaterial}
-                                onChange={(e) => setEditedMaterial(e.target.value)}
-                                fullWidth
-                                sx={{
-                                    '& .MuiInputBase-root': {
-                                        backgroundColor: '#FFFFFF',
-                                    },
-                                }}
-                            />
-                        </Box>
-
-                        {/* Modal Footer */}
-                        <Box
-                            sx={{
-                                padding: '16px',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                borderTop: '1px solid #e0e0e0',
-                                backgroundColor: '#FFFFFF',
-                            }}
-                        >
-                            <Button
-                                onClick={() => setOpenModal(false)}
-                                variant="outlined"
-                                sx={{
-                                    color: '#333',
-                                    borderColor: '#333',
-                                    padding: '8px 16px',
-                                    borderRadius: '8px',
+                                    padding: '16px',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    borderTop: '1px solid #e0e0e0',
+                                    backgroundColor: '#FFFFFF',
                                 }}
                             >
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={handleSave}
-                                variant="contained"
-                                sx={{
-                                    backgroundColor: 'maroon',
-                                    color: '#FFFFFF',
-                                    padding: '8px 16px',
-                                    borderRadius: '8px',
-                                    '&:hover': {
-                                        backgroundColor: '#014d4d',
-                                    },
-                                }}
-                            >
-                                Save
-                            </Button>
+                                <Button
+                                    onClick={() => setOpenModal(false)}
+                                    variant="outlined"
+                                    sx={{
+                                        color: '#333',
+                                        borderColor: '#333',
+                                        padding: '8px 16px',
+                                        borderRadius: '8px',
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    onClick={handleSave}
+                                    variant="contained"
+                                    sx={{
+                                        backgroundColor: 'maroon',
+                                        color: '#FFFFFF',
+                                        padding: '8px 16px',
+                                        borderRadius: '8px',
+                                        '&:hover': {
+                                            backgroundColor: '#014d4d',
+                                        },
+                                    }}
+                                >
+                                    Save
+                                </Button>
+                            </Box>
                         </Box>
-                    </Box>
-                </Modal>
-                {/* Confirmation Modal */}
-                <Modal open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
+                    </Modal>
+
+                    <Modal open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
                         <Box
                             sx={{
                                 position: 'absolute',
@@ -376,8 +412,7 @@ export default function Request() {
                         </Box>
                     </Modal>
 
-                     {/* Success Modal */}
-                     <Modal open={openSuccessModal} onClose={() => setOpenSuccessModal(false)}>
+                    <Modal open={openSuccessModal} onClose={() => setOpenSuccessModal(false)}>
                         <Box
                             sx={{
                                 position: 'absolute',

@@ -1,11 +1,16 @@
 import React from 'react';
 import { TablePagination, Button } from '@mui/material';
 
-const CustomTablePagination = ({ count, page, rowsPerPage, onPageChange, onRowsPerPageChange, onAddClick, roleid }) => {
+const CustomTablePagination = ({ count, page, rowsPerPage, onPageChange, onRowsPerPageChange, onAddClick, roleid, isAtInventory }) => {
+    const showAddButton = isAtInventory;
+
     return (
-        <div style={{display: 'flex', alignItems: 'center'}}>
-            {roleid != 1 && <Button onClick={onAddClick} style={{marginRight: 'auto'}}>Add</Button>}
-            {/*<Button onClick={onAddClick} style={{marginRight: 'auto'}}>Add</Button>*/}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            {showAddButton && roleid !== 1 && (
+                <Button onClick={onAddClick} style={{ marginRight: 'auto' }}>
+                    Add
+                </Button>
+            )}
             <TablePagination
                 rowsPerPageOptions={[5, 10, 15]}
                 component="div"
@@ -18,6 +23,6 @@ const CustomTablePagination = ({ count, page, rowsPerPage, onPageChange, onRowsP
             />
         </div>
     );
-            };
+};
 
-            export default CustomTablePagination;
+export default CustomTablePagination;

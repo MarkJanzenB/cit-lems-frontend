@@ -21,6 +21,7 @@ const columns = [
     { field: 'quantity', headerName: 'Quantity' },
     { field: 'unit', headerName: 'Unit' },
     { field: 'status', headerName: 'Status' },
+
 ];
 
 
@@ -89,29 +90,6 @@ export default function Inventory() {
         description:'',
     });
 
-    // const [newEquipment, setNewEquipment] = useState({
-    //     unit: '',
-    //     name: '',
-    //     item_category: { category_id: 2 },
-    //     quantity: 0,
-    //     description: '',
-    // });
-    //
-    // const [newGlassware, setNewGlassware] = useState({
-    //     unit: '',
-    //     name: '',
-    //     item_category: { category_id: 3},
-    //     quantity: 0,
-    //     description: '',
-    // });
-    //
-    // const [newHazards, setNewHazards] = useState({
-    //     unit: '',
-    //     name: '',
-    //     item_category: { category_id: 4 },
-    //     quantity: 0,
-    //     description: '',
-    // });
 
     const handleModalClose = () => {
         setOpenModal(false);
@@ -203,6 +181,7 @@ export default function Inventory() {
     };
 
     const handleRemoveItem = (category_id) => {
+        const jwtToken =localStorage.getItem("jwtToken");
         axios.delete(`http://localhost:8080/inventory/delete/${category_id}`, {
             headers: {
                 "Authorization": `Bearer ${jwtToken}`
@@ -300,32 +279,6 @@ const handleInputChange = async (e) => {
             checkItemExists(itemName);
         }
     }, [newItem.item_name, newItem.name]);
-
-
-    // const handleInputChangeCategory = (e) => {
-    //     const { name, value } = e.target;
-    //     if(name == "category"){
-    //         setNewItemCategory(value);
-    //     }
-    //
-    // };
-
-    // const handleInputChange = (e) => {
-    //     const { name, value} = e.target;
-    //     setError('');
-    //
-    //     if(newItemCategory != 1){
-    //         setNewItem(prevState => ({
-    //             ...prevState,
-    //             [name]: value
-    //         }));
-    //     }else{
-    //         setNewConsumable(prevState => ({
-    //             ...prevState,
-    //             [name]: value
-    //         }));
-    //     }
-    // }
 
     const handleInputChangeEdit = (e) => {
         const {name, value} = e.target;
@@ -450,43 +403,6 @@ const handleInputChange = async (e) => {
         }
     };
 
-
-
-    // const handleAddItem = () => {
-    //     let newItemData;
-    //     if (newItemCategory == 1) {
-    //         newItemData = newConsumable;
-    //     } else if (newItemCategory == 2) {
-    //         newItemData = newEquipment;
-    //     } else if (newItemCategory == 3) {
-    //         newItemData = newGlassware;
-    //     } else if (newItemCategory == 4) {
-    //         newItemData = newHazards;
-    //     }
-    //
-    //     axios.post("http://localhost:8080/inventory/addinventory", newItemData, {
-    //         headers: {
-    //             "Authorization": `Bearer ${jwtToken}`
-    //         }
-    //     })
-    //         .then(response => {
-    //             setOpenModal(false);
-    //             setCurrentStep(1);
-    //             fetchData(currentCategory);
-    //             setOpenSnackbar(true);
-    //             setSnackbarText("Item added");
-    //         })
-    //         .catch(error => {
-    //             if (error.response.status === 401) {
-    //                 setError("Unauthorized: Please log in again.");
-    //             } else if (error.response.status === 409) {
-    //                 setError("Item already exists. Did you mean add stock?");
-    //             } else {
-    //                 setError("An unexpected error occurred.");
-    //             }
-    //         });
-    // };
-
     const handleSave = () => {
         console.log(editData)
         if(editData.item_category.category_id == 1){
@@ -591,10 +507,7 @@ const handleInputChange = async (e) => {
                     console.log("Error when updating items for non consumabeles");
                     setError("An unexpected error occurred. Please check the details and try again.");
                 })
-                // setSnackbarText("Item successfully updated");
-                // setOpenSnackbar(true);
-                // setOpenModalEdit(false);
-                // fetchData(currentCategory);
+
             })
             .catch(error => {
                 if(error.response.status == 409){
@@ -607,6 +520,9 @@ const handleInputChange = async (e) => {
         }
     }
 
+    const handleRemoveClick = (id) => {
+        console.log('Remove clicked for id:', id);
+    };
     const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     return (
@@ -630,7 +546,7 @@ const handleInputChange = async (e) => {
                                         <Button onClick={() => handleViewListClick(0)}>View List</Button>
                                     </MyPaper>
                                     <MyPaper width="30%" height="30%">
-                                    <h1>Equipments</h1>
+                                    <h1>Equipment</h1>
                                         <img src={"/equipment.gif"} style={{ width: '200px', height: '200px' }}
                                              onClick={() => handleViewListClick(1)}/>
                                         <MyPaper width={"100%"} height={"30%"}>
@@ -639,7 +555,7 @@ const handleInputChange = async (e) => {
                                         <Button onClick={() => handleViewListClick(1)}>View List</Button>
                                     </MyPaper>
                                     <MyPaper width="30%" height="30%">
-                                        <h1>Glasswares</h1>
+                                        <h1>Glassware</h1>
                                         <img src={"/glassware.gif"} style={{ width: '200px', height: '200px' }} onClick={() => handleViewListClick(2)}/>
                                         <MyPaper width={"100%"} height={"30%"}>
                                             <h4>
@@ -764,6 +680,8 @@ const handleInputChange = async (e) => {
                                         onRowClick={handleRowClick}
                                         onRemoveClick={handleRemoveItem}
                                         roleid={roleid}
+                                        showRemoveColumn={true}
+                                        isInventoryPage={true}
                                     />
                                     <CustomTablePagination
                                         count={data.length}
@@ -774,7 +692,9 @@ const handleInputChange = async (e) => {
                                         rowsPerPageOptions={[5, 10, 15]}
                                         onAddClick={handleAddClick}
                                         roleid={roleid}
+                                        isInventoryPage={true}
                                     />
+
                                 </>
                             )}
                         </MyPaper>
@@ -835,8 +755,8 @@ const handleInputChange = async (e) => {
                                     >
                                         <MenuItem value={0}>SELECT CATEGORY</MenuItem>
                                         <MenuItem value={1}>Consumables</MenuItem>
-                                        <MenuItem value={2}>Equipments</MenuItem>
-                                        <MenuItem value={3}>Glasswares</MenuItem>
+                                        <MenuItem value={2}>Equipment</MenuItem>
+                                        <MenuItem value={3}>Glassware</MenuItem>
                                         <MenuItem value={4}>Hazards</MenuItem>
                                     </Select>
                                 </FormControl>
