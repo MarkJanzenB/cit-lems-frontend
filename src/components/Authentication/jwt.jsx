@@ -47,3 +47,9 @@ export const checkUserRole = (expectedRoleId) => {
 // Usage example:
 export const isUserRole1 = checkUserRole(1);
 console.log("Is user role 1?", isUserRole1);
+
+export const getJWTUid = () => {
+    const decodedToken = jwtDecoder();
+
+    return decodedToken.uid;
+}

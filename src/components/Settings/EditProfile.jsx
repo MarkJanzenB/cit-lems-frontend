@@ -5,28 +5,28 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { getJWTUid } from "../Authentication/jwt.jsx";
 
 export default function EditProfile() {
     const navigate = useNavigate();
-    const [fetchedData, setFetchedData] = useState(null);
+    const [fetchedData, setFetchedData] = useState({});
+    const jwtToken = localStorage.getItem("jwtToken");
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const jwtToken = localStorage.getItem("jwtToken");
-    //         //please help meeeeeeeee
-    //         const response = await fetch("https://your-api-endpoint.com/user", {
-    //             method: "GET",
-    //             headers: {
-    //                 "Authorization": `Bearer ${jwtToken}`,
-    //                 "Content-Type": "application/json"
-    //             }
-    //         });
-    //         const data = await response.json();
-    //         setFetchedData(data);
-    //     };
-    //
-    //     fetchData();
-    // }, []);
+    useEffect(() => {
+        const uid = getJWTUid();
+        axios.get(`http://localhost:8080/user/getuser?uid=${uid}`, {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            setFetchedData(response.data);
+        })
+        .catch(error => {
+            console.log("Thy error: ",error.data);
+        })
+    }, []);
 
     const handleCancel = () => navigate(-1);
 
@@ -75,7 +75,7 @@ export default function EditProfile() {
                         margin="normal"
                         InputProps={{ style: { fontSize: '20px' } }}
                         InputLabelProps={{ style: { fontSize: '20px' } }}
-                        value={fetchedData ? fetchedData.firstName : ''}
+                        value={fetchedData ? fetchedData.first_name : ''}
                     />
                     <TextField
                         label="Last Name"
@@ -84,7 +84,7 @@ export default function EditProfile() {
                         margin="normal"
                         InputProps={{ style: { fontSize: '20px' } }}
                         InputLabelProps={{ style: { fontSize: '20px' } }}
-                        value={fetchedData ? fetchedData.lastName : ''}
+                        value={fetchedData ? fetchedData.last_name : ''}
                     />
                     <TextField
                         label="ID Number"
@@ -93,7 +93,7 @@ export default function EditProfile() {
                         margin="normal"
                         InputProps={{ style: { fontSize: '20px' } }}
                         InputLabelProps={{ style: { fontSize: '20px' } }}
-                        value={fetchedData ? fetchedData.idNumber : ''}
+                        value={fetchedData ? fetchedData.insti_id : ''}
                     />
                     <TextField
                         label="Email"
