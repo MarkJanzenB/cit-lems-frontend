@@ -170,7 +170,7 @@ const Appbar = ({ page }) => {
                   <Box sx={style}>
                     <Button style={closeButtonStyle} onClick={handleClose}>X</Button><br />
                     <Typography id="modal-modal-title" variant="h6" component="h2" align={"center"}>
-                      <Link to="/editprofile" style={{ textDecoration: 'none' }}>
+                      <Link to="/updateuser" style={{ textDecoration: 'none' }}>
                         <Box sx={{
                           ...buttonStyle,
                           '&:hover': {
