@@ -79,7 +79,7 @@ function AppRoutes() {
             <Route path="/borrowhistory/borrowlist" element={<PrivateRoute allowedRoles={[1]}><BorrowList /></PrivateRoute>} />
 
             {/* Borrow Cart Route */}
-            <Route path="/borrowcart" element={<PrivateRoute><BorrowCart /></PrivateRoute>} />
+            <Route path="/borrowcart" element={<PrivateRoute allowedRoles={[1]}><BorrowCart /></PrivateRoute>} />
 
             {/* Settings Routes */}
             <Route path="/editprofile" element={<PrivateRoute><EditProfile /></PrivateRoute>} />

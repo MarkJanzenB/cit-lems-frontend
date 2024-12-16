@@ -93,9 +93,11 @@ export default function Sidebar({ page }) {
                                     onClick={handleExport} style={{display: 'block'}}>Export Inventory
                             </button>
                         )}
-                        <button className={`sidebar-button ${isActive('/borrowcart') ? 'active' : ''}`}
-                                onClick={handleBorrowCart} style={{display: 'block'}}>Borrow Cart
-                        </button>
+                        {userRole === 1 && (
+                            <button className={`sidebar-button ${isActive('/borrowcart') ? 'active' : ''}`}
+                                    onClick={handleBorrowCart} style={{display: 'block'}}>Borrow Cart
+                            </button>
+                        )}
                     </>
                 )}
                 {page === 'report' && (
