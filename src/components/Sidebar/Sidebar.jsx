@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import {getJWTSub, getJWTFullName} from "../Authentication/jwt.jsx";
+import {getJWTSub, getJWTFullName, getJWTUid} from "../Authentication/jwt.jsx";
 
 import './Sidebar.css';
 import { Modal, Box, TextField, Typography, Button, Select, MenuItem } from '@mui/material';
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DatePicker} from "@mui/x-date-pickers";
+import axios from 'axios';
 
 export default function Sidebar({ page }) {
     const navigate = useNavigate();
@@ -36,16 +37,52 @@ export default function Sidebar({ page }) {
     };
 
     const label = labels[page] || 'Return';
-
+    const [teacherId, setTeacherId] = useState(0);
+    const jwtToken = localStorage.getItem("jwtToken");
+        const [teachers, setTeachers] = useState([{
+        user_id: 0,
+        fullname: '',
+    }]);
+    const [subjects, setSubjects] = useState([{}]);
+    const [subjectId, setSubjectId] = useState(0);
 
     const handleCreateRequest = () => {
+        axios.get("http://localhost:8080/user/getallusersbyroleid?roleId=1", {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            const updatedTeachers = response.data.map(teacher => ({
+                ...teacher,
+                fullname: `${teacher.first_name} ${teacher.last_name}` // Concatenate with space
+            }));
+
+            setTeachers(updatedTeachers);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+        axios.get("http://localhost:8080/subject/getallsubject", {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            setSubjects(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        })
         if (userRole != 1) {
             setTeacher('');
             setApproval('Approved');
         }
         if (userRole === 1) {
             setTeacher(getJWTSub());
-            setApproval('');
+            setTeacherId(getJWTUid());
+            setApproval('Pending');
         }
         setDate(null);
         setStartHour('');
@@ -62,21 +99,94 @@ export default function Sidebar({ page }) {
     };
 
     const handleConfirmSave = () => {
-        const updatedRows = rows.map((row) =>
-            row === selectedRow
-                ? {
-                    ...row,
-                    teacher: getTeacher,
-                    date: getDate.toLocaleDateString(),
-                    time: `${getStartHour}:${getStartMinute < 10 ? `0${getStartMinute}` : getStartMinute} - ${getEndHour}:${getEndMinute < 10 ? `0${getEndMinute}` : getEndMinute}`,
-                    yearSection: getYearSection,
-                    subject: getSubject,
-                    room: getRoom,
-                    approval: getApproval,
-                }
-                : row
-        );
-        setRows(updatedRows);
+        // const updatedRows = rows.map((row) =>
+        //     row === selectedRow
+        //         ? {
+        //             ...row,
+        //             teacher: getTeacher,
+        //             date: getDate.toLocaleDateString(),
+        //             time: `${getStartHour}:${getStartMinute < 10 ? `0${getStartMinute}` : getStartMinute} - ${getEndHour}:${getEndMinute < 10 ? `0${getEndMinute}` : getEndMinute}`,
+        //             yearSection: getYearSection,
+        //             subject: getSubject,
+        //             room: getRoom,
+        //             approval: getApproval,
+        //         }
+        //         : row
+        // );
+
+        const [minute, period] = getStartMinute.split(" ");
+        const [endminute, endperiod] = getEndMinute.split(" ");
+
+        let hour = parseInt(getStartHour, 10);
+        let endhour = parseInt(getEndHour, 10);
+
+        if (period === "AM") {
+            if (hour === 12) {
+                hour = 0; // Midnight case (12 AM = 00 in 24-hour format)
+            }
+        } else if (period === "PM") {
+            if (hour !== 12) {
+                hour += 12; // PM, add 12 to convert to 24-hour format (e.g., 1 PM = 13)
+            }
+        }
+
+        if (endperiod === "AM") {
+            if (endhour === 12) {
+                endhour = 0; // Midnight case (12 AM = 00 in 24-hour format)
+            }
+        } else if (endperiod === "PM") {
+            if (endhour !== 12) {
+                endhour += 12; // PM, add 12 to convert to 24-hour format (e.g., 1 PM = 13)
+            }
+        }
+
+        console.log(getApproval)
+
+        const formattedHour = hour.toString().padStart(2, "0"); // Ensure two-digit hour
+        const formattedMinute = minute.padStart(2, "0");
+
+        const endformattedHour = endhour.toString().padStart(2, "0"); // Ensure two-digit hour
+        const endformattedMinute = endminute.padStart(2, "0");
+
+        const timeString = `${formattedHour}:${formattedMinute}:00`;
+        const endtimeString = `${endformattedHour}:${endformattedMinute}:00`;
+
+        const requestData = {
+            teacher: {
+                user_id: teacherId
+            },
+            date_schedule: getDate.toLocaleDateString("en-CA"),
+            start_time: timeString,
+            end_time: endtimeString,
+            subject: {
+                subject_id: subjectId
+            },
+            room: getRoom,
+            status: getApproval
+        };
+        
+        // Conditionally add date_approved
+        if (userRole !== 1) {
+            requestData.date_approved = getFormattedLocalDateTime();
+            requestData.date_requested = getFormattedLocalDateTime();
+            requestData.approver = { user_id: getJWTUid() };
+        }else{
+            requestData.date_requested = getFormattedLocalDateTime();
+        }
+
+         axios.post("http://localhost:8080/request/addrequest", requestData, {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            console.log(response)
+            setIncrementFlag(incrementFlag + 1);
+        })
+        .catch(error => {
+            console.log(error)
+        })
+        //setRows(updatedRows);
         setOpenModal(false);
         setOpenConfirmModal(false);
         setOpenSuccessModal(true);
@@ -121,6 +231,21 @@ export default function Sidebar({ page }) {
     };
 
     const isActive = (path) => location.pathname === path;
+
+    const getFormattedLocalDateTime = () => {
+        const now = new Date();
+    
+        // Get date and time components
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Add leading 0
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+        // Combine them into the desired format
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    };
 
     return (
         <aside className="sidebar-container">
@@ -290,7 +415,7 @@ export default function Sidebar({ page }) {
                                 backgroundColor: '#f9f9f9',
                             }}
                         >
-
+                            {/* HERE */}
                         {userRole != 1 && (
                             <Select
                                 onChange={(e) => setTeacher(e.target.value)}
@@ -307,8 +432,13 @@ export default function Sidebar({ page }) {
                                     Select a Teacher
                                 </MenuItem>
                                 {/*Should fetch fullname of all users that are teacher*/}
-                                <MenuItem value={getTeacher}>{getJWTFullName()}</MenuItem>
-                            </Select>
+                                {/* <MenuItem value={getTeacher}>{getJWTFullName()}</MenuItem> */}
+                                {teachers.map((teacher) => (
+                                     <MenuItem key={teacher.user_id} value={teacher.fullname} onClick={() => setTeacherId(teacher.user_id)}>
+                                        {teacher.fullname}
+                                    </MenuItem>
+                                ))}
+                                </Select>
                         )}
 
                         {userRole === 1 && (
@@ -424,14 +554,19 @@ export default function Sidebar({ page }) {
                                 <MenuItem value="" disabled>
                                     Select Subject
                                 </MenuItem>
-                                <MenuItem value="Mathematics">Mathematics</MenuItem>
+                                {/* <MenuItem value="Mathematics">Mathematics</MenuItem>
                                 <MenuItem value="Science">Science</MenuItem>
                                 <MenuItem value="History">History</MenuItem>
-                                <MenuItem value="English">English</MenuItem>
+                                <MenuItem value="English">English</MenuItem> */}
+                                {subjects.map((subject) => (
+                                    <MenuItem key={subject.subject_id} value={subject.subject_name} onClick={() => setSubjectId(subject.subject_id)}>
+                                        {subject.subject_name}
+                                    </MenuItem>
+                                ))}
                             </Select>
                             <Select
-                                value={getYearSection}
-                                onChange={(e) => setYearSection(e.target.value)}
+                                value={getRoom}
+                                onChange={(e) => setRoom(e.target.value)}
                                 fullWidth
                                 displayEmpty
                                 sx={{
