@@ -30,27 +30,13 @@ const initialRows = [
 
 const columns = [
     { field: 'id', headerName: 'ID' },
+    { field: 'teacher', headerName: 'Teacher' },
     { field: 'date', headerName: 'Date' },
     { field: 'time', headerName: 'Time' },
-    { field: 'teacher', headerName: 'Teacher' },
     { field: 'yearSection', headerName: 'Year & Section' },
     { field: 'subject', headerName: 'Subject' },
     { field: 'room', headerName: 'Room' },
-    {
-        field: 'status',
-        headerName: 'Status',
-        renderCell: (params) => (
-            <Select
-                value={params.row.status}
-                onChange={(e) => handleStatusChange(e, params.row.id)}
-                fullWidth
-            >
-                <MenuItem value="Approved">Approved</MenuItem>
-                <MenuItem value="Rescheduled">Rescheduled</MenuItem>
-                <MenuItem value="Rejected">Rejected</MenuItem>
-            </Select>
-        )
-    },
+    { field: 'approvalStatus',headerName: 'Approval Status'},
 ];
 
 const handleStatusChange = (event, id) => {
@@ -89,28 +75,22 @@ export default function Request() {
     const [searchText, setSearchText] = useState('');
     const [openModal, setOpenModal] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
-    const [editedTeacher, setEditedTeacher] = useState('');
-    const [editedRemarks, setEditedRemarks] = useState(null);
-    const [editedRoom, setEditedRoom] = useState(null);
-
-    const [editedDate, setEditedDate] = useState(null);
-
-
-
-    const [startHour, setStartHour] = useState('');
-    const [startMinute, setStartMinute] = useState('');
-    const [endHour, setEndHour] = useState('');
-    const [endMinute, setEndMinute] = useState('');
-
-
-
-    const [editedYearSection, setEditedYearSection] = useState('');
-    const [editedSubject, setEditedSubject] = useState('');
+    //for editing data of request
+    const [getTeacher, setTeacher] = useState('');
+    const [getRemarks, setRemarks] = useState(null);
+    const [getRoom, setRoom] = useState(null);
+    const [getDate, setDate] = useState(null);
+    const [getStartHour, setStartHour] = useState('');
+    const [getStartMinute, setStartMinute] = useState('');
+    const [getEndHour, setEndHour] = useState('');
+    const [getEndMinute, setEndMinute] = useState('');
+    const [getYearSection, setYearSection] = useState('');
+    const [getSubject, setSubject] = useState('');
+    const [getApproval, setApproval] = useState('');
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [EditedApproval, setEditedApproval] = useState('');
     const [view, setView] = useState('table'); // State to manage the current view
 
     const handleSearch = (event) => {
@@ -119,17 +99,17 @@ export default function Request() {
 
     const handleEditClick = (row) => {
         setSelectedRow(row);
-        setEditedTeacher(row.teacher);
-        setEditedDate(new Date(row.date));
+        setTeacher(row.teacher);
+        setDate(new Date(row.date));
 
         if (row.time && row.time.includes(' - ')) {
             const [start, end] = row.time.split(' - ');
-            const [startHour, startMinute] = start.split(':');
-            const [endHour, endMinute] = end.split(':');
-            setStartHour(startHour);
-            setStartMinute(startMinute);
-            setEndHour(endHour);
-            setEndMinute(endMinute);
+            const [getStartHour, getStartMinute] = start.split(':');
+            const [getEndHour, getEndMinute] = end.split(':');
+            setStartHour(getStartHour);
+            setStartMinute(getStartMinute);
+            setEndHour(getEndHour);
+            setEndMinute(getEndMinute);
         } else {
             setStartHour('');
             setStartMinute('');
@@ -137,10 +117,10 @@ export default function Request() {
             setEndMinute('');
         }
 
-        setEditedYearSection(row.yearSection || '');
-        setEditedSubject(row.subject || '');
-        setEditedRoom(row.room || '');
-        setEditedApproval(row.approval || '');
+        setYearSection(row.yearSection || '');
+        setSubject(row.subject || '');
+        setRoom(row.room || '');
+        setApproval(row.approval || '');
         setOpenModal(true);
     };
 
@@ -153,13 +133,13 @@ export default function Request() {
             row === selectedRow
                 ? {
                     ...row,
-                    teacher: editedTeacher,
-                    date: editedDate.toLocaleDateString(),
-                    time: `${startHour}:${startMinute < 10 ? `0${startMinute}` : startMinute} - ${endHour}:${endMinute < 10 ? `0${endMinute}` : endMinute}`,
-                    yearSection: editedYearSection,
-                    subject: editedSubject,
-                    room: editedRoom,
-                    approval: EditedApproval,
+                    teacher: getTeacher,
+                    date: getDate.toLocaleDateString(),
+                    time: `${getStartHour}:${getStartMinute < 10 ? `0${getStartMinute}` : getStartMinute} - ${getEndHour}:${getEndMinute < 10 ? `0${getEndMinute}` : getEndMinute}`,
+                    yearSection: getYearSection,
+                    subject: getSubject,
+                    room: getRoom,
+                    approval: getApproval,
                 }
                 : row
         );
@@ -300,7 +280,7 @@ export default function Request() {
                                         padding: '15px',
                                     }}
                                 >
-                                    Edit Request
+                                    Request Details
                                 </Typography>
                                 <Button
                                     onClick={() => setOpenModal(false)}
@@ -329,8 +309,8 @@ export default function Request() {
                             >
                                 <Select
                                     labelID="Teacher"
-                                    value={editedTeacher}
-                                    onChange={(e) => setEditedTeacher(e.target.value)}
+                                    value={getTeacher}
+                                    onChange={(e) => setTeacher(e.target.value)}
                                     fullWidth
                                     displayEmpty
                                     sx={{
@@ -352,8 +332,8 @@ export default function Request() {
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         label="Date"
-                                        value={editedDate}
-                                        onChange={(newValue) => setEditedDate(newValue)}
+                                        value={getDate}
+                                        onChange={(newValue) => setDate(newValue)}
                                         sx={{
                                             '& .MuiInputBase-root': {
                                                 backgroundColor: '#FFFFFF',
@@ -365,7 +345,7 @@ export default function Request() {
                                     <Select
                                         labelId="start-hour-label"
                                         id="start-hour-select"
-                                        value={startHour}
+                                        value={getStartHour}
                                         onChange={(e) => setStartHour(e.target.value)}
                                         displayEmpty
                                         sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
@@ -379,7 +359,7 @@ export default function Request() {
                                     <Select
                                         labelId="start-minute-label"
                                         id="start-minute-select"
-                                        value={startMinute}
+                                        value={getStartMinute}
                                         onChange={(e) => setStartMinute(e.target.value)}
                                         displayEmpty
                                         sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
@@ -393,7 +373,7 @@ export default function Request() {
                                     <Select
                                         labelId="end-hour-label"
                                         id="end-hour-select"
-                                        value={endHour}
+                                        value={getEndHour}
                                         onChange={(e) => setEndHour(e.target.value)}
                                         displayEmpty
                                         sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
@@ -407,7 +387,7 @@ export default function Request() {
                                     <Select
                                         labelId="end-minute-label"
                                         id="end-minute-select"
-                                        value={endMinute}
+                                        value={getEndMinute}
                                         onChange={(e) => setEndMinute(e.target.value)}
                                         displayEmpty
                                         sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
@@ -421,8 +401,8 @@ export default function Request() {
                                 <Select
                                     labelId="year-section-label"
                                     id="year-section-select"
-                                    value={editedYearSection}
-                                    onChange={(e) => setEditedYearSection(e.target.value)}
+                                    value={getYearSection}
+                                    onChange={(e) => setYearSection(e.target.value)}
                                     fullWidth
                                     displayEmpty
                                     sx={{
@@ -443,9 +423,9 @@ export default function Request() {
                                 <Select
                                     labelId="subject-label"
                                     id="subject-select"
-                                    value={editedSubject}
+                                    value={getSubject}
                                     aria-placeholder={"Subject"}
-                                    onChange={(e) => setEditedSubject(e.target.value)}
+                                    onChange={(e) => setSubject(e.target.value)}
                                     fullWidth
                                     displayEmpty
                                     sx={{
@@ -463,8 +443,8 @@ export default function Request() {
                                     <MenuItem value="English">English</MenuItem>
                                 </Select>
                                 <Select
-                                    value={editedYearSection}
-                                    onChange={(e) => setEditedYearSection(e.target.value)}
+                                    value={getYearSection}
+                                    onChange={(e) => setYearSection(e.target.value)}
                                     fullWidth
                                     displayEmpty
                                     sx={{
@@ -483,14 +463,12 @@ export default function Request() {
 
                                 <TextField
                                     label="Remarks"
-                                    value={editedRemarks}
-                                    onChange={(e) => setEditedRemarks(e.target.value)}
+                                    value={getRemarks}
+                                    onChange={(e) => setRemarks(e.target.value)}
                                     fullWidth
                                     InputProps={{
-                                        readOnly: true,
-                                        style: {
+                                       style: {
                                             backgroundColor: '#f0f0f0',
-                                            color: '#a0a0a0',
                                         },
                                     }}
                                     sx={{
@@ -502,8 +480,8 @@ export default function Request() {
                                 <Select
                                     labelId="approval-label"
                                     id="approval-select"
-                                    value={EditedApproval}
-                                    onChange={(e) => setEditedApproval(e.target.value)}
+                                    value={getApproval}
+                                    onChange={(e) => setApproval(e.target.value)}
                                     fullWidth
                                     displayEmpty
                                     sx={{
