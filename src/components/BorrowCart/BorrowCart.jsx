@@ -6,6 +6,7 @@ import Sidebar from '../Sidebar/Sidebar.jsx';
 import './BorrowCart.css';
 import axios from 'axios';
 import { getJWTSub } from '../Authentication/jwt.jsx';
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 export default function BorrowCart() {
     const [borrowCart, setBorrowCart] = useState([]);
@@ -183,15 +184,21 @@ export default function BorrowCart() {
                             </Grid>
                         ))}
                     </Grid>
-                    <TextField
-                        name="section"
-                        value={formData.section}
-                        label="Section"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        onChange={handleInputChange}
-                    />
+
+                    <FormControl fullWidth margin="normal" variant="outlined">
+                        <InputLabel id="section-label">Section</InputLabel>
+                        <Select
+                            labelId="section-label"
+                            name="section"
+                            value={formData.section}
+                            label="Section"
+                            onChange={handleInputChange}
+                        >
+                            <MenuItem value="7 - Malunggay">7 - Malunggay</MenuItem>
+                            <MenuItem value="8 - Sampaguita">8 - Sampaguita</MenuItem>
+                            <MenuItem value="9 - Narra">9 - Narra</MenuItem>
+                        </Select>
+                    </FormControl>
                     <TextField
                         name="date"
                         value={formData.date}
@@ -203,15 +210,15 @@ export default function BorrowCart() {
                         InputLabelProps={{ shrink: true }}
                         onChange={handleInputChange}
                     />
-                    <TextField
-                        name="instructor"
-                        value={formData.instructor}
-                        label="Instructor"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        disabled
-                    />
+                    {/*<TextField*/}
+                    {/*    name="instructor"*/}
+                    {/*    value={formData.instructor}*/}
+                    {/*    label="Instructor"*/}
+                    {/*    variant="outlined"*/}
+                    {/*    fullWidth*/}
+                    {/*    margin="normal"*/}
+                    {/*    disabled*/}
+                    {/*/>*/}
                     <Box display="flex" justifyContent="space-between" mt={2}>
                         <Button variant="outlined" onClick={handleModalClose}>
                             Cancel

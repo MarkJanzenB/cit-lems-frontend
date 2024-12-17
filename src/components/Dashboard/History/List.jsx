@@ -167,9 +167,19 @@ export default function List() {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Item Name</TableCell>
-                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Quantity Borrowed</TableCell>
-                                        <TableCell sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}>Status</TableCell>
+                                        <TableCell
+                                            sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}
+                                        >
+                                            Item Name</TableCell>
+                                        <TableCell
+                                            sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}
+                                        >
+                                            Quantity Borrowed</TableCell>
+                                        <TableCell
+                                            sx={{ position: 'sticky', top: 0, backgroundColor: '#F2EE9D', zIndex: 1 }}
+                                        >
+                                            Status
+                                        </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
