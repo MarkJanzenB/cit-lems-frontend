@@ -23,6 +23,7 @@ import PrivateRoute from './PrivateRoute.jsx';
 import useLocalStorageListener from '../hooks/useLocalStorageListener';
 import BorrowList from './Dashboard/History/BorrowList.jsx';
 import BorrowCart from './BorrowCart/BorrowCart';
+import STRequest from "./Dashboard/Schedule/ScheduleTab/STRequest.jsx";
 
 function AppRoutes() {
     const [userRole, setUserRole] = useState(null);
@@ -56,6 +57,7 @@ function AppRoutes() {
             {/* Schedule Routes */}
             <Route path="/schedule" element={<PrivateRoute><Schedule /></PrivateRoute>}>
                 <Route path="request" element={<Request />} />
+                <Route path={"strequest"} element={<STRequest />} />
                 <Route path="today" element={<Today />} />
                 <Route path="upcoming" element={<UpcomingSchedule />} />
                 <Route path="calendar" element={<Calendar />} />
