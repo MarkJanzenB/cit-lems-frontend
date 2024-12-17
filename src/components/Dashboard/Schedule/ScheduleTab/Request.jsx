@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../../../Sidebar/Sidebar.jsx';
 import Appbar from '../../../Appbar/Appbar';
 import { Modal, Box, TextField, Typography, Button, Select, MenuItem } from '@mui/material';
+import {getJWTSub, getJWTFullName} from "../Authentication/jwt.jsx";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -14,20 +15,20 @@ import CustomTablePagination from "../../../Table and Pagination/Pagination.jsx"
 import MyPaper from "../../../MyPaper.jsx";
 import axios from 'axios';
 
-const generateRandomFutureDate = () => {
-    const today = new Date();
-    const randomDays = Math.floor(Math.random() * 365) + 1;
-    today.setDate(today.getDate() + randomDays);
-    return today.toLocaleDateString();
-};
-
-const initialRows = [
-    { id: 1, date: generateRandomFutureDate(), time: '9:00 AM', teacher: 'Mr. Smith', material: 'Microscope' },
-    { id: 2, date: generateRandomFutureDate(), time: '10:00 AM', teacher: 'Ms. Johnson', material: 'Beakers' },
-    { id: 3, date: generateRandomFutureDate(), time: '11:00 AM', teacher: 'Dr. Brown', material: 'Test Tubes' },
-    { id: 4, date: generateRandomFutureDate(), time: '1:00 PM', teacher: 'Prof. Davis', material: 'Bunsen Burner' },
-    { id: 5, date: generateRandomFutureDate(), time: '2:00 PM', teacher: 'Mrs. Taylor', material: 'Slides' },
-];
+// const generateRandomFutureDate = () => {
+//     const today = new Date();
+//     const randomDays = Math.floor(Math.random() * 365) + 1;
+//     today.setDate(today.getDate() + randomDays);
+//     return today.toLocaleDateString();
+// };
+//
+// const initialRows = [
+//     { id: 1, date: generateRandomFutureDate(), time: '9:00 AM', teacher: 'Mr. Smith', material: 'Microscope' },
+//     { id: 2, date: generateRandomFutureDate(), time: '10:00 AM', teacher: 'Ms. Johnson', material: 'Beakers' },
+//     { id: 3, date: generateRandomFutureDate(), time: '11:00 AM', teacher: 'Dr. Brown', material: 'Test Tubes' },
+//     { id: 4, date: generateRandomFutureDate(), time: '1:00 PM', teacher: 'Prof. Davis', material: 'Bunsen Burner' },
+//     { id: 5, date: generateRandomFutureDate(), time: '2:00 PM', teacher: 'Mrs. Taylor', material: 'Slides' },
+// ];
 
 const columns = [
     { field: 'request_id', headerName: 'ID' },
@@ -90,6 +91,7 @@ export default function Request() {
         teacher_fullname: "",
         teacher_id: 0
     }]);
+    const userRole = parseInt(localStorage.getItem("userRole"));
     const [searchText, setSearchText] = useState('');
     const [openModal, setOpenModal] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
