@@ -31,7 +31,7 @@ const initialRows = [
 
 const columns = [
     { field: 'request_id', headerName: 'ID' },
-    { field: 'teacher_lastname', headerName: 'Teacher' ,valueGetter: (params) => params.rows.teacher.last_name},
+    { field: 'teacher_fullname', headerName: 'Teacher'},
     { field: 'date_schedule', headerName: 'Date' },
     { field: 'start_time', headerName: 'Time' },
     //{ field: 'yearSection', headerName: 'Year & Section' },
@@ -85,7 +85,9 @@ export default function Request() {
         status:"",
         subject_name:"",
         subject_id:"",
+        taecher_firstname:"",
         teacher_lastname: "",
+        teacher_fullname: "",
         teacher_id: 0
     }]);
     const [searchText, setSearchText] = useState('');
@@ -109,7 +111,10 @@ export default function Request() {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [view, setView] = useState('table'); // State to manage the current view
     const jwtToken = localStorage.getItem("jwtToken");
-    const [teachers, setTeachers] = useState([{}]);
+    const [teachers, setTeachers] = useState([{
+        user_id: 0,
+        fullname: '',
+    }]);
     const [subjects, setSubjects] = useState([{}]);
     const [requestId, setRequestId] = useState(0);
     const [getTeacherId, setTeacherId] = useState(0);
@@ -128,7 +133,12 @@ export default function Request() {
             }
         })
         .then(response => {
-            setTeachers(response.data);
+            const updatedTeachers = response.data.map(teacher => ({
+                ...teacher,
+                fullname: `${teacher.first_name} ${teacher.last_name}` // Concatenate with space
+            }));
+
+            setTeachers(updatedTeachers);
         })
         .catch(error => {
             console.log(error);
@@ -147,13 +157,13 @@ export default function Request() {
         })
         console.log(row.teacher_lastname);
         setSelectedRow(row);
-        setTeacher(row.teacher_lastname);
+        setTeacher(row.teacher_firstname + " " + row.teacher_lastname);
         setTeacherId(row.teacher_id);
         setDate(new Date(row.date_schedule));
         setRequestId(row.request_id);
         setDateUnchanged(row.date_schedule);
         setSubjectId(row.subject_id);
-        console.log(row);
+        console.log(row.teacher_firstname + " " + row.teacher_lastname);
 
         //if (row.time && row.time.includes(' - ')) {
         if (row.start_time) {
@@ -318,8 +328,10 @@ export default function Request() {
                 status: request.status,
                 subject_name: request.subject.subject_name,
                 subject_id: request.subject.subject_id,
+                teacher_firstname: request.teacher.first_name,
                 teacher_lastname: request.teacher.last_name,
-                teacher_id: request.teacher.user_id
+                teacher_fullname: request.teacher.first_name + " " + request.teacher.last_name,
+                teacher_id: request.teacher.user_id,
             }))
             setRows(formattedData);
         })
@@ -494,8 +506,8 @@ export default function Request() {
                                         Select a Teacher
                                     </MenuItem>
                                     {teachers.map((teacher) => (
-                                        <MenuItem key={teacher.user_id} value={teacher.last_name} onClick={() => setTeacherId(teacher.user_id)}>
-                                            {teacher.last_name}
+                                        <MenuItem key={teacher.user_id} value={teacher.fullname} onClick={() => setTeacherId(teacher.user_id)}>
+                                            {teacher.fullname}
                                         </MenuItem>
                                     ))}
                                 </Select>
