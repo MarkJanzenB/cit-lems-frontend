@@ -13,7 +13,6 @@ export default function Sidebar({ page }) {
     const navigate = useNavigate();
     const location = useLocation();
     const userRole = parseInt(localStorage.getItem("userRole"));
-    const currentUser = localStorage.getItem("User");
     const [openModal, setOpenModal] = useState(false);
     //for editing data of request
     const [getTeacher, setTeacher] = useState('');
