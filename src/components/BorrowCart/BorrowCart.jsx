@@ -59,22 +59,48 @@ export default function BorrowCart() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleProceedToBorrow = () => {
-        const borrowList = JSON.parse(localStorage.getItem('borrowList')) || [];
-        const updatedBorrowList = borrowCart.map(item => ({
-            ...item,
+    const handleProceedToBorrow = async () => {
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (!jwtToken) {
+            setSnackbarText("Authentication required. Please log in.");
+            setOpenSnackbar(true);
+            return;
+        }
+
+        const borrowItems = borrowCart.map(item => ({
+            itemName: item.itemName,
+            categoryName: item.categoryName,
+            quantity: item.quantity,
             section: formData.section,
             date: formData.date,
             instructor: formData.instructor,
             status: 'Pending for Approval'
         }));
-        localStorage.setItem('borrowList', JSON.stringify([...borrowList, ...updatedBorrowList]));
 
-        // Clear the borrow cart
-        localStorage.removeItem('borrowCart');
-        setBorrowCart([]);
-        setOpenModal(false);
-        setOpenAlert(true);
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/api/borrowitems',
+                borrowItems,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                // Clear the borrow cart
+                localStorage.removeItem('borrowCart');
+                setBorrowCart([]);
+                setOpenModal(false);
+                setOpenAlert(true);
+            } else {
+                console.error('Failed to post borrow items:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error posting borrow items:', error);
+        }
     };
 
     const handleAlertClose = () => {
