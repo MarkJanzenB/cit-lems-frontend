@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../../Sidebar/Sidebar.jsx';
 import Appbar from '../../../Appbar/Appbar';
 import { Modal, Box, TextField, Typography, Button, Select, MenuItem } from '@mui/material';
@@ -12,6 +12,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import CustomTable from "../../../Table and Pagination/Table.jsx";
 import CustomTablePagination from "../../../Table and Pagination/Pagination.jsx";
 import MyPaper from "../../../MyPaper.jsx";
+import axios from 'axios';
 
 const generateRandomFutureDate = () => {
     const today = new Date();
@@ -29,14 +30,14 @@ const initialRows = [
 ];
 
 const columns = [
-    { field: 'id', headerName: 'ID' },
-    { field: 'teacher', headerName: 'Teacher' },
-    { field: 'date', headerName: 'Date' },
-    { field: 'time', headerName: 'Time' },
-    { field: 'yearSection', headerName: 'Year & Section' },
-    { field: 'subject', headerName: 'Subject' },
+    { field: 'request_id', headerName: 'ID' },
+    { field: 'teacher_lastname', headerName: 'Teacher' ,valueGetter: (params) => params.rows.teacher.last_name},
+    { field: 'date_schedule', headerName: 'Date' },
+    { field: 'start_time', headerName: 'Time' },
+    //{ field: 'yearSection', headerName: 'Year & Section' },
+    { field: 'subject_name', headerName: 'Subject' },
     { field: 'room', headerName: 'Room' },
-    { field: 'approvalStatus',headerName: 'Approval Status'},
+    { field: 'status',headerName: 'Approval Status'},
 ];
 
 const handleStatusChange = (event, id) => {
@@ -71,7 +72,22 @@ const theme = createTheme({
 const localizer = momentLocalizer(moment);
 
 export default function Request() {
-    const [rows, setRows] = useState(initialRows);
+    const [rows, setRows] = useState([{
+        approver_lastname: "",
+        date_approved: "",
+        date_requested: "",
+        date_schedule: "",
+        end_time:"",
+        remarks: "",
+        request_id: 0,
+        room: "",
+        start_time: "",
+        status:"",
+        subject_name:"",
+        subject_id:"",
+        teacher_lastname: "",
+        teacher_id: 0
+    }]);
     const [searchText, setSearchText] = useState('');
     const [openModal, setOpenModal] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
@@ -92,20 +108,58 @@ export default function Request() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [view, setView] = useState('table'); // State to manage the current view
+    const jwtToken = localStorage.getItem("jwtToken");
+    const [teachers, setTeachers] = useState([{}]);
+    const [subjects, setSubjects] = useState([{}]);
+    const [requestId, setRequestId] = useState(0);
+    const [getTeacherId, setTeacherId] = useState(0);
+    const [dateUnchanged, setDateUnchanged] = useState();
+    const [subjectId, setSubjectId] = useState(0);
+    const [incrementFlag, setIncrementFlag] = useState(0)
 
     const handleSearch = (event) => {
         setSearchText(event.target.value);
     };
 
     const handleEditClick = (row) => {
-        setSelectedRow(row);
-        setTeacher(row.teacher);
-        setDate(new Date(row.date));
+        axios.get("http://localhost:8080/user/getallusersbyroleid?roleId=1", {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            setTeachers(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        })
 
-        if (row.time && row.time.includes(' - ')) {
-            const [start, end] = row.time.split(' - ');
-            const [getStartHour, getStartMinute] = start.split(':');
-            const [getEndHour, getEndMinute] = end.split(':');
+        axios.get("http://localhost:8080/subject/getallsubject", {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            setSubjects(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+        console.log(row.teacher_lastname);
+        setSelectedRow(row);
+        setTeacher(row.teacher_lastname);
+        setTeacherId(row.teacher_id);
+        setDate(new Date(row.date_schedule));
+        setRequestId(row.request_id);
+        setDateUnchanged(row.date_schedule);
+        setSubjectId(row.subject_id);
+        console.log(row);
+
+        //if (row.time && row.time.includes(' - ')) {
+        if (row.start_time) {
+            //const [start, end] = row.time.split(' - ');
+            const [getStartHour, getStartMinute] = row.start_time.split(':');
+            const [getEndHour, getEndMinute] = row.start_time.split(':');
             setStartHour(getStartHour);
             setStartMinute(getStartMinute);
             setEndHour(getEndHour);
@@ -118,7 +172,7 @@ export default function Request() {
         }
 
         setYearSection(row.yearSection || '');
-        setSubject(row.subject || '');
+        setSubject(row.subject_name || '');
         setRoom(row.room || '');
         setApproval(row.approval || '');
         setOpenModal(true);
@@ -129,26 +183,89 @@ export default function Request() {
     };
 
     const handleConfirmSave = () => {
-        const updatedRows = rows.map((row) =>
-            row === selectedRow
-                ? {
-                    ...row,
-                    teacher: getTeacher,
-                    date: getDate.toLocaleDateString(),
-                    time: `${getStartHour}:${getStartMinute < 10 ? `0${getStartMinute}` : getStartMinute} - ${getEndHour}:${getEndMinute < 10 ? `0${getEndMinute}` : getEndMinute}`,
-                    yearSection: getYearSection,
-                    subject: getSubject,
-                    room: getRoom,
-                    approval: getApproval,
-                }
-                : row
-        );
-        setRows(updatedRows);
+        // const updatedRows = rows.map((row) =>
+        //     row === selectedRow
+        //         ? {
+        //             ...row,
+        //             teacher: getTeacher,
+        //             date: getDate.toLocaleDateString(),
+        //             time: `${getStartHour}:${getStartMinute < 10 ? `0${getStartMinute}` : getStartMinute} - ${getEndHour}:${getEndMinute < 10 ? `0${getEndMinute}` : getEndMinute}`,
+        //             yearSection: getYearSection,
+        //             subject: getSubject,
+        //             room: getRoom,
+        //             approval: getApproval,
+        //         }
+        //         : row
+        // );
+
+        const [minute, period] = getStartMinute.split(" ");
+        const [endminute, endperiod] = getEndMinute.split(" ");
+
+        let hour = parseInt(getStartHour, 10);
+        let endhour = parseInt(getEndHour, 10);
+
+        if (period === "AM") {
+            if (hour === 12) {
+                hour = 0; // Midnight case (12 AM = 00 in 24-hour format)
+            }
+        } else if (period === "PM") {
+            if (hour !== 12) {
+                hour += 12; // PM, add 12 to convert to 24-hour format (e.g., 1 PM = 13)
+            }
+        }
+
+        if (endperiod === "AM") {
+            if (endhour === 12) {
+                endhour = 0; // Midnight case (12 AM = 00 in 24-hour format)
+            }
+        } else if (endperiod === "PM") {
+            if (endhour !== 12) {
+                endhour += 12; // PM, add 12 to convert to 24-hour format (e.g., 1 PM = 13)
+            }
+        }
+
+        console.log(getApproval)
+
+        const formattedHour = hour.toString().padStart(2, "0"); // Ensure two-digit hour
+        const formattedMinute = minute.padStart(2, "0");
+
+        const endformattedHour = endhour.toString().padStart(2, "0"); // Ensure two-digit hour
+        const endformattedMinute = endminute.padStart(2, "0");
+
+        const timeString = `${formattedHour}:${formattedMinute}:00`;
+        const endtimeString = `${endformattedHour}:${endformattedMinute}:00`;
+
+         axios.put(`http://localhost:8080/request/updaterequest?reqId=${requestId}`, {
+            teacher:{
+                user_id: getTeacherId
+            },
+            date_schedule: getDate.toLocaleDateString("en-CA"),
+            start_time: timeString,
+            end_time: endtimeString,
+            subject: {
+                 subject_id: subjectId
+            },
+            room: getRoom,
+            status: getApproval
+        }, {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            console.log(response)
+            setIncrementFlag(incrementFlag + 1);
+        })
+        .catch(error => {
+            console.log(error)
+        })
+        console.log(subjectId);
+        //setRows(updatedRows);
         setOpenModal(false);
         setOpenConfirmModal(false);
         setOpenSuccessModal(true);
     };
-    const handlePageChange = (newPage) => {
+    const handlePageChange = (event, newPage) => {
         setPage(newPage);
     };
 
@@ -157,13 +274,14 @@ export default function Request() {
     };
 
     const filteredRows = rows
-        .filter((row) => new Date(row.date) > new Date())
+        .filter((row) => new Date(row.date_schedule) > new Date())
         .filter(
             (row) =>
-                row.teacher.toLowerCase().includes(searchText.toLowerCase()) ||
-                row.material.toLowerCase().includes(searchText.toLowerCase()) ||
-                row.date.toLowerCase().includes(searchText.toLowerCase()) ||
-                row.time.toLowerCase().includes(searchText.toLowerCase())
+                row.teacher_lastname.toLowerCase().includes(searchText.toLowerCase()) ||
+                //row.material.toLowerCase().includes(searchText.toLowerCase()) ||
+                row.date_schedule.toLowerCase().includes(searchText.toLowerCase()) ||
+                row.start_time.toLowerCase().includes(searchText.toLowerCase()) ||
+                row.subject_name.toLowerCase().includes(searchText.toLowerCase())
         );
 
     const displayedRows = filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -178,6 +296,51 @@ export default function Request() {
     const toggleView = () => {
         setView((prevView) => (prevView === 'table' ? 'calendar' : 'table'));
     };
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/request/getrequests`, {
+            headers: {
+                "Authorization": `Bearer ${jwtToken}`
+            }
+        })
+        .then(response => {
+            console.log(response.data);
+            const formattedData = response.data.map(request => ({
+                approver_lastname: request.approver.last_name,
+                date_approved: request.date_approved,
+                date_requested: request.date_requested,
+                date_schedule: request.date_schedule,
+                end_time: convertTo12HourFormat(request.end_time),
+                remarks: request.remarks,
+                request_id: request.request_id,
+                room: request.room,
+                start_time: convertTo12HourFormat(request.start_time),
+                status: request.status,
+                subject_name: request.subject.subject_name,
+                subject_id: request.subject.subject_id,
+                teacher_lastname: request.teacher.last_name,
+                teacher_id: request.teacher.user_id
+            }))
+            setRows(formattedData);
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    },[incrementFlag])
+
+    const convertTo12HourFormat = (time24) => {
+        const [hours, minutes, seconds] = time24.split(':');
+        let hour = parseInt(hours, 10);
+        const suffix = hour >= 12 ? 'PM' : 'AM';
+
+        if(hour > 12){
+            hour -= 12;
+        }else if(hour === 0){
+            hour = 12;
+        }
+
+        return `${hour}:${minutes} ${suffix}`
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -318,15 +481,23 @@ export default function Request() {
                                             backgroundColor: '#f0f0f0',
                                         },
                                     }}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            style: {
+                                                maxHeight: 200,
+                                                overflow: 'auto',
+                                            },
+                                        },
+                                    }}
                                 >
                                     <MenuItem value="" disabled>
                                         Select a Teacher
                                     </MenuItem>
-                                    <MenuItem value="Mr. Smith">Mr. Smith</MenuItem>
-                                    <MenuItem value="Ms. Johnson">Ms. Johnson</MenuItem>
-                                    <MenuItem value="Dr. Brown">Dr. Brown</MenuItem>
-                                    <MenuItem value="Prof. Davis">Prof. Davis</MenuItem>
-                                    <MenuItem value="Mrs. Taylor">Mrs. Taylor</MenuItem>
+                                    {teachers.map((teacher) => (
+                                        <MenuItem key={teacher.user_id} value={teacher.last_name} onClick={() => setTeacherId(teacher.user_id)}>
+                                            {teacher.last_name}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
 
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -398,7 +569,7 @@ export default function Request() {
                                         ))}
                                     </Select>
                                 </Box>
-                                <Select
+                                {/* <Select
                                     labelId="year-section-label"
                                     id="year-section-select"
                                     value={getYearSection}
@@ -418,7 +589,7 @@ export default function Request() {
                                     <MenuItem value="Year 1 - Section B">Year 1 - Section B</MenuItem>
                                     <MenuItem value="Year 2 - Section A">Year 2 - Section A</MenuItem>
                                     <MenuItem value="Year 2 - Section B">Year 2 - Section B</MenuItem>
-                                </Select>
+                                </Select> */}
 
                                 <Select
                                     labelId="subject-label"
@@ -433,18 +604,27 @@ export default function Request() {
                                             backgroundColor: '#f0f0f0',
                                         },
                                     }}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            style: {
+                                                maxHeight: 200,
+                                                overflow: 'auto',
+                                            },
+                                        },
+                                    }}
                                 >
                                     <MenuItem value="" disabled>
                                         Select Subject
                                     </MenuItem>
-                                    <MenuItem value="Mathematics">Mathematics</MenuItem>
-                                    <MenuItem value="Science">Science</MenuItem>
-                                    <MenuItem value="History">History</MenuItem>
-                                    <MenuItem value="English">English</MenuItem>
+                                    {subjects.map((subject) => (
+                                        <MenuItem key={subject.subject_id} value={subject.subject_name} onClick={() => setSubjectId(subject.subject_id)}>
+                                            {subject.subject_name}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                                 <Select
-                                    value={getYearSection}
-                                    onChange={(e) => setYearSection(e.target.value)}
+                                    value={getRoom}
+                                    onChange={(e) => setRoom(e.target.value)}
                                     fullWidth
                                     displayEmpty
                                     sx={{
