@@ -32,6 +32,12 @@ export const getJWTFName = () => {
     return decodedToken.first_name;
 }
 
+export const getJWTFullName = () => {
+    const decodedToken = jwtDecoder();
+
+    return decodedToken.full_name;
+}
+
 // This code will return true if the user's role_id matches the expected role ID, and false otherwise.
 export const checkUserRole = (expectedRoleId) => {
     const jwtToken = localStorage.getItem("jwtToken");

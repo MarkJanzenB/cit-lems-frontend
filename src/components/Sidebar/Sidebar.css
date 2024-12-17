@@ -40,7 +40,7 @@
 .sidebar-button {
     background: none;
     color: #F2EE9D;
-    font-size: 16px;
+    font-size: 25px;
     margin: 10px 0;
     padding: 10px;
     cursor: pointer;
@@ -59,4 +59,18 @@
 .sidebar-button.active {
     background-color: #F2EE9D;
     color: #016565;
+}
+
+.sidebar-create-button {
+    background: none;
+    background: #07a889;
+    color: #F2EE9D;
+    font-size: 14px;
+    margin: 10px 10px;
+    padding: 25px 20px;
+    cursor: pointer;
+    border-radius: 100px;
+    width: 100%;
+    text-align: left;
+    border: none;
 }
