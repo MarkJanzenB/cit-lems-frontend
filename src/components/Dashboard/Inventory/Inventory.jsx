@@ -229,28 +229,29 @@ export default function Inventory() {
     };
 
 
-const handleInputChange = async (e) => {
-    const { name, value } = e.target;0
-    if (name === 'category') {
-        setNewItemCategory(value);
-        if (message === "New Item?! Click the dropdown below and choose a category where your item belongs.") {
-            setMessage('');
+    const handleInputChange = async (e) => {
+        const { name, value } = e.target;
+        if (name === 'category') {
+            setNewItemCategory(value);
+        } else {
+            setNewItem(prevState => ({
+                ...prevState,
+                [name]: value
+            }));
+            if ((name === 'item_name' || name === 'name') && value !== '') {
+                await checkItemExists(value);
+            } else {
+                setMessage('');
+            }
         }
-    } else {
-        setNewItem(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-        setMessage('');
-        if ((name === 'item_name' || name === 'name') && value !== '') {
-            await checkItemExists(value);
-        }
-    }
-};
+    };
+
     const handleBlurOrEnter = async (e) => {
         const { name, value } = e.target;
-        if ((name === 'item_name' || name === 'name') && value !== '') {
+        if (e.type === 'blur' && (name === 'item_name' || name === 'name') && value !== '') {
             await checkItemExists(value);
+        } else {
+            setMessage('');
         }
     };
 
@@ -262,14 +263,10 @@ const handleInputChange = async (e) => {
                 }
             });
             setMessage("Item already exists. Do you wanna proceed to update it instead?");
-            console.log("Item already exists. Do you wanna proceed to update it instead?");
-
         } catch (error) {
-
+            if (message !== "New Item?! Click the dropdown below and choose a category where your item belongs.") {
                 setMessage("New Item?! Click the dropdown below and choose a category where your item belongs.");
-                console.log("New Item?! Click the dropdown below and choose a category where your item belongs.");
-                // setMessage("An unexpected error occurred.");
-
+            }
         }
     };
 
@@ -302,13 +299,18 @@ const handleInputChange = async (e) => {
     }
 
     const handleAddItem = () => {
-        if(newItemCategory == 1){
+        if (!newItem.item_name || !newItem.unit || newItem.quantity <= 0 || newItemCategory === 0) {
+            setError("Please fill in all required fields.");
+            return;
+        }
+
+        if (newItemCategory == 1) {
             axios.post("http://localhost:8080/inventory/addinventory", {
                 unit: newItem.unit,
                 name: newItem.item_name,
                 description: newItem.description,
-                item_category:{
-                    category_id:newItemCategory
+                item_category: {
+                    category_id: newItemCategory
                 },
                 quantity: newItem.quantity
             }, {
@@ -322,16 +324,21 @@ const handleInputChange = async (e) => {
                     fetchData(currentCategory);
                     setOpenSnackbar(true);
                     setSnackbarText("Item added");
+
+                    newItem.unit = '';
+                    newItem.item_name = '';
+                    newItem.description = '';
+                    newItem.quantity = 1;
+                    setNewItemCategory(0);
                 })
                 .catch(error => {
-                    if(error.response.status == 409){
+                    if (error.response.status == 409) {
                         setError("Item already exists. Did you mean add stock?");
-                    }else{
-                        setError("An unexpected error occured.");
+                    } else {
+                        setError("An unexpected error occurred.");
                     }
-                })
-
-        }else{
+                });
+        } else {
             axios.get(`http://localhost:8080/inventory/isinventoryexists?inventoryName=${newItem.item_name}`, {
                 headers: {
                     "Authorization": `Bearer ${jwtToken}`
@@ -341,17 +348,17 @@ const handleInputChange = async (e) => {
                     setError("Item already exists. To add stock please click the item from the list.");
                 })
                 .catch(error => {
-                    if(error.response.status == 409){
+                    if (error.response.status == 409) {
                         axios.post("http://localhost:8080/inventory/addinventory", {
                             unit: newItem.unit,
                             name: newItem.item_name,
                             description: newItem.description,
-                            item_category:{
-                                category_id:newItemCategory
+                            item_category: {
+                                category_id: newItemCategory
                             },
                             quantity: newItem.quantity
-                        },{
-                            headers:{
+                        }, {
+                            headers: {
                                 "Authorization": `Bearer ${jwtToken}`
                             }
                         })
@@ -364,8 +371,8 @@ const handleInputChange = async (e) => {
                                     inventory: {
                                         inventory_id: response.data.inventory_id
                                     }
-                                },{
-                                    headers:{
+                                }, {
+                                    headers: {
                                         "Authorization": `Bearer ${jwtToken}`
                                     }
                                 })
@@ -377,29 +384,29 @@ const handleInputChange = async (e) => {
                                         setSnackbarText("Item added");
                                     })
                                     .catch(error => {
-                                        if(error.response.status == 409){
+                                        if (error.response.status == 409) {
                                             setError(error.response.data);
                                             axios.delete(`http://localhost:8080/inventory/delete/${newInvId.current}`, {
-                                                headers:{
+                                                headers: {
                                                     "Authorization": `Bearer ${jwtToken}`
                                                 }
                                             })
                                                 .then(response => {
                                                 })
                                                 .catch(error => {
-                                                })
-                                        }else{
-                                            setError("An unexpected error occured.");
+                                                });
+                                        } else {
+                                            setError("An unexpected error occurred.");
                                         }
-                                    })
+                                    });
                             })
                             .catch(error => {
-                                setError("An unexpected error occured.");
-                            })
-                    }else{
-                        setError("An unexpected error occured.");
+                                setError("An unexpected error occurred.");
+                            });
+                    } else {
+                        setError("An unexpected error occurred.");
                     }
-                })
+                });
         }
     };
 
@@ -753,6 +760,7 @@ const handleInputChange = async (e) => {
                                         value={newItemCategory}
                                         onChange={handleInputChange}
                                         variant='outlined'
+                                        required
                                     >
                                         <MenuItem value={0}>SELECT CATEGORY</MenuItem>
                                         <MenuItem value={1}>Consumables</MenuItem>
@@ -770,7 +778,6 @@ const handleInputChange = async (e) => {
                                         sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px', flexGrow: 1 }}
                                         label="Quantity"
                                         variant="outlined"
-                                        required={true}
                                         autoComplete={'off'}
                                     />
                                     <ButtonGroup variant="contained" aria-label="outlined primary button group">
@@ -793,6 +800,7 @@ const handleInputChange = async (e) => {
                                         sx={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}
                                         label="Unit"
                                         fullWidth
+                                        required
                                     >
                                         <MenuItem value="units">Units</MenuItem>
                                         <MenuItem value="grams">Grams</MenuItem>
@@ -810,7 +818,6 @@ const handleInputChange = async (e) => {
                                     label="Description"
                                     variant="outlined"
                                     fullWidth
-                                    required={true}
                                     autoComplete={'off'}
                                 />
                                 {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}

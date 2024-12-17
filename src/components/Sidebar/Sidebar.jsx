@@ -293,7 +293,6 @@ export default function Sidebar({ page }) {
 
                         {userRole != 1 && (
                             <Select
-                                value={getTeacher}
                                 onChange={(e) => setTeacher(e.target.value)}
                                 fullWidth
                                 displayEmpty
