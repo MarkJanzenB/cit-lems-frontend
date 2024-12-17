@@ -73,13 +73,13 @@ export default function Sidebar({ page }) {
                 {page === 'schedule' && (
                     <>
                         <button className={`sidebar-button ${isActive('/schedule/request') ? 'active' : ''}`}
-                                onClick={handleRequest} style={{display: 'block'}}>Request
+                                onClick={handleRequest} style={{display: 'block'}}>Requests
                         </button>
                         <button className={`sidebar-button ${isActive('/schedule/today') ? 'active' : ''}`}
                                 onClick={handleToday} style={{display: 'block'}}>Today
                         </button>
                         <button className={`sidebar-button ${isActive('/schedule/upcoming') ? 'active' : ''}`}
-                                onClick={handleUpcomingSched} style={{display: 'block'}}>Upcoming Schedule
+                                onClick={handleUpcomingSched} style={{display: 'block'}}>Schedules
                         </button>
                     </>
                 )}

@@ -33,7 +33,9 @@ const columns = [
     { field: 'date', headerName: 'Date' },
     { field: 'time', headerName: 'Time' },
     { field: 'teacher', headerName: 'Teacher' },
-    { field: 'material', headerName: 'Material' },
+    { field: 'yearSection', headerName: 'Year & Section' },
+    { field: 'subject', headerName: 'Subject' },
+    { field: 'room', headerName: 'Room' },
     {
         field: 'status',
         headerName: 'Status',
@@ -88,14 +90,27 @@ export default function Request() {
     const [openModal, setOpenModal] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
     const [editedTeacher, setEditedTeacher] = useState('');
-    const [editedMaterial, setEditedMaterial] = useState('');
+    const [editedRemarks, setEditedRemarks] = useState(null);
+    const [editedRoom, setEditedRoom] = useState(null);
+
     const [editedDate, setEditedDate] = useState(null);
-    const [editedTime, setEditedTime] = useState(null);
+
+
+
+    const [startHour, setStartHour] = useState('');
+    const [startMinute, setStartMinute] = useState('');
+    const [endHour, setEndHour] = useState('');
+    const [endMinute, setEndMinute] = useState('');
+
+
+
+    const [editedYearSection, setEditedYearSection] = useState('');
+    const [editedSubject, setEditedSubject] = useState('');
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const [openSuccessModal, setOpenSuccessModal] = useState(false);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [selectedTeacher, setSelectedTeacher] = useState('');
+    const [EditedApproval, setEditedApproval] = useState('');
     const [view, setView] = useState('table'); // State to manage the current view
 
     const handleSearch = (event) => {
@@ -105,9 +120,27 @@ export default function Request() {
     const handleEditClick = (row) => {
         setSelectedRow(row);
         setEditedTeacher(row.teacher);
-        setEditedMaterial(row.material);
         setEditedDate(new Date(row.date));
-        setEditedTime(moment(row.time, 'h:mm A').toDate());
+
+        if (row.time && row.time.includes(' - ')) {
+            const [start, end] = row.time.split(' - ');
+            const [startHour, startMinute] = start.split(':');
+            const [endHour, endMinute] = end.split(':');
+            setStartHour(startHour);
+            setStartMinute(startMinute);
+            setEndHour(endHour);
+            setEndMinute(endMinute);
+        } else {
+            setStartHour('');
+            setStartMinute('');
+            setEndHour('');
+            setEndMinute('');
+        }
+
+        setEditedYearSection(row.yearSection || '');
+        setEditedSubject(row.subject || '');
+        setEditedRoom(row.room || '');
+        setEditedApproval(row.approval || '');
         setOpenModal(true);
     };
 
@@ -118,7 +151,16 @@ export default function Request() {
     const handleConfirmSave = () => {
         const updatedRows = rows.map((row) =>
             row === selectedRow
-                ? { ...row, teacher: editedTeacher, material: editedMaterial, date: editedDate.toLocaleDateString(), time: moment(editedTime).format('h:mm A') }
+                ? {
+                    ...row,
+                    teacher: editedTeacher,
+                    date: editedDate.toLocaleDateString(),
+                    time: `${startHour}:${startMinute < 10 ? `0${startMinute}` : startMinute} - ${endHour}:${endMinute < 10 ? `0${endMinute}` : endMinute}`,
+                    yearSection: editedYearSection,
+                    subject: editedSubject,
+                    room: editedRoom,
+                    approval: EditedApproval,
+                }
                 : row
         );
         setRows(updatedRows);
@@ -126,7 +168,6 @@ export default function Request() {
         setOpenConfirmModal(false);
         setOpenSuccessModal(true);
     };
-
     const handlePageChange = (newPage) => {
         setPage(newPage);
     };
@@ -236,7 +277,7 @@ export default function Request() {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                width: 400,
+                                width: 450,
                                 bgcolor: '#FFFFFF',
                                 borderRadius: '15px',
                                 boxShadow: 24,
@@ -286,6 +327,28 @@ export default function Request() {
                                     backgroundColor: '#f9f9f9',
                                 }}
                             >
+                                <Select
+                                    labelID="Teacher"
+                                    value={editedTeacher}
+                                    onChange={(e) => setEditedTeacher(e.target.value)}
+                                    fullWidth
+                                    displayEmpty
+                                    sx={{
+                                        '& .MuiInputBase-root': {
+                                            backgroundColor: '#f0f0f0',
+                                        },
+                                    }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        Select a Teacher
+                                    </MenuItem>
+                                    <MenuItem value="Mr. Smith">Mr. Smith</MenuItem>
+                                    <MenuItem value="Ms. Johnson">Ms. Johnson</MenuItem>
+                                    <MenuItem value="Dr. Brown">Dr. Brown</MenuItem>
+                                    <MenuItem value="Prof. Davis">Prof. Davis</MenuItem>
+                                    <MenuItem value="Mrs. Taylor">Mrs. Taylor</MenuItem>
+                                </Select>
+
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         label="Date"
@@ -297,22 +360,131 @@ export default function Request() {
                                             },
                                         }}
                                     />
-                                    <TimePicker
-                                        label="Time"
-                                        value={editedTime}
-                                        onChange={(newValue) => setEditedTime(newValue)}
-                                        sx={{
-                                            '& .MuiInputBase-root': {
-                                                backgroundColor: '#FFFFFF',
-                                            },
-                                        }}
-                                    />
                                 </LocalizationProvider>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <Select
+                                        labelId="start-hour-label"
+                                        id="start-hour-select"
+                                        value={startHour}
+                                        onChange={(e) => setStartHour(e.target.value)}
+                                        displayEmpty
+                                        sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
+                                    >
+                                        <MenuItem value="" disabled>00</MenuItem>
+                                        {[...Array(12).keys()].map((hour) => (
+                                            <MenuItem key={hour + 1} value={hour + 1}>{hour + 1}</MenuItem>
+                                        ))}
+                                    </Select>
+                                    <Typography>:</Typography>
+                                    <Select
+                                        labelId="start-minute-label"
+                                        id="start-minute-select"
+                                        value={startMinute}
+                                        onChange={(e) => setStartMinute(e.target.value)}
+                                        displayEmpty
+                                        sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
+                                    >
+                                        <MenuItem value="" disabled>00 PM</MenuItem>
+                                        {["00 AM", "15 AM", "30 AM", "45 AM", "00 PM", "15 PM", "30 PM", "45 PM"].map((minute) => (
+                                            <MenuItem key={minute} value={minute}>{minute < 10 ? `0${minute}` : minute}</MenuItem>
+                                        ))}
+                                    </Select>
+                                    <Typography>-</Typography>
+                                    <Select
+                                        labelId="end-hour-label"
+                                        id="end-hour-select"
+                                        value={endHour}
+                                        onChange={(e) => setEndHour(e.target.value)}
+                                        displayEmpty
+                                        sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
+                                    >
+                                        <MenuItem value="" disabled>00</MenuItem>
+                                        {[...Array(12).keys()].map((hour) => (
+                                            <MenuItem key={hour + 1} value={hour + 1}>{hour + 1}</MenuItem>
+                                        ))}
+                                    </Select>
+                                    <Typography>:</Typography>
+                                    <Select
+                                        labelId="end-minute-label"
+                                        id="end-minute-select"
+                                        value={endMinute}
+                                        onChange={(e) => setEndMinute(e.target.value)}
+                                        displayEmpty
+                                        sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
+                                    >
+                                        <MenuItem value="" disabled>00 PM</MenuItem>
+                                        {["00 AM", "15 AM", "30 AM", "45 AM","00 PM","15 PM", "30 PM", "45 PM"].map((minute) => (
+                                            <MenuItem key={minute} value={minute}>{minute < 10 ? `0${minute}` : minute}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </Box>
+                                <Select
+                                    labelId="year-section-label"
+                                    id="year-section-select"
+                                    value={editedYearSection}
+                                    onChange={(e) => setEditedYearSection(e.target.value)}
+                                    fullWidth
+                                    displayEmpty
+                                    sx={{
+                                        '& .MuiInputBase-root': {
+                                            backgroundColor: '#f0f0f0',
+                                        },
+                                    }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        Select Year and Section
+                                    </MenuItem>
+                                    <MenuItem value="Year 1 - Section A">Year 1 - Section A</MenuItem>
+                                    <MenuItem value="Year 1 - Section B">Year 1 - Section B</MenuItem>
+                                    <MenuItem value="Year 2 - Section A">Year 2 - Section A</MenuItem>
+                                    <MenuItem value="Year 2 - Section B">Year 2 - Section B</MenuItem>
+                                </Select>
+
+                                <Select
+                                    labelId="subject-label"
+                                    id="subject-select"
+                                    value={editedSubject}
+                                    aria-placeholder={"Subject"}
+                                    onChange={(e) => setEditedSubject(e.target.value)}
+                                    fullWidth
+                                    displayEmpty
+                                    sx={{
+                                        '& .MuiInputBase-root': {
+                                            backgroundColor: '#f0f0f0',
+                                        },
+                                    }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        Select Subject
+                                    </MenuItem>
+                                    <MenuItem value="Mathematics">Mathematics</MenuItem>
+                                    <MenuItem value="Science">Science</MenuItem>
+                                    <MenuItem value="History">History</MenuItem>
+                                    <MenuItem value="English">English</MenuItem>
+                                </Select>
+                                <Select
+                                    value={editedYearSection}
+                                    onChange={(e) => setEditedYearSection(e.target.value)}
+                                    fullWidth
+                                    displayEmpty
+                                    sx={{
+                                        '& .MuiInputBase-root': {
+                                            backgroundColor: '#f0f0f0',
+                                        },
+                                    }}
+                                >
+                                    <MenuItem value="" disabled>
+                                        Select Room
+                                    </MenuItem>
+                                    <MenuItem value="Laboratory 1">Laboratory 1</MenuItem>
+                                    <MenuItem value="Laboratory 2">Laboratory 2</MenuItem>
+                                    <MenuItem value="Classroom">Classroom</MenuItem>
+                                </Select>
 
                                 <TextField
-                                    label="Teacher"
-                                    value={editedTeacher}
-                                    onChange={(e) => setEditedTeacher(e.target.value)}
+                                    label="Remarks"
+                                    value={editedRemarks}
+                                    onChange={(e) => setEditedRemarks(e.target.value)}
                                     fullWidth
                                     InputProps={{
                                         readOnly: true,
@@ -327,24 +499,26 @@ export default function Request() {
                                         },
                                     }}
                                 />
-                                <TextField
-                                    label="Material"
-                                    value={editedMaterial}
-                                    onChange={(e) => setEditedMaterial(e.target.value)}
+                                <Select
+                                    labelId="approval-label"
+                                    id="approval-select"
+                                    value={EditedApproval}
+                                    onChange={(e) => setEditedApproval(e.target.value)}
                                     fullWidth
-                                    InputProps={{
-                                        readOnly: true,
-                                        style: {
-                                            backgroundColor: '#f0f0f0',
-                                            color: '#a0a0a0',
-                                        },
-                                    }}
+                                    displayEmpty
                                     sx={{
                                         '& .MuiInputBase-root': {
                                             backgroundColor: '#f0f0f0',
                                         },
                                     }}
-                                />
+                                >
+                                    <MenuItem value="" disabled>
+                                        Approval status
+                                    </MenuItem>
+                                    <MenuItem value="Approved">Approved</MenuItem>
+                                    <MenuItem value="Rejected">Denied</MenuItem>
+                                    <MenuItem value="Rescheduled">Rescheduled</MenuItem>
+                                </Select>
                             </Box>
 
                             <Box
@@ -381,12 +555,11 @@ export default function Request() {
                                         },
                                     }}
                                 >
-                                    Save
+                                    Submit
                                 </Button>
                             </Box>
                         </Box>
                     </Modal>
-
                     <Modal open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
                         <Box
                             sx={{
@@ -402,7 +575,7 @@ export default function Request() {
                                 textAlign: 'center',
                             }}
                         >
-                            <Typography variant="h6">Are you sure you want to save?</Typography>
+                            <Typography variant="h6">Are you sure you want to Submit?</Typography>
                             <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
                                 <Button onClick={() => setOpenConfirmModal(false)}>No</Button>
                                 <Button onClick={handleConfirmSave} variant="contained" color="primary">
