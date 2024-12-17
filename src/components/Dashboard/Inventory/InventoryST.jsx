@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Appbar from "../../Appbar/Appbar.jsx";
 import Sidebar from "../../Sidebar/Sidebar.jsx";
+import {getJWTSub} from "../../Authentication/jwt.jsx";
+
 import {
     Button, Box, Typography, Grid, Card, CardContent, CardMedia,
     ThemeProvider, createTheme, Snackbar, IconButton, Modal, TextField
@@ -32,20 +34,20 @@ const theme = createTheme({
 
 export default function InventoryST() {
     const navigate = useNavigate();
-    const jwtToken = localStorage.getItem("jwtToken");
+    const jwtToken = localStorage.getItem("jwtToken");  // Ensure you are using jwtToken
     const [items, setItems] = useState([]);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarText, setSnackbarText] = useState("");
     const [openModal, setOpenModal] = useState(false);
     const [formData, setFormData] = useState({
+        itemId: '',
         itemName: '',
-        quantity: '',
-        instructor: '',
-        section: '',
-        date: '',
-        itemPhoto: 'https://via.placeholder.com/140', // Default demo image URL
+        quantity: 1,
+        maxQuantity: 0,
+        category: '',
+        itemPhoto: 'https://via.placeholder.com/140',
     });
-    const [currentUser, setCurrentUser] = useState('');
+    const [currentUser, setCurrentUser] = useState({});
 
     const handleSnackbarClose = () => {
         setOpenSnackbar(false);
@@ -53,11 +55,12 @@ export default function InventoryST() {
 
     const handleModalOpen = (item) => {
         setFormData({
+            itemId: item.inventory_id,  // Set the itemId correctly from selected item
             itemName: item.name,
-            quantity: 1, // Default to 1
+            quantity: 1,  // Default quantity to 1
             maxQuantity: item.quantity,
-            itemPhoto: item.image_url || 'https://via.placeholder.com/140', // Use a placeholder if item has no image
-            category: item.category, // Add category field
+            itemPhoto: item.image_url || 'https://via.placeholder.com/140',
+            category: item.item_category.category_name,
         });
         setOpenModal(true);
     };
@@ -65,7 +68,7 @@ export default function InventoryST() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (name === 'quantity') {
-            const quantity = Math.min(value, formData.maxQuantity);
+            const quantity = Math.min(value, formData.maxQuantity);  // Ensure quantity doesn't exceed maxQuantity
             setFormData({ ...formData, [name]: quantity });
         } else {
             setFormData({ ...formData, [name]: value });
@@ -76,18 +79,58 @@ export default function InventoryST() {
         setOpenModal(false);
     };
 
+    const handleFormSubmit = async (event) => {
+        event.preventDefault();
 
-    const handleFormSubmit = async () => {
-        // Add the item to the Borrow Cart
-        const borrowCart = JSON.parse(localStorage.getItem('borrowCart')) || [];
-        borrowCart.push(formData);
-        localStorage.setItem('borrowCart', JSON.stringify(borrowCart));
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (!jwtToken) {
+            setSnackbarText("Authentication required. Please log in.");
+            setOpenSnackbar(true);
+            return;
+        }
 
-        // Display a message when the item is added to the Borrow Cart
-        setSnackbarText(`${formData.itemName} added to Borrow Cart.`);
-        setOpenSnackbar(true);
-        setOpenModal(false);
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/api/borrowcart/addToBorrowCart',
+                null,
+                {
+                    params: {
+                        instiId: parseInt(getJWTSub()),
+                        itemId: parseInt(formData.itemId),
+                        itemName: formData.itemName,
+                        categoryName: formData.category,
+                        quantity: parseInt(formData.quantity),
+                    },
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            // Update the items state to reflect the deducted quantity
+            setItems((prevItems) =>
+                prevItems.map((item) =>
+                    item.inventory_id === formData.itemId
+                        ? { ...item, quantity: item.quantity - formData.quantity }
+                        : item
+                )
+            );
+
+            setSnackbarText(`${formData.itemName} added to Borrow Cart.`);
+            setOpenSnackbar(true);
+            setOpenModal(false);  // Close the modal on success
+        } catch (error) {
+            console.error('Error adding item to borrow cart:', error);
+            if (error.response && error.response.status === 401) {
+                setSnackbarText('Unauthorized! Please log in again.');
+            } else {
+                setSnackbarText('Failed to add item to Borrow Cart.');
+            }
+            setOpenSnackbar(true);
+        }
     };
+
 
     const fetchItems = async () => {
         try {
@@ -109,7 +152,7 @@ export default function InventoryST() {
                     "Authorization": `Bearer ${jwtToken}`
                 }
             });
-            setCurrentUser(response.data.name);
+            setCurrentUser(response.data);
         } catch (error) {
             console.error('Error fetching current user:', error);
         }
@@ -141,7 +184,7 @@ export default function InventoryST() {
                                         <CardMedia
                                             component="img"
                                             height="140"
-                                            image={item.image_url || 'https://via.placeholder.com/140'} // Fallback image
+                                            image={item.image_url || 'https://via.placeholder.com/140'}
                                             alt={item.name}
                                         />
                                         <CardContent>
@@ -152,7 +195,7 @@ export default function InventoryST() {
                                                 {item.description}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
-                                                Category: {item.category}
+                                                Category: {item.item_category.category_name}
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
                                                 Quantity: {item.quantity}
@@ -160,7 +203,7 @@ export default function InventoryST() {
                                             <Button
                                                 variant="contained"
                                                 sx={{ mt: 2, backgroundColor: '#f2ee9d', color: '#000', '&:hover': { backgroundColor: '#e0d96b' } }}
-                                                onClick={() => handleModalOpen(item)}
+                                                onClick={() => handleModalOpen(item)}  // Open the modal with selected item
                                             >
                                                 Borrow
                                             </Button>
@@ -172,6 +215,8 @@ export default function InventoryST() {
                     </Box>
                 </div>
             </div>
+
+            {/* Modal for Borrow Item */}
             <Modal
                 open={openModal}
                 onClose={handleModalClose}
@@ -235,13 +280,15 @@ export default function InventoryST() {
                         <Button
                             variant="contained"
                             sx={{ backgroundColor: '#016565', color: '#FFF', '&:hover': { backgroundColor: '#014d4d' } }}
-                            onClick={handleFormSubmit}
+                            onClick={handleFormSubmit}  // Trigger form submission
                         >
                             Add to Borrow Cart
                         </Button>
                     </Box>
                 </Box>
             </Modal>
+
+            {/* Snackbar for success or error messages */}
             <Snackbar
                 open={openSnackbar}
                 autoHideDuration={6000}

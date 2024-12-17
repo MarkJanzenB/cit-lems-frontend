@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import Appbar from '../Appbar/Appbar.jsx';
 import Sidebar from '../Sidebar/Sidebar.jsx';
 import './BorrowCart.css';
+import axios from 'axios';
+import { getJWTSub } from '../Authentication/jwt.jsx';
 
 export default function BorrowCart() {
     const [borrowCart, setBorrowCart] = useState([]);
@@ -17,9 +19,31 @@ export default function BorrowCart() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const cart = JSON.parse(localStorage.getItem('borrowCart')) || [];
-        setBorrowCart(cart);
+        fetchBorrowCart();
     }, []);
+
+    const fetchBorrowCart = async () => {
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (!jwtToken) {
+            console.error('JWT token is missing. Please log in.');
+            return;
+        }
+
+        try {
+            const response = await axios.get(`http://localhost:8080/api/borrowcart/insti/${getJWTSub()}`, {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            });
+            setBorrowCart(response.data);
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                console.error('Unauthorized! Please log in again.');
+            } else {
+                console.error('Error fetching borrow cart items:', error);
+            }
+        }
+    };
 
     const handleFinalizeBorrow = () => {
         setOpenModal(true);
@@ -67,17 +91,28 @@ export default function BorrowCart() {
             <Sidebar page={"inventory"} />
             <div className="borrowcart-content">
                 <Box sx={{ p: 4 }}>
-                    <Typography variant="h4" gutterBottom>
-                        Borrow Cart
-                    </Typography>
-                    <Grid container spacing={3}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography variant="h4" gutterBottom>
+                                Borrow Cart
+                            </Typography>
+                        </Box>
+                        <Button
+                            variant="contained"
+                            sx={{ backgroundColor: '#016565', color: '#FFF', '&:hover': { backgroundColor: '#014d4d' } }}
+                            onClick={handleFinalizeBorrow}
+                        >
+                            Finalize Borrow
+                        </Button>
+                    </Box>
+                    <Grid container spacing={3} mt={4}>
                         {borrowCart.map((item, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                                 <Card>
                                     <CardMedia
                                         component="img"
                                         height="140"
-                                        image={item.itemPhoto}
+                                        image="https://via.placeholder.com/140"
                                         alt={item.itemName}
                                     />
                                     <CardContent>
@@ -85,7 +120,7 @@ export default function BorrowCart() {
                                             {item.itemName}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Category: {item.category}
+                                            Category: {item.categoryName}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
                                             Quantity: {item.quantity}
@@ -95,15 +130,6 @@ export default function BorrowCart() {
                             </Grid>
                         ))}
                     </Grid>
-                    <Box display="flex" justifyContent="flex-end" mt={4}>
-                        <Button
-                            variant="contained"
-                            sx={{ backgroundColor: '#016565', color: '#FFF', '&:hover': { backgroundColor: '#014d4d' } }}
-                            onClick={handleFinalizeBorrow}
-                        >
-                            Finalize Borrow
-                        </Button>
-                    </Box>
                 </Box>
             </div>
             <Modal
@@ -112,36 +138,42 @@ export default function BorrowCart() {
                 aria-labelledby="modal-title"
                 aria-describedby="modal-description"
             >
-                <Box sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 600,
-                    bgcolor: 'background.paper',
-                    boxShadow: 24,
-                    p: 4,
-                    borderRadius: '10px',
-                }}>
-                    <Typography id="modal-title" variant="h6" component="h2">
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '90%',
+                        maxHeight: '90%',
+                        bgcolor: '#F2EE9D',
+                        boxShadow: 24,
+                        p: 4,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        borderRadius: '25px',
+                        overflow: 'auto'
+                    }}
+                >
+                    <Typography id="modal-title" variant="h6" component="h2"
+                                sx={{ fontWeight: 'bold', color: '#016565', textAlign: 'center' }}
+                    >
                         Confirm Borrow Details
                     </Typography>
+                    <Typography variant="body1">Teacher's name: Mr. Topacio</Typography>
+                    <Typography variant="body1">Schedule: Nov 21, 2024 | 10:00 AM - 12:00 PM</Typography>
+                    <Typography variant="body1">Items borrowed list:</Typography>
                     <Grid container spacing={2} sx={{ mt: 2 }}>
                         {borrowCart.map((item, index) => (
                             <Grid item xs={12} sm={6} key={index}>
                                 <Card>
-                                    <CardMedia
-                                        component="img"
-                                        height="140"
-                                        image={item.itemPhoto}
-                                        alt={item.itemName}
-                                    />
                                     <CardContent>
                                         <Typography variant="h5" component="div">
                                             {item.itemName}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            Category: {item.category}
+                                            Category: {item.categoryName}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary">
                                             Quantity: {item.quantity}
