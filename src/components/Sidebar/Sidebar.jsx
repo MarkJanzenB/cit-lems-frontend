@@ -41,9 +41,11 @@ export default function Sidebar({ page }) {
     const handleCreateRequest = () => {
         if (userRole != 1) {
             setTeacher('');
+            setApproval('Approved');
         }
         if (userRole === 1) {
             setTeacher(getJWTSub());
+            setApproval('');
         }
         setDate(null);
         setStartHour('');
@@ -53,14 +55,6 @@ export default function Sidebar({ page }) {
         setYearSection('');
         setSubject('');
         setRoom('');
-        if (userRole != 1) {
-            setApproval('Approved');
-            getApproval;
-        }
-        if (userRole === 1) {
-            setApproval('');
-            getApproval;
-        }
         setOpenModal(true);
     };
     const handleSave = () => {
@@ -164,12 +158,15 @@ export default function Sidebar({ page }) {
                         }>
 
                             {userRole != 1 && (
-                                <button className={`sidebar-create-button`}
-                                onClick={handleCreateRequest}>Create Schedule
+                                <button
+                                    className={`sidebar-create-button`}
+                                    onClick={handleCreateRequest}>Create Schedule
                                 </button>
                             )}
                             {userRole === 1 && (
-                                <button className={`sidebar-create-button`}>Request Schedule
+                                <button
+                                    className={`sidebar-create-button`}
+                                    onClick={handleCreateRequest}>Request Schedule
                                 </button>
                             )}
 
@@ -243,16 +240,31 @@ export default function Sidebar({ page }) {
                                 alignItems: 'center',
                             }}
                         >
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    fontWeight: 'bold',
-                                    color: '#FFFFFF',
-                                    padding: '15px',
-                                }}
-                            >
-                                Request Details
-                            </Typography>
+                            {userRole != 1 && (
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        color: '#FFFFFF',
+                                        padding: '15px',
+                                    }}
+                                >
+                                    Create New Schedule
+                                </Typography>
+                            )}
+                            {userRole === 1 && (
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        color: '#FFFFFF',
+                                        padding: '15px',
+                                    }}
+                                >
+                                    Request a Schedule
+                                </Typography>
+                            )}
+
                             <Button
                                 onClick={() => setOpenModal(false)}
                                 sx={{
@@ -279,23 +291,41 @@ export default function Sidebar({ page }) {
                             }}
                         >
 
-                                    <Select
-                                        value={getTeacher}
-                                        onChange={(e) => setTeacher(e.target.value)}
-                                        fullWidth
-                                        displayEmpty
-                                        sx={{
-                                            '& .MuiInputBase-root': {
-                                                backgroundColor: '#f0f0f0',
-                                            },
-                                        }}
-                                        value={getTeacher}
-                                    >
-                                        <MenuItem value="" disabled>
-                                            Select a Teacher
-                                        </MenuItem>
-                                        <MenuItem value={getTeacher}>Teacher {getJWTFullName()}</MenuItem>
-                                    </Select>
+                        {userRole != 1 && (
+                            <Select
+                                value={getTeacher}
+                                onChange={(e) => setTeacher(e.target.value)}
+                                fullWidth
+                                displayEmpty
+                                sx={{
+                                    '& .MuiInputBase-root': {
+                                        backgroundColor: '#f0f0f0',
+                                    },
+                                }}
+                                value={getTeacher}
+                            >
+                                <MenuItem value="" disabled>
+                                    Select a Teacher
+                                </MenuItem>
+                                {/*Should fetch fullname of all users that are teacher*/}
+                                <MenuItem value={getTeacher}>{getJWTFullName()}</MenuItem>
+                            </Select>
+                        )}
+
+                        {userRole === 1 && (
+                            <TextField
+                                label="Teacher"
+                                value={getJWTFullName()}
+                                fullWidth
+                                // Should fetch fullname of curent user that is a teacher
+                                disabled
+                                sx={{
+                                    '& .MuiInputBase-root': {
+                                        backgroundColor: '#f0f0f0',
+                                    },
+                                }}
+                            />
+                        )}
 
 
 
