@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../../../Sidebar/Sidebar.jsx';
 import Appbar from '../../../Appbar/Appbar';
 import { Modal, Box, TextField, Typography, Button, Select, MenuItem } from '@mui/material';
-import {getJWTSub, getJWTFullName} from "../Authentication/jwt.jsx";
+import {getJWTSub, getJWTFullName} from "../../../Authentication/jwt.jsx";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -159,7 +159,7 @@ export default function Request() {
         })
         console.log(row.teacher_lastname);
         setSelectedRow(row);
-        setTeacher(row.teacher_firstname + " " + row.teacher_lastname);
+
         setTeacherId(row.teacher_id);
         setDate(new Date(row.date_schedule));
         setRequestId(row.request_id);
@@ -309,39 +309,49 @@ export default function Request() {
         setView((prevView) => (prevView === 'table' ? 'calendar' : 'table'));
     };
 
-    useEffect(() => {
-        axios.get(`http://localhost:8080/request/getrequests`, {
-            headers: {
-                "Authorization": `Bearer ${jwtToken}`
-            }
-        })
-        .then(response => {
-            console.log(response.data);
-            const formattedData = response.data.map(request => ({
-                approver_lastname: request.approver.last_name,
-                date_approved: request.date_approved,
-                date_requested: request.date_requested,
-                date_schedule: request.date_schedule,
-                end_time: convertTo12HourFormat(request.end_time),
-                remarks: request.remarks,
-                request_id: request.request_id,
-                room: request.room,
-                start_time: convertTo12HourFormat(request.start_time),
-                status: request.status,
-                subject_name: request.subject.subject_name,
-                subject_id: request.subject.subject_id,
-                teacher_firstname: request.teacher.first_name,
-                teacher_lastname: request.teacher.last_name,
-                teacher_fullname: request.teacher.first_name + " " + request.teacher.last_name,
-                teacher_id: request.teacher.user_id,
-            }))
-            setRows(formattedData);
-        })
-        .catch(error => {
-            console.log(error)
-        })
-    },[incrementFlag])
+ useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/request/getrequests`, {
+                headers: {
+                    "Authorization": `Bearer ${jwtToken}`
+                }
+            });
 
+            const formattedData = response.data.map(request => ({
+                approver_lastname: request.approver?.last_name || '',
+                date_approved: request.date_approved || '',
+                date_requested: request.date_requested || '',
+                date_schedule: request.date_schedule || '',
+                end_time: request.end_time ? convertTo12HourFormat(request.end_time) : '',
+                remarks: request.remarks || '',
+                request_id: request.request_id || 0,
+                room: request.room || '',
+                start_time: request.start_time ? convertTo12HourFormat(request.start_time) : '',
+                status: request.status || '',
+                subject_name: request.subject?.subject_name || '',
+                subject_id: request.subject?.subject_id || 0,
+                teacher_firstname: request.teacher?.first_name || '',
+                teacher_lastname: request.teacher?.last_name || '',
+                teacher_fullname: `${request.teacher?.first_name || ''} ${request.teacher?.last_name || ''}`.trim(),
+                teacher_id: request.teacher?.user_id || 0,
+            }));
+
+            const currentUserFullName = getJWTFullName();
+
+const filteredData = userRole === 1
+    ? formattedData.filter(request => request.teacher_fullname === currentUserFullName)
+    : userRole === 3
+        ? formattedData
+        : formattedData.filter(request => request.teacher_id === 1);
+            setRows(filteredData);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    fetchData();
+}, [incrementFlag]);
     const convertTo12HourFormat = (time24) => {
         const [hours, minutes, seconds] = time24.split(':');
         let hour = parseInt(hours, 10);
@@ -484,44 +494,28 @@ export default function Request() {
                                     backgroundColor: '#f9f9f9',
                                 }}
                             >
-                                <Select
-                                    labelID="Teacher"
-                                    value={getTeacher}
-                                    onChange={(e) => setTeacher(e.target.value)}
-                                    fullWidth
-                                    displayEmpty
-                                    sx={{
-                                        '& .MuiInputBase-root': {
+                                <TextField
+                                    label="Teacher"
+                                    value={selectedRow ? selectedRow.teacher_fullname : ''}
+                                    InputProps={{
+                                        readOnly: true,
+                                        disabled: true,
+                                        style: {
                                             backgroundColor: '#f0f0f0',
                                         },
                                     }}
-                                    MenuProps={{
-                                        PaperProps: {
-                                            style: {
-                                                maxHeight: 200,
-                                                overflow: 'auto',
-                                            },
-                                        },
-                                    }}
-                                >
-                                    <MenuItem value="" disabled>
-                                        Select a Teacher
-                                    </MenuItem>
-                                    {teachers.map((teacher) => (
-                                        <MenuItem key={teacher.user_id} value={teacher.fullname} onClick={() => setTeacherId(teacher.user_id)}>
-                                            {teacher.fullname}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-
+                                    fullWidth
+                                />
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         label="Date"
                                         value={getDate}
                                         onChange={(newValue) => setDate(newValue)}
+                                        readOnly
+                                        disabled
                                         sx={{
                                             '& .MuiInputBase-root': {
-                                                backgroundColor: '#FFFFFF',
+                                                backgroundColor: '#f0f0f0',
                                             },
                                         }}
                                     />
@@ -533,6 +527,8 @@ export default function Request() {
                                         value={getStartHour}
                                         onChange={(e) => setStartHour(e.target.value)}
                                         displayEmpty
+                                        readOnly
+                                        disabled
                                         sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
                                     >
                                         <MenuItem value="" disabled>00</MenuItem>
@@ -547,6 +543,8 @@ export default function Request() {
                                         value={getStartMinute}
                                         onChange={(e) => setStartMinute(e.target.value)}
                                         displayEmpty
+                                        readOnly
+                                        disabled
                                         sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
                                     >
                                         <MenuItem value="" disabled>00 PM</MenuItem>
@@ -561,6 +559,8 @@ export default function Request() {
                                         value={getEndHour}
                                         onChange={(e) => setEndHour(e.target.value)}
                                         displayEmpty
+                                        readOnly
+                                        disabled
                                         sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
                                     >
                                         <MenuItem value="" disabled>00</MenuItem>
@@ -575,36 +575,16 @@ export default function Request() {
                                         value={getEndMinute}
                                         onChange={(e) => setEndMinute(e.target.value)}
                                         displayEmpty
+                                        readOnly
+                                        disabled
                                         sx={{ '& .MuiInputBase-root': { backgroundColor: '#f0f0f0' } }}
                                     >
                                         <MenuItem value="" disabled>00 PM</MenuItem>
-                                        {["00 AM", "15 AM", "30 AM", "45 AM","00 PM","15 PM", "30 PM", "45 PM"].map((minute) => (
+                                        {["00 AM", "15 AM", "30 AM", "45 AM", "00 PM", "15 PM", "30 PM", "45 PM"].map((minute) => (
                                             <MenuItem key={minute} value={minute}>{minute < 10 ? `0${minute}` : minute}</MenuItem>
                                         ))}
                                     </Select>
                                 </Box>
-                                {/* <Select
-                                    labelId="year-section-label"
-                                    id="year-section-select"
-                                    value={getYearSection}
-                                    onChange={(e) => setYearSection(e.target.value)}
-                                    fullWidth
-                                    displayEmpty
-                                    sx={{
-                                        '& .MuiInputBase-root': {
-                                            backgroundColor: '#f0f0f0',
-                                        },
-                                    }}
-                                >
-                                    <MenuItem value="" disabled>
-                                        Select Year and Section
-                                    </MenuItem>
-                                    <MenuItem value="Year 1 - Section A">Year 1 - Section A</MenuItem>
-                                    <MenuItem value="Year 1 - Section B">Year 1 - Section B</MenuItem>
-                                    <MenuItem value="Year 2 - Section A">Year 2 - Section A</MenuItem>
-                                    <MenuItem value="Year 2 - Section B">Year 2 - Section B</MenuItem>
-                                </Select> */}
-
                                 <Select
                                     labelId="subject-label"
                                     id="subject-select"
@@ -613,6 +593,8 @@ export default function Request() {
                                     onChange={(e) => setSubject(e.target.value)}
                                     fullWidth
                                     displayEmpty
+                                    readOnly
+                                    disabled
                                     sx={{
                                         '& .MuiInputBase-root': {
                                             backgroundColor: '#f0f0f0',
@@ -641,6 +623,8 @@ export default function Request() {
                                     onChange={(e) => setRoom(e.target.value)}
                                     fullWidth
                                     displayEmpty
+                                    readOnly
+                                    disabled
                                     sx={{
                                         '& .MuiInputBase-root': {
                                             backgroundColor: '#f0f0f0',
@@ -654,20 +638,21 @@ export default function Request() {
                                     <MenuItem value="Laboratory 2">Laboratory 2</MenuItem>
                                     <MenuItem value="Classroom">Classroom</MenuItem>
                                 </Select>
-
                                 <TextField
                                     label="Remarks"
                                     value={getRemarks}
                                     onChange={(e) => setRemarks(e.target.value)}
                                     fullWidth
                                     InputProps={{
-                                       style: {
-                                            backgroundColor: '#f0f0f0',
+                                        readOnly: userRole !== 3,
+                                        disabled: userRole !== 3,
+                                        style: {
+                                            backgroundColor: userRole !== 3 ? '#f0f0f0' : '#FFFFFF',
                                         },
                                     }}
                                     sx={{
                                         '& .MuiInputBase-root': {
-                                            backgroundColor: '#f0f0f0',
+                                            backgroundColor: userRole !== 3 ? '#f0f0f0' : '#FFFFFF',
                                         },
                                     }}
                                 />
@@ -678,9 +663,11 @@ export default function Request() {
                                     onChange={(e) => setApproval(e.target.value)}
                                     fullWidth
                                     displayEmpty
+                                    readOnly={userRole !== 3}
+                                    disabled={userRole !== 3}
                                     sx={{
                                         '& .MuiInputBase-root': {
-                                            backgroundColor: '#f0f0f0',
+                                            backgroundColor: userRole !== 3 ? '#f0f0f0' : '#FFFFFF',
                                         },
                                     }}
                                 >
@@ -688,8 +675,8 @@ export default function Request() {
                                         Approval status
                                     </MenuItem>
                                     <MenuItem value="Approved">Approved</MenuItem>
-                                    <MenuItem value="Rejected">Denied</MenuItem>
-                                    <MenuItem value="Rescheduled">Rescheduled</MenuItem>
+                                    <MenuItem value="Denied">Denied</MenuItem>
+                                    <MenuItem value="Advised to reschedule">Advised to reschedule</MenuItem>
                                 </Select>
                             </Box>
 
@@ -731,8 +718,7 @@ export default function Request() {
                                 </Button>
                             </Box>
                         </Box>
-                    </Modal>
-                    <Modal open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
+                    </Modal>                    <Modal open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
                         <Box
                             sx={{
                                 position: 'absolute',
