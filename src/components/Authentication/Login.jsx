@@ -11,6 +11,7 @@ export default function Login() {
   });
 
   const [error, setError] = useState('');
+  const [ logginIn, setLoggingIn] = useState('');
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
@@ -28,6 +29,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoggingIn('Logging in...')
     if (!formData.insti_id || !formData.password) {
       setError('Institutional ID and password are required');
       return;
@@ -59,10 +61,12 @@ export default function Login() {
           navigate('/dashboard'); // Redirect after successful login
         } else {
           setError('Login failed: Invalid token structure');
+          setLoggingIn('');
         }
       } catch (decodeError) {
         console.error("Error decoding token:", decodeError);
         setError('Incorrect password.');
+        setLoggingIn('');
       }
     } catch (error) {
       console.error("Error during login request:", error);
@@ -71,11 +75,14 @@ export default function Login() {
       if (error.response) {
         if (error.response.status === 401) {
           setError('Incorrect Institutional ID or password');
+          setLoggingIn('');
         } else {
           setError(`Server error: ${error.response.data || 'Please try again later.'}`);
+          setLoggingIn('');
         }
       } else {
         setError('Network error. Please check your connection and try again.');
+        setLoggingIn('');
       }
     }
   };
@@ -140,6 +147,7 @@ export default function Login() {
                   />
                 </div>
                 {error && <p className="error-text">{error}</p>}
+                {logginIn && <p className='loggin-in-text'>{logginIn}</p>}
                 <button type="submit" className="login-button"
                         style={{ backgroundColor: '#800000', marginTop: '20px' }}>
                   Login
