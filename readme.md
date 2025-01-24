@@ -10,7 +10,7 @@
 - Luke Stanley Castro
 
 ## Tech Stack / Tools
-**Client:** React, MUI
+**Client:** Vite, React, MUI
 
 **Server:** Spring boot, MySQL
 
