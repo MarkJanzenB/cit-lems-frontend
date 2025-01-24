@@ -14,7 +14,7 @@
 
 **Server:** Spring boot, MySQL
 
-![Java](https://skillicons.dev/icons?i=html,css,javascript,vite,react,spring,springboot,mysql)
+![Java](https://skillicons.dev/icons?i=html,css,javascript,vite,react,spring,mysql)
 
 ## Project Description
 
