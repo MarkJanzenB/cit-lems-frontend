@@ -25,7 +25,7 @@ The Laboratory Equipment Monitoring System is a web-based application designed t
 ## Installation Instructions (Run Locally)
 
 ### Prerequisites
-1. **Node v10+ and npm**: Ensure Node.js and npm are installed on your system. You can download and install them from [here](https://nodejs.org/).
+1. **Node.js**: Ensure Node.js and npm are installed on your system. You can download and install them from [here](https://nodejs.org/).
 
 2. **MySQL Database**: Ensure MySQL is installed on your system. You can download and install it from [here](https://dev.mysql.com/downloads/installer/)(Windows).
 
