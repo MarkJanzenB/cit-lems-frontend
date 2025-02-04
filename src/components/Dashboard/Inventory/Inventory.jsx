@@ -141,7 +141,7 @@ export default function Inventory() {
     };
 
     const fetchData = async (categoryId) => {
-        if(categoryId != 4){
+        if(categoryId != 5){
             const response = await axios.get(`http://localhost:8080/inventory/getinventorybycategory?categoryId=${categoryId+1}`, {
                 headers: {
                     "authorization": `Bearer ${jwtToken}`,
@@ -597,7 +597,7 @@ export default function Inventory() {
                                 <div className={transition ? 'fade-slide-up' : ''} style={{ display: 'flex', justifyContent: 'center' }}>
                                     <MyPaper width={"95%"} height={"8%"}>
                                         {roleid != 1 ? (
-                                            <Button onClick={() => handleViewAllItemsClick(4)}>View All Items</Button>
+                                            <Button onClick={() => handleViewAllItemsClick(5)}>View All Items</Button>
                                         ) : (
                                             <Button
                                                 onClick={() => navigate('/inventoryST')}
@@ -787,6 +787,7 @@ export default function Inventory() {
                                         <MenuItem value={2}>Equipment</MenuItem>
                                         <MenuItem value={3}>Glassware</MenuItem>
                                         <MenuItem value={4}>Hazards</MenuItem>
+                                        <MenuItem value={5}>Others</MenuItem>
                                     </Select>
                                 </FormControl>
 
