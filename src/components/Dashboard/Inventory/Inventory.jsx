@@ -81,7 +81,6 @@ export default function Inventory() {
         inventory: {inventory_id:0},
         quantity: 1,
     });
-
     const [newConsumable, setNewConsumable] = useState({
         unit: '',
         name: '',
@@ -582,6 +581,15 @@ export default function Inventory() {
                                         </MyPaper>
                                         <Button onClick={() => handleViewListClick(3)}>View List</Button>
                                     </MyPaper>
+                                    <MyPaper width="30%" height="30%">
+                                        <h1>Others</h1>
+                                        <img src={"/warehouse.gif"} style={{width: '200px', height: '200px'}}
+                                             onClick={() => handleViewListClick(4)}/>
+                                        <MyPaper width={"100%"} height={"30%"}>
+                                            <h4>Items that are consumed and need to be replenished.</h4>
+                                        </MyPaper>
+                                        <Button onClick={() => handleViewListClick(4)}>View List</Button>
+                                    </MyPaper>
                                 </div>
                             )}
                             <br />
@@ -666,6 +674,18 @@ export default function Inventory() {
                                             >
                                                 {currentCategory === 3 ? 'Hazards' :
                                                     <img src="/hazardous.gif" alt="Hazards"
+                                                         style={{width: '50px', height: '50px'}}/>}
+                                            </Button>
+                                            <Button
+                                                style={currentCategory === 3 ? {
+                                                    width: '200px',
+                                                    height: '80px',
+                                                    fontSize: '24px',
+                                                } : {}}
+                                                onClick={() => handleViewListClick(3)}
+                                            >
+                                                {currentCategory === 4 ? 'Others' :
+                                                    <img src="/warehouse.gif" alt="Hazards"
                                                          style={{width: '50px', height: '50px'}}/>}
                                             </Button>
 
